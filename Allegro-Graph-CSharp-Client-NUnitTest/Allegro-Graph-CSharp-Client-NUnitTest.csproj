@@ -44,7 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AGClient_Util_Test.cs" />
+    <Compile Include="MiniTest\AGCatalogTest.cs" />
+    <Compile Include="MiniTest\AGClientTest.cs" />
+    <Compile Include="MiniTest\AGRepositoryTest.cs" />
+    <Compile Include="MiniTest\AGRequestServiceTest.cs" />
+    <Compile Include="MiniTest\AGServerInfoTest.cs" />
+    <Compile Include="UtilTest\RequestUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

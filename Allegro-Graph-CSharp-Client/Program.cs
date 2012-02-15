@@ -18,6 +18,7 @@ namespace Allegro_Graph_CSharp_Client
             {
                 Console.WriteLine(catalog);
             }
+            Console.ReadLine();
         }
     }
 }
