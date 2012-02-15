@@ -9,7 +9,7 @@ using System.Net;
 namespace Allegro_Graph_CSharp_Client_NUnitTest
 {
     [TestFixture]
-    class AGClient_Util_Test
+    class RequestUtilTest
     {
         /// <summary>
         /// 测试DoReq函数
