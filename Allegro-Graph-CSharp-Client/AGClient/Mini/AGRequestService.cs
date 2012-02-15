@@ -47,6 +47,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 AbsUrl += ";" + Base.Username + ";" + Base.Password;
         }
 
+        /// <summary>
+        /// 执行HTTP请求，无返回
+        /// </summary>
+        /// <param name="Base">URL信息</param>
+        /// <param name="Method">HTTP方法</param>
+        /// <param name="RelativeUrl">相对URL</param>
+        /// <param name="NeedsUserInfo">是否需要加入用户信息</param>
+        /// <param name="Body">发送的内容, null表示不发送内容</param>
         public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, bool NeedsUserInfo = true, object Body = null) 
         {
             string absUrl, contentType, bodyString;
@@ -54,6 +62,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             RequestUtil.DoReq(absUrl, Method, bodyString, contentType);
         }
 
+        /// <summary>
+        /// 执行HTTP请求，返回JSON格式的结果
+        /// </summary>
+        /// <seealso cref="DoReq"/>
         public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, bool NeedsUserInfo = true, object Body = null) 
         {
             string absUrl, contentType, bodyString;
@@ -62,6 +74,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return RequestUtil.DoJsonReq(absUrl, Method, bodyString, contentType);
         }
 
+        /// <summary>
+        /// 执行HTTP请求，返回JSON格式的结果，并将结果解析成T类型
+        /// </summary>
+        /// <seealso cref="DoReqAndGet"/>
         public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl, bool NeedsUserInfo = true, object Body = null) 
         {
             string result = DoReqAndGet(Base, Method, RelativeUrl, NeedsUserInfo, Body);
