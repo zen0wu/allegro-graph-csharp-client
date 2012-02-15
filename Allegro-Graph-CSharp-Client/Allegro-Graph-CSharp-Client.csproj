@@ -46,7 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AGClient\Mini\AGCatalog.cs" />
+    <Compile Include="AGClient\Mini\AGClient.cs" />
+    <Compile Include="AGClient\Mini\AGRepository.cs" />
+    <Compile Include="AGClient\Mini\AGRequestService.cs" />
     <Compile Include="AGClient\Mini\AGServerInfo.cs" />
+    <Compile Include="AGClient\Mini\IAGUrl.cs" />
     <Compile Include="AGClient\Util\AGRequestException.cs" />
     <Compile Include="AGClient\Util\RequestUtil.cs" />
     <Compile Include="Program.cs" />

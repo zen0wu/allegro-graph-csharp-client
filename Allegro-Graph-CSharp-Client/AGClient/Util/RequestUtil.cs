@@ -18,10 +18,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
             bool needsReturns = Accept != null;
             req.Accept = needsReturns ? Accept : "*/*";
 
-            StreamWriter reqInWriter = new StreamWriter(req.GetRequestStream());
-            reqInWriter.Write(Body);
-            reqInWriter.Close();
-            req.GetRequestStream().Close();
+            if (Body != null)
+            {
+                StreamWriter reqInWriter = new StreamWriter(req.GetRequestStream());
+                reqInWriter.Write(Body);
+                reqInWriter.Close();
+                req.GetRequestStream().Close();
+            }
 
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             StatusCode = resp.StatusCode;
@@ -66,7 +69,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
         {
             HttpStatusCode status;
             string returnBody;
-            MakeReq(Url, Method, Body, ContentType, null, out status, out returnBody);
+            MakeReq(Url, Method, Body, ContentType, "application/json; utf-8", out status, out returnBody);
 
             if ((int)status < 200 || (int)status > 204)
                 throw new AGRequestException("Error while performing the request with error code " + (int)status);
