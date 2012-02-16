@@ -18,10 +18,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         private AGServerInfo server;
         private AGCatalog catalog;
 
-<<<<<<< HEAD
         [Test]
-=======
->>>>>>> 926a582c7067e7e8bab059eba182ab910424fb79
         [TestFixtureSetUp]
         public void Init()
         {
@@ -48,11 +45,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void OpenRepositoryTest()
         {
             string repName = "zhishi291";
-<<<<<<< HEAD
             bool result = catalog.OpenRepository(repName) is AGRepository;
-=======
-            bool result = catalog.OpenRepository(repName) is AGRepositoryTest;
->>>>>>> 926a582c7067e7e8bab059eba182ab910424fb79
             Assert.IsTrue(result);
         }
     }
