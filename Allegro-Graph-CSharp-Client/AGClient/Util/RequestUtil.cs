@@ -9,14 +9,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
 {
     public class RequestUtil
     {
-        private static void MakeReq(string Url, string Method, string Body, string ContentType, string Accept, out HttpStatusCode StatusCode, out string ReturnBody)
+        private static void MakeReq(string Url, string Method, string Body, string ContentType, bool ReadResponse, string Accept, 
+            string Username, string Password,
+            out HttpStatusCode StatusCode, out string ReturnBody)
         {
             HttpWebRequest req = WebRequest.Create(Url) as HttpWebRequest;
             req.Method = Method;
             req.ContentType = ContentType;
-            // Accept = null，代表此请求不需要返回值
-            bool needsReturns = Accept != null;
-            req.Accept = needsReturns ? Accept : "*/*";
+            req.Accept = Accept;
+            if (Username != null && Password != null)
+            {
+                req.Credentials = new NetworkCredential(Username, Password);
+            }
 
             if (Body != null)
             {
@@ -29,7 +33,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             StatusCode = resp.StatusCode;
 
-            if (needsReturns)
+            if (ReadResponse)
             {
                 StreamReader reqOutReader = new StreamReader(resp.GetResponseStream());
                 ReturnBody = reqOutReader.ReadToEnd();
@@ -47,11 +51,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
         /// <param name="Method">请求的方法</param>
         /// <param name="Body">请求的内容</param>
         /// <param name="ContentType">请求内容的类型，默认为JSON</param>
-        public static void DoReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8")
+        public static void DoReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8",
+            string Username = null, string Password = null)
         {
             HttpStatusCode status;
             string returnBody;
-            MakeReq(Url, Method, Body, ContentType, null, out status, out returnBody);
+            MakeReq(Url, Method, Body, ContentType, false, "*/*", Username, Password, out status, out returnBody);
 
             if ((int)status < 200 || (int)status > 204)
                 throw new AGRequestException("Error while performing the request with error code " + (int)status);
@@ -65,11 +70,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
         /// <param name="Body">请求的内容</param>
         /// <param name="ContentType">请求内容的类型，默认为JSON</param>
         /// <returns>请求的返回内容</returns>
-        public static string DoJsonReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8")
+        public static string DoJsonReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8",
+            string Username = null, string Password = null)
         {
             HttpStatusCode status;
             string returnBody;
-            MakeReq(Url, Method, Body, ContentType, "application/json; utf-8", out status, out returnBody);
+            MakeReq(Url, Method, Body, ContentType, true, "application/json; utf-8", Username, Password, out status, out returnBody);
 
             if ((int)status < 200 || (int)status > 204)
                 throw new AGRequestException("Error while performing the request with error code " + (int)status);
