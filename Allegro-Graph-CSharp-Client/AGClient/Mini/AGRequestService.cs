@@ -40,9 +40,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 string parameters = GenerateUrlParameters((Dictionary<string, string>)Body);
                 // GET方法将参数加入到URL中
                 if (Method == "GET")
-                    AbsUrl += "?" + parameters;
-                else
-                // POST方法将参数放到Body中
+                {
+                    if (parameters.Length > 0)
+                        AbsUrl += "?" + parameters;
+                }
+                else if (Method == "POST" || Method == "DELETE" || Method == "PUT")
+                    // POST方法将参数放到Body中
                     BodyString = parameters;
             }
             else if (Body is string)
@@ -64,7 +67,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="RelativeUrl">相对URL</param>
         /// <param name="NeedsAuth">是否需要认证</param>
         /// <param name="Body">发送的内容, null表示不发送内容</param>
-        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, bool NeedsAuth = true, object Body = null) 
+        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
@@ -82,7 +85,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// 执行HTTP请求，返回JSON格式的结果
         /// </summary>
         /// <seealso cref="DoReq"/>
-        public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, bool NeedsAuth = true, object Body = null) 
+        public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
@@ -100,9 +103,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// 执行HTTP请求，返回JSON格式的结果，并将结果解析成T类型
         /// </summary>
         /// <seealso cref="DoReqAndGet"/>
-        public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl, bool NeedsAuth = true, object Body = null) 
+        public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
         {
-            string result = DoReqAndGet(Base, Method, RelativeUrl, NeedsAuth, Body);
+            string result = DoReqAndGet(Base, Method, RelativeUrl, Body, NeedsAuth);
             return JsonConvert.DeserializeObject<T>(result);
         }
     }
