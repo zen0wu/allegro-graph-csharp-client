@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 using Newtonsoft.Json;
 
@@ -11,6 +12,20 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
     public class AGRequestService
     {
+
+        private static string GenerateUrlParameters(Dictionary<string, string> parameters)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string key in parameters.Keys)
+            {
+                if (builder.Length > 0)
+                    builder.Append("&");
+                builder.Append(key + "=");
+                builder.Append(HttpUtility.UrlEncode(parameters[key]));
+            }
+            return builder.ToString();
+        }
+
         private static void PrepareReq(IAGUrl Base, string Method, string RelativeUrl, object Body, out string AbsUrl, out string BodyString, out string ContentType)
         {
             AbsUrl = Base.Url + RelativeUrl;
@@ -20,17 +35,15 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             {
                 BodyString = null;
             }
-            else if (Method == "GET" && Body is Dictionary<string, string>)
+            else if (Body is Dictionary<string, string>)
             {
+                string parameters = GenerateUrlParameters((Dictionary<string, string>)Body);
                 // GET方法将参数加入到URL中
-                bool isFirst = true;
-                Dictionary<string, string> parameters = (Dictionary<string, string>)Body;
-                foreach (string key in parameters.Keys)
-                {
-                    AbsUrl += (isFirst ? "?" : "&");
-                    AbsUrl += key + "=" + parameters[key];
-                    isFirst = false;
-                }
+                if (Method == "GET")
+                    AbsUrl += "?" + parameters;
+                else
+                // POST方法将参数放到Body中
+                    BodyString = parameters;
             }
             else if (Body is string)
             {

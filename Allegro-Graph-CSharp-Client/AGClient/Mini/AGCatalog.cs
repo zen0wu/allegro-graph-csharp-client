@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
     public class AGCatalog : IAGUrl
@@ -23,12 +26,34 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string Password { get { return Server.Password; } }
 
         /// <summary>
+        /// 列出当前目录下的仓库
+        /// </summary>
+        public string[] ListRepositories()
+        {
+            string result = AGRequestService.DoReqAndGet(this, "GET", "/repositories", false);
+            JArray arr = JArray.Parse(result);
+            string[] repos = new string[arr.Count];
+            for (int i = 0; i < repos.Length; ++i)
+                repos[i] = (string)arr[i]["id"];
+            return repos;
+        }
+
+        /// <summary>
         /// 删除仓库
         /// </summary>
         /// <param name="Name">仓库名</param>
         public void DeleteRepository(string Name)
         {
             AGRequestService.DoReq(Server, "DELETE", "/repositories/" + Name);
+        }
+
+        /// <summary>
+        /// 创建仓库
+        /// </summary>
+        /// <param name="Name">仓库名</param>
+        public void CreateRepository(string Name)
+        {
+            AGRequestService.DoReq(Server, "PUT", "/repositories/" + Name);
         }
 
         /// <summary>
