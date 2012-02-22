@@ -18,12 +18,16 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         private AGServerInfo server;
         private AGCatalog catalog;
 
-        [Test]
-        [TestFixtureSetUp]
+       [Test]
+       [TestFixtureSetUp]
         public void Init()
         {
-            server = new AGServerInfo("http://172.16.2.21:10035", "chainyi", "chainyi123");
-            catalog = new AGCatalog(server, "zhishime");
+            string baseUrl = "http://172.16.2.21:10035"; 
+            string username = "chainyi";
+            string password = "chainyi123";
+            server = new AGServerInfo(baseUrl, username, password); 
+            catalog = new AGCatalog(server, "chainyi");
+          
         }
 
         ///<summary>
@@ -32,7 +36,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void SameObjectTest()
         {
-            string catalogName = "zhishi291";
+            string catalogName = "chainyi";
             AGCatalog catalog1 = new AGCatalog(server,catalogName);
             AGCatalog catalog2 = new AGCatalog(server, catalogName);
             Assert.AreNotSame(catalog1, catalog2);
@@ -44,9 +48,21 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void OpenRepositoryTest()
         {
-            string repName = "zhishi291";
+            string repName = "chainyi";
             bool result = catalog.OpenRepository(repName) is AGRepository;
             Assert.IsTrue(result);
+        }
+
+        /// <summary>
+        /// 测试 CreateRepository()
+        /// </summary>
+        [Test]
+        public void CreateRepositoryTest()
+        {
+            string newRepName = "blizzard";
+            Console.WriteLine(catalog.Url);
+            //Console.WriteLine(catalog.Url + "/repositories/" + newRepName);
+            catalog.CreateRepository(newRepName);
         }
     }
 }

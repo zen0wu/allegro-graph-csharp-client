@@ -35,7 +35,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             AGClient agClient2 = new AGClient(server);
             Assert.AreNotSame(agClient1, agClient2);
         }
-
+        
         /// <summary>
         /// 测试 GetVersion()
         /// </summary>
@@ -43,6 +43,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void GetVersionTest()
         {
             string version = agClient.GetVersion();
+            Console.Write(version);
             bool result = string.IsNullOrEmpty(version);
             Assert.IsFalse(result);
         }
@@ -54,6 +55,10 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void ListCatalogsTest()
         {
             string[] catalogs = agClient.ListCatalogs();
+            foreach (string catalog in catalogs)
+            {
+                Console.WriteLine(catalog);
+            }
             Assert.IsNotEmpty(catalogs);
         }
 
@@ -63,7 +68,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void OpenCatalogTest()
         {
-            string catalogName = "zhishime";
+            string catalogName = "chainyi";
             //Assert.IsInstanceOf(Type.GetType("Allegro_Graph_CSharp_Client.AGClient.Mini.AGCatalog"), agClient.OpenCatalog(catalogName));
             bool result = agClient.OpenCatalog(catalogName) is AGCatalog;
             Assert.IsTrue(result);

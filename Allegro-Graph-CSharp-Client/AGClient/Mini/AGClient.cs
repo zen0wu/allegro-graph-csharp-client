@@ -23,7 +23,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public string GetVersion()
         {
-            return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version", false);
+            return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version", null,false);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public string[] ListCatalogs()
         {
-            string result = AGRequestService.DoReqAndGet(Server, "GET", "/catalogs", false);
+            string result = AGRequestService.DoReqAndGet(Server, "GET", "/catalogs",null,false);
             JArray arr = JArray.Parse(result);
             string[] catalogs = new string[arr.Count];
             for (int i = 0; i < catalogs.Length; ++i)
