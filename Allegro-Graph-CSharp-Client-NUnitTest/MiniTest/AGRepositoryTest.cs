@@ -12,6 +12,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
     class AGRepositoryTest
     {
         private AGServerInfo server;
+        private AGCatalog catalog;
         private AGRepository repository;
         
         [Test]
@@ -19,12 +20,13 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void init()
         {
             //对于非root catalog，访问时要增加catalog的路径,是否增加个成员表示repository所在的catalog
-            string baseUrl = "http://172.16.2.21:10035/catalogs/chainyi"; 
+            string baseUrl = "http://172.16.2.21:10035"; 
             string username = "chainyi";
             string password = "chainyi123";
             server = new AGServerInfo(baseUrl, username, password);
+            catalog = new AGCatalog(server, "chainyi");
             string repositoryName = "CSharpClient";
-            repository = new AGRepository(server, repositoryName);
+            repository = new AGRepository(catalog, repositoryName);
             Console.WriteLine(repository.Url);
         }
 
@@ -35,8 +37,8 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void SameObjectTest()
         {
             string repositoryName = "CSharpClient";
-            AGRepository repository1 = new AGRepository(server, repositoryName);
-            AGRepository repository2 = new AGRepository(server, repositoryName);
+            AGRepository repository1 = new AGRepository(catalog, repositoryName);
+            AGRepository repository2 = new AGRepository(catalog, repositoryName);
             Assert.AreNotSame(repository1, repository2);
         }
 
@@ -57,7 +59,8 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void AddStatementsTest()
         {
-            string[,] quads = new string[,] { { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "xxx" ,"demo"} };
+            string[][] quads = new string[1][] {
+                new string[4] { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/q?abc=1&def=2>" ,"<http://example/q?abc=1&def=2>" } };
             repository.AddStatements(quads);
         }
 
@@ -68,7 +71,8 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [ExpectedException(typeof(AGRequestException))]
         public void AddStatementsTest2()
         {
-            string[,] quads = new string[,] { { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "xxx" } };
+            string[][] quads = new string[1][] {
+                new string[3] { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/q?abc=1&def=2>" } };
             repository.AddStatements(quads);
         }
     }

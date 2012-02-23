@@ -19,6 +19,12 @@ namespace Allegro_Graph_CSharp_Client
                 Console.WriteLine(catalog);
             }
             Console.WriteLine();
+
+            AGCatalog cat = new AGCatalog(info, "chainyi");
+            AGRepository repo = cat.OpenRepository("CSharpClient");
+
+            int size = repo.GetSize(null);
+            Console.Write(size);
         }
     }
 }

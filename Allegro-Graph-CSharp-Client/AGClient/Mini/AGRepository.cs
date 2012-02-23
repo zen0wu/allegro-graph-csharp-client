@@ -12,19 +12,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
     public class AGRepository : IAGUrl
     {
         private string RepoUrl;
-        private AGServerInfo Server;
+        private AGCatalog Catalog;
         private string Name;
 
-        public AGRepository(AGServerInfo Server, string Name)
+        public AGRepository(AGCatalog Catalog, string Name)
         {
-            RepoUrl = Server.Url + "/repositories/" + Name;
+            RepoUrl = Catalog.Url + "/repositories/" + Name;
             this.Name = Name;
-            this.Server = Server;
+            this.Catalog = Catalog;
         }
 
         public string Url { get { return RepoUrl; } }
-        public string Username { get { return Server.Username; } }
-        public string Password { get { return Server.Password; } }
+        public string Username { get { return Catalog.Username; } }
+        public string Password { get { return Catalog.Password; } }
 
         /// <summary>
         /// 返回仓库的大小
@@ -46,11 +46,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// 增加三元组
         /// </summary>
         /// <param name="Quads">每个元素长度为4，分别为主语、谓语、宾语、上下文</param>
-        public void AddStatements(string[,] Quads)
+        public void AddStatements(string[][] Quads)
         {
-            if (Quads.GetLength(1) != 4)
-                throw new AGRequestException("Parameters in AddStatements must be of type [,4]");
-            AGRequestService.DoReq(this, "POST", "/statememts", JsonConvert.SerializeObject(Quads));
+            AGRequestService.DoReq(this, "POST", "/statements", Quads);
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             if (Quads.GetLength(1) != 4)
                 throw new AGRequestException("Parameters in DeleteStatements must be of type [,4]");
-            AGRequestService.DoReq(this, "POST", "/statememts/delete", JsonConvert.SerializeObject(Quads));
+            AGRequestService.DoReq(this, "POST", "/statements/delete", JsonConvert.SerializeObject(Quads));
         }
 
         /// <summary>
@@ -92,7 +90,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Ids">给定的Id</param>
         public void DeleteStatementsById(string[] Ids)
         {
-            AGRequestService.DoReq(this, "POST", "/statememts/delete?ids=true", JsonConvert.SerializeObject(Ids));
+            AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(Ids));
         }
 
         /// <summary>

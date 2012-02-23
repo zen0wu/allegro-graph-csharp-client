@@ -30,6 +30,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -49,18 +53,19 @@
     <Compile Include="MiniTest\AGRepositoryTest.cs" />
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
+    <Compile Include="RunTest.cs" />
     <Compile Include="UtilTest\RequestUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\nunit.framework.dll" />
+    <Content Include="lib\nunit.framework.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Allegro-Graph-CSharp-Client\Allegro-Graph-CSharp-Client.csproj">
       <Project>{9ECE89F7-87D4-492C-BC2D-46AA8CD28582}</Project>
       <Name>Allegro-Graph-CSharp-Client</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\nunit.framework.dll" />
-    <Content Include="lib\nunit.framework.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

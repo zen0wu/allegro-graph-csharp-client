@@ -57,7 +57,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         //}
         public void CreateRepository(string Name)
         {
-            AGRequestService.DoReq(Server, "PUT", CatalogUrl+"/repositories/" + Name);
+            AGRequestService.DoReq(this, "PUT", "/repositories/" + Name);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns>打开的仓库</returns>
         public AGRepository OpenRepository(string Name)
         {
-            return new AGRepository(Server, Name);
+            return new AGRepository(this, Name);
         }
     }
 }
