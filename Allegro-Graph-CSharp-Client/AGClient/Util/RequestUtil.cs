@@ -30,10 +30,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
                 req.GetRequestStream().Close();
             }
             
-            StreamWriter ww = new StreamWriter(new FileStream("D:\\ga.txt", FileMode.Append));
-            ww.WriteLine(Url);
-            ww.WriteLine(Body);
-            ww.Close();
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             StatusCode = resp.StatusCode;
 

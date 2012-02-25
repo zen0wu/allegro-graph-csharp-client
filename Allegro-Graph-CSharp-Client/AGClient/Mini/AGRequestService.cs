@@ -13,15 +13,26 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
     public class AGRequestService
     {
 
-        private static string GenerateUrlParameters(Dictionary<string, string> parameters)
+        private static string GenerateUrlParameters(Dictionary<string, object> parameters)
         {
             StringBuilder builder = new StringBuilder();
-            foreach (string key in parameters.Keys)
-            {
+            Action<string, string> appendParameter = delegate(string key, string value) {
                 if (builder.Length > 0)
                     builder.Append("&");
-                builder.Append(key + "=");
-                builder.Append(HttpUtility.UrlEncode(parameters[key]));
+                builder.Append(key + "=" + value);
+            };
+            foreach (string key in parameters.Keys)
+            {
+                object value = parameters[key];
+                if (value is string)
+                    appendParameter(key, HttpUtility.UrlEncode(value as string));
+                else if (value is string[])
+                {
+                    foreach (string v in value as string[])
+                        appendParameter(key, HttpUtility.UrlEncode(v));
+                }
+                else
+                    appendParameter(key, HttpUtility.UrlEncode(value.ToString()));
             }
             return builder.ToString();
         }
@@ -30,21 +41,21 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             AbsUrl = Base.Url + RelativeUrl;
             ContentType = "application/json; utf-8";
-            BodyString = "";
+            BodyString = null;
             if (Body == null)
             {
                 BodyString = null;
             }
-            else if (Body is Dictionary<string, string>)
+            else if (Body is Dictionary<string, object>)
             {
-                string parameters = GenerateUrlParameters((Dictionary<string, string>)Body);
+                string parameters = GenerateUrlParameters((Dictionary<string, object>)Body);
                 // GET方法将参数加入到URL中
-                if (Method == "GET")
+                if (Method == "GET" || Method == "DELETE")
                 {
                     if (parameters.Length > 0)
                         AbsUrl += "?" + parameters;
                 }
-                else if (Method == "POST" || Method == "DELETE" || Method == "PUT")
+                else if (Method == "POST" || Method == "PUT")
                     // POST方法将参数放到Body中
                     BodyString = parameters;
             }

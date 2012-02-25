@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Data;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Allegro_Graph_CSharp_Client.AGClient.Util;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.Mini
@@ -31,12 +33,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// </summary>
         /// <param name="Context">可以指定一个Named Graph作为Context</param>
         /// <returns>仓库的大小</returns>
-        public int GetSize(string Context)
+        public int GetSize(string Context = null)
         {
-            Dictionary<string, string> parameters = null;
+            Dictionary<string, object> parameters = null;
             if (Context != null) 
             {
-                parameters = new Dictionary<string, string>();
+                parameters = new Dictionary<string, object>();
                 parameters.Add("context", Context);
             }
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
@@ -61,7 +63,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public int DeleteMatchingStatements(string Subj, string Pred, string Obj, string Context)
         {
-            Dictionary<string, string> body = new Dictionary<string, string>();
+            Dictionary<string, object> body = new Dictionary<string, object>();
             if (Subj != null)
                 body.Add("subj", Subj);
             if (Pred != null)
@@ -77,20 +79,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// 删除给定的元组
         /// </summary>
         /// <param name="Quads">待删除的元组</param>
-        public void DeleteStatements(string[,] Quads)
+        public void DeleteStatements(string[][] Quads)
         {
-            if (Quads.GetLength(1) != 4)
-                throw new AGRequestException("Parameters in DeleteStatements must be of type [,4]");
-            AGRequestService.DoReq(this, "POST", "/statements/delete", JsonConvert.SerializeObject(Quads));
-        }
-
-        /// <summary>
-        /// 删除给定Id的元组
-        /// </summary>
-        /// <param name="Ids">给定的Id</param>
-        public void DeleteStatementsById(string[] Ids)
-        {
-            AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(Ids));
+            AGRequestService.DoReq(this, "POST", "/statements/delete", Quads);
         }
 
         /// <summary>
@@ -105,10 +96,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Limit">返回结果的最多个数</param>
         /// <param name="Offset">跳过部分返回结果</param>
         /// <returns></returns>
-        public string EvalSPARQLQuery(string Query, string Infer = "false", string Context = null, string NamedContext = null,
+        public DataTable EvalSPARQLQuery(string Query, string Infer = "false", string Context = null, string NamedContext = null,
             Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("query", Query);
             parameters.Add("queryLn", "sparql");
             parameters.Add("infer", Infer);
@@ -122,7 +113,25 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             parameters.Add("checkVariables", CheckVariables.ToString());
             if (Limit >= 0) parameters.Add("limit", Limit.ToString());
             if (Offset >= 0) parameters.Add("offset", Offset.ToString());
-            return AGRequestService.DoReqAndGet(this, "GET", "", parameters);
+
+            JObject rawResult = JObject.Parse(AGRequestService.DoReqAndGet(this, "GET", "", parameters));
+            JArray headers = rawResult["names"] as JArray;
+            JArray contents = rawResult["values"] as JArray;
+
+            DataTable resultTable = new DataTable();
+            foreach (JToken columnName in headers)
+                resultTable.Columns.Add(new DataColumn(columnName.Value<string>()));
+
+            foreach (JArray rowObj in contents)
+            {
+                DataRow aRow = resultTable.NewRow();
+                int index = 0;
+                foreach (JToken cell in rowObj)
+                    aRow[index++] = cell.Value<string>();
+                resultTable.Rows.Add(aRow);
+            }
+
+            return resultTable;
         }
 
         /// <summary>
@@ -136,18 +145,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Limit">返回结果的最多个数</param>
         /// <param name="Offset">跳过部分返回结果</param>
         /// <returns></returns>
-        public string GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context, string Infer = "false", 
+        public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context, string Infer = "false", 
             int Limit = -1, int Offset = -1)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
             Action<string, string[]> addArrayParam = delegate(string Key, string[] param)
             {
-                if (param.Length > 0)
+                if (param != null && param.Length > 0)
                 {
                     if (param.Length == 1)
                         parameters.Add(Key, param[0]);
                     else
-                        parameters.Add(Key, JsonConvert.SerializeObject(param));
+                        parameters.Add(Key, param);
                 }
             };
             addArrayParam("subj", Subj);
@@ -156,14 +165,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             addArrayParam("context", Context);
             if (Limit >= 0) parameters.Add("limit", Limit.ToString());
             if (Offset >= 0) parameters.Add("offset", Offset.ToString());
-            return AGRequestService.DoReqAndGet(this, "GET", "/statements", parameters);
+            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", parameters);
         }
-
-        /*
-         * 目前的问题
-         * 上面两个函数的返回类型
-         * subjEnd的作用
-         * subj参数能不能用数组传递
-        */
     }
 }

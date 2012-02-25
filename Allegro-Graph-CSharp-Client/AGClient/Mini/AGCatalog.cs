@@ -51,10 +51,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// 创建仓库
         /// </summary>
         /// <param name="Name">仓库名</param>
-        //public void CreateRepository(string Name)
-        //{
-        //    AGRequestService.DoReq(Server, "PUT", "/repositories/" + Name);
-        //}
         public void CreateRepository(string Name)
         {
             AGRequestService.DoReq(this, "PUT", "/repositories/" + Name);
