@@ -55,6 +55,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void ListCatalogsTest()
         {
             string[] catalogs = agClient.ListCatalogs();
+            Console.WriteLine(catalogs.Length);
             foreach (string catalog in catalogs)
             {
                 Console.WriteLine(catalog);

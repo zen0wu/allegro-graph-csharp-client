@@ -59,10 +59,20 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void CreateRepositoryTest()
         {
-            string newRepName = "blizzard";
+            string newRepName = "temp";
             Console.WriteLine(catalog.Url);
-            //Console.WriteLine(catalog.Url + "/repositories/" + newRepName);
             catalog.CreateRepository(newRepName);
+        }
+
+        /// <summary>
+        /// 测试 DeleteRepository()
+        /// </summary>
+        [Test]
+        public void DeleteRepositoryTest()
+        {
+            string repName = "temp";
+            Console.WriteLine(catalog.Url);
+            catalog.DeleteRepository(repName);
         }
     }
 }
