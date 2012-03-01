@@ -21,6 +21,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                     builder.Append("&");
                 builder.Append(key + "=" + value);
             };
+
             foreach (string key in parameters.Keys)
             {
                 object value = parameters[key];

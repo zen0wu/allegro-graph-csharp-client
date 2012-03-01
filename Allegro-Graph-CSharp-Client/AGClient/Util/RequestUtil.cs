@@ -22,7 +22,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
                 req.Credentials = new NetworkCredential(Username, Password);
             }
 
-            if (Body != null)
+            if (Method!="GET"&&Body != null)
             {
                 StreamWriter reqInWriter = new StreamWriter(req.GetRequestStream());
                 reqInWriter.Write(Body);

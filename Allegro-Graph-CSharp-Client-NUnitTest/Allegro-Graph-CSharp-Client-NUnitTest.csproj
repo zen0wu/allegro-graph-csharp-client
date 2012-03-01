@@ -53,6 +53,7 @@
     <Compile Include="MiniTest\AGRepositoryTest.cs" />
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
+    <Compile Include="OpenRDFTest\SailTest\AllegroGraphServerTest.cs" />
     <Compile Include="RunTest.cs" />
     <Compile Include="UtilTest\RequestUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,7 @@
       <Name>Allegro-Graph-CSharp-Client</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

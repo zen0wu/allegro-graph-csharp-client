@@ -57,6 +57,10 @@
     <Compile Include="AGClient\Mini\AGRequestService.cs" />
     <Compile Include="AGClient\Mini\AGServerInfo.cs" />
     <Compile Include="AGClient\Mini\IAGUrl.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\Statement.cs" />
+    <Compile Include="AGClient\OpenRDF\Repository\Repository.cs" />
+    <Compile Include="AGClient\OpenRDF\Repository\RepositoryConnection.cs" />
+    <Compile Include="AGClient\OpenRDF\Sail\AllegroGraphServer.cs" />
     <Compile Include="AGClient\Util\AGRequestException.cs" />
     <Compile Include="AGClient\Util\RequestUtil.cs" />
     <Compile Include="Program.cs" />
@@ -64,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AGClient\OpenRDF\Query\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

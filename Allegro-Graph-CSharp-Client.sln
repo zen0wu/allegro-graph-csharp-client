@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allegro-Graph-CSharp-Client", "Allegro-Graph-CSharp-Client\Allegro-Graph-CSharp-Client.csproj", "{9ECE89F7-87D4-492C-BC2D-46AA8CD28582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allegro-Graph-CSharp-Client-Test", "Allegro-Graph-CSharp-Client-Test\Allegro-Graph-CSharp-Client-Test.csproj", "{EC468D77-7978-40E3-BB9D-73099A1C8814}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A182453D-0C79-4F69-9707-F17DAFF3380A}"
 	ProjectSection(SolutionItems) = preProject
 		Allegro-Graph-CSharp-Client.vsmdi = Allegro-Graph-CSharp-Client.vsmdi
@@ -37,16 +35,6 @@ Global
 		{9ECE89F7-87D4-492C-BC2D-46AA8CD28582}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9ECE89F7-87D4-492C-BC2D-46AA8CD28582}.Release|x86.ActiveCfg = Release|x86
 		{9ECE89F7-87D4-492C-BC2D-46AA8CD28582}.Release|x86.Build.0 = Release|x86
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EC468D77-7978-40E3-BB9D-73099A1C8814}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A1A07E3-ABC0-4171-9146-FBCBCB5F49B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A1A07E3-ABC0-4171-9146-FBCBCB5F49B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A1A07E3-ABC0-4171-9146-FBCBCB5F49B4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

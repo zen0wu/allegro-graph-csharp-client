@@ -74,5 +74,19 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Console.WriteLine(catalog.Url);
             catalog.DeleteRepository(repName);
         }
+
+        /// <summary>
+        /// 测试 ListRepositories()
+        /// </summary>
+        [Test]
+        public void ListRepositoriesTest()
+        {
+             Console.WriteLine(catalog.Url);
+             string[] repos = catalog.ListRepositories();
+             foreach (string repo in repos)
+             {
+                 Console.WriteLine(repo);
+             }
+        }
     }
 }

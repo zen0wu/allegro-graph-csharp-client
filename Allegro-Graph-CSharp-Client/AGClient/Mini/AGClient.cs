@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -48,6 +49,30 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public AGCatalog OpenCatalog(string Name)
         {
             return new AGCatalog(Server, Name);
+        }
+
+        /// <summary>
+        /// 取出init文件内容
+        /// </summary>
+        /// <param name="Name">Catalog的唯一名字</param>
+        /// <returns>返回打开的Catalog</returns>
+        public string GetInitFile()
+        {
+            return AGRequestService.DoReqAndGet(Server, "GET", "/initfile", null, false);
+        }
+
+        public void SetInitFile(string content = null, bool restart = true)
+        {
+            //Console.WriteLine(Server.Url + "/initfile");
+            if (string.IsNullOrEmpty(content))
+            {
+                AGRequestService.DoReq(Server, "DELETE", "/initfile");
+            }
+            else
+            {
+                //AGRequestService.DoReq(Server, "PUT", "/initfile?" + "restart="+restart, content,true);
+                AGRequestService.DoReq(Server, "PUT", string.Format("/initfile?restart={0}",restart), content,true);
+            }
         }
     }
 }

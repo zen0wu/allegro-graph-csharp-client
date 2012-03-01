@@ -14,9 +14,22 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         private AGServerInfo Server;
         private string Name;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Server">服务器</param>
+        /// <param name="Name">CatalogName,null 返回rootCatalog</param>
+        /// <returns></returns>
         public AGCatalog(AGServerInfo Server, string Name)
         {
-            CatalogUrl = Server.Url + "/catalogs/" + Name;
+            if (string.IsNullOrEmpty(Name))
+            {
+                CatalogUrl = Server.Url + "/";
+            }
+            else
+            {
+                CatalogUrl = Server.Url + "/catalogs/" + Name;
+            }
             this.Name = Name;
             this.Server = Server;
         }
@@ -54,7 +67,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Name">仓库名</param>
         public void CreateRepository(string Name)
         {
-            AGRequestService.DoReq(this, "PUT", "/repositories/" + Name);
+            AGRequestService.DoReq(this, "PUT", "/repositories/" + Name,null,true);
         }
 
         /// <summary>
@@ -65,6 +78,15 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public AGRepository OpenRepository(string Name)
         {
             return new AGRepository(this, Name);
+        }
+
+        /// <summary>
+        /// 获取catalog名称
+        /// </summary>
+        /// <returns>catalog名称</returns>
+        public string GetName()
+        {
+            return this.Name;
         }
     }
 }
