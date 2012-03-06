@@ -51,10 +51,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
            get { return _prefix; }
            set { this._prefix = value; }
        }
-       public string Name
+       public string NameSpace
        {
            get { return _name; }
            set { this._name = value; }
+       }
+
+       public Namespace(string p, string n)
+       {
+           this._name = n;
+           this._prefix = p;
        }
 
        public override string ToString()

@@ -342,10 +342,10 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void ListNamespaces()
         {
-            Dictionary<string, string> results = repository.ListNamespaces();
-            foreach (string s in results.Keys)
+            List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> results = repository.ListNamespaces();
+            foreach (Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace nspace in results)
             {
-                Console.WriteLine(s);
+                Console.WriteLine(nspace.Prefix+"#"+nspace.NameSpace);
             }
         }
 

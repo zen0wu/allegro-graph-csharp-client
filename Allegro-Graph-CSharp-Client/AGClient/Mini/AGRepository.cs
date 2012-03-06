@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Data;
+using System.IO;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -49,7 +50,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public int GetSize(string Context = null)
         {
             Dictionary<string, object> parameters = null;
-            if (Context != null) 
+            if (Context != null)
             {
                 parameters = new Dictionary<string, object>();
                 parameters.Add("context", Context);
@@ -125,7 +126,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             if (NamedContext != null) parameters.Add("namedContext", NamedContext);
             if (Bindings != null)
             {
-                foreach (string vari in Bindings.Keys) 
+                foreach (string vari in Bindings.Keys)
                     parameters.Add("$" + vari, HttpUtility.UrlEncode(Bindings[vari]));
             }
             parameters.Add("checkVariables", CheckVariables.ToString());
@@ -163,7 +164,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Limit">返回结果的最多个数</param>
         /// <param name="Offset">跳过部分返回结果</param>
         /// <returns></returns>
-        public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context, string Infer = "false", 
+        public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context, string Infer = "false",
             int Limit = -1, int Offset = -1)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -188,12 +189,44 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 
         public void DeleteStatementsById(string[] ids)
         {
-            AGRequestService.DoReq(this,"POST","/statements/delete?ids=true",JsonConvert.SerializeObject(ids));
+            AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(ids));
         }
 
-        public Dictionary<string, string> ListNamespaces()
+        public List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> ListNamespaces()
         {
-            return AGRequestService.DoReqAndGet<Dictionary<string,string>>(this,"GET","/namespaces");
+            return AGRequestService.DoReqAndGet<List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace>>(this, "GET", "/namespaces");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="format"></param>
+        /// <param name="baseUrl"></param>
+        /// <param name="context"></param>
+        /// <param name="serverSide"></param>
+        public void LoadFile(string filePath, string format, string baseUrl = null, string context = null, bool serverSide = false)
+        {
+            string contentType = string.Empty;
+            if (format == "ntriples")
+            {
+                contentType = "text/plain";
+            }
+            else if (format == "rdf/xml")
+            {
+                contentType = "application/rdf+xml";
+            }
+            string fileContent = string.Empty;
+            if (!serverSide)
+            {
+                StreamReader sr = new StreamReader(filePath);
+                fileContent = sr.ReadToEnd();
+                sr.Close();
+                filePath = null;
+            }
+            string vars = string.Format("file={0}&context={1}&baseUrl={2}",HttpUtility.UrlEncode(filePath), HttpUtility.UrlEncode(context), HttpUtility.UrlEncode(baseUrl));
+            string relativeUrl = "/statements?" + vars;
+            AGRequestService.DoReq(this, "POST", relativeUrl, contentType, fileContent);
         }
     }
 }

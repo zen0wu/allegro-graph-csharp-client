@@ -93,6 +93,20 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             RequestUtil.DoReq(absUrl, Method, bodyString, contentType, username, password);
         }
 
+        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl,string ContentType, object Body = null, bool NeedsAuth = true)
+        {
+            string absUrl, contentType, bodyString;
+            PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
+            string username = null, password = null;
+            if (NeedsAuth)
+            {
+                username = Base.Username;
+                password = Base.Password;
+            }
+            contentType = ContentType;
+            RequestUtil.DoReq(absUrl, Method, bodyString, contentType, username, password);
+        }
+
         /// <summary>
         /// 执行HTTP请求，返回JSON格式的结果
         /// </summary>
@@ -101,7 +115,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
-            Console.WriteLine(absUrl);
+            //Console.WriteLine(absUrl);
             string username = null, password = null;
             if (NeedsAuth)
             {

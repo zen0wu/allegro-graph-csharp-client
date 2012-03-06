@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Rio;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model;
@@ -26,6 +27,24 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="serverSide"></param>
         public void AddFile(string filePath, string baseUrl = null, RDFFormat format = null, string context = null, bool serverSide = false)
         {
+            if (baseUrl != null)
+            {
+                filePath = string.Format("{0}\\{1}", baseUrl, filePath);
+            }
+            FileInfo file = new FileInfo(filePath);
+            string[] nTripleExts = { ".nt", ".ntriples" };
+            string[] rdfExts = { ".rdf", ".owl" };
+            string fileFormat = string.Empty;
+            if (nTripleExts.Contains(file.Extension.ToLower()))
+            {
+                fileFormat = "ntriples";
+            }
+            else if (rdfExts.Contains(file.Extension.ToLower()))
+            {
+                fileFormat = "rdf/xml";
+            }
+            _repository.GetMiniRepository().LoadFile(filePath, fileFormat, null, context, false);
+
         }
         public void AddStatement(Statement statement, string[] contexts = null)
         {
@@ -68,7 +87,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             _repository.GetMiniRepository().AddStatements(triples_or_quads);
         }
 
-        public int RemoveTriples(string subj, string pred,string obj,string contexts=null)
+        public int RemoveTriples(string subj, string pred, string obj, string contexts = null)
         {
             return _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, contexts);
         }
@@ -86,7 +105,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             _repository.GetMiniRepository().DeleteStatementsById(tids);
         }
 
-        public Dictionary<string, string> GetNamespaces()
+        public List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> GetNamespaces()
         {
             return _repository.GetMiniRepository().ListNamespaces();
         }
