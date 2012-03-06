@@ -54,6 +54,7 @@
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
     <Compile Include="OpenRDFTest\SailTest\AllegroGraphServerTest.cs" />
+    <Compile Include="OpenRDFTest\SailTest\SpecTest.cs" />
     <Compile Include="RunTest.cs" />
     <Compile Include="UtilTest\RequestUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

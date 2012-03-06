@@ -24,9 +24,22 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             this.Catalog = Catalog;
         }
 
+        /// <summary>
+        /// Constructor for OpenSession
+        /// </summary>
+        /// <param name="repoUrl">Session Url</param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        public AGRepository(string repoUrl, string userName, string password)
+        {
+            this.RepoUrl = repoUrl;
+            this.Catalog = new AGCatalog(new AGServerInfo(repoUrl, userName, password), null);
+        }
+
         public string Url { get { return RepoUrl; } }
         public string Username { get { return Catalog.Username; } }
         public string Password { get { return Catalog.Password; } }
+        public string DatabaseName { get { return this.Name; } }
 
         /// <summary>
         /// 返回仓库的大小
@@ -44,6 +57,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
         }
 
+
+        public string[] GetBlankNodes(int amount = 1)
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "POST", "/blankNodes", string.Format("amount={0}", amount));
+        }
         /// <summary>
         /// 增加三元组
         /// </summary>
@@ -166,6 +184,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             if (Limit >= 0) parameters.Add("limit", Limit.ToString());
             if (Offset >= 0) parameters.Add("offset", Offset.ToString());
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", parameters);
+        }
+
+        public void DeleteStatementsById(string[] ids)
+        {
+            AGRequestService.DoReq(this,"POST","/statements/delete?ids=true",JsonConvert.SerializeObject(ids));
+        }
+
+        public Dictionary<string, string> ListNamespaces()
+        {
+            return AGRequestService.DoReqAndGet<Dictionary<string,string>>(this,"GET","/namespaces");
         }
     }
 }

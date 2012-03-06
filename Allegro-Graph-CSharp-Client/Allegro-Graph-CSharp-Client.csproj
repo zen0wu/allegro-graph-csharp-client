@@ -58,11 +58,17 @@
     <Compile Include="AGClient\Mini\AGServerInfo.cs" />
     <Compile Include="AGClient\Mini\IAGUrl.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Statement.cs" />
-    <Compile Include="AGClient\OpenRDF\Repository\Repository.cs" />
-    <Compile Include="AGClient\OpenRDF\Repository\RepositoryConnection.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\Value.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\ValueFactory.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\Repository.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnection.cs" />
+    <Compile Include="AGClient\OpenRDF\Rio\RDFFormat.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\AllegroGraphServer.cs" />
+    <Compile Include="AGClient\OpenRDF\Sail\Spec.cs" />
+    <Compile Include="AGClient\OpenRDF\Util\Uris.cs" />
     <Compile Include="AGClient\Util\AGRequestException.cs" />
     <Compile Include="AGClient\Util\RequestUtil.cs" />
+    <Compile Include="AGClient\OpenRDF\Util\Misc.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AGClient\OpenRDF\Query\" />
+    <Folder Include="AGClient\OpenRDF\Vocabulary\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Allegro_Graph_CSharp_Client.AGClient.Util;
 using Allegro_Graph_CSharp_Client.AGClient.Mini;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail;
-using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository;
+using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil;
 
 namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
 {
@@ -77,7 +77,6 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
             Repository repository = catalog.GetRepository("temp", AccessVerb.CREATE);
         }
 
-        //chainyi的权限好像不够？？？！！！
         [Test]
         public void SetInitFileTest()
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Allegro_Graph_CSharp_Client.AGClient.Mini;
-using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository;
+using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
 {
@@ -15,10 +15,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="host">服务器</param>
-        /// <param name="port">端口号，默认为10035</param>
-        /// <param name="user">用户名,默认为空</param>
-        /// <param name="password">密码，默认为空</param>
+        /// <param name="host">server</param>
+        /// <param name="port">port number，default 10035</param>
+        /// <param name="user">user name,default null</param>
+        /// <param name="password">password，default null</param>
         /// <returns></returns>
         public AllegroGraphServer(string host, int port = 10035, string user = null, string password = null)
         {
@@ -60,9 +60,22 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
         {
             _agClient.SetInitFile(content, restart);
         }
+
+        public Repository OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
+        {
+            AGRepository _agRepository = _agClient.OpenSession(spec, autoCommit, lifetime, loadInitFile);
+            return new Repository(_agRepository);
+        }
+
+        public Repository OpenFederated(string[] specs, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
+        {
+            string spec = Spec.Federate(specs);
+            return OpenSession(spec, autoCommit, lifetime, loadInitFile);
+        }
+
+
+
     }
-
-
 
     public class Catalog
     {
@@ -79,10 +92,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
         {
             _agCatalog = catalog;
         }
-        public Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository.Repository CreateRepository(string repName)
+        public Repository CreateRepository(string repName)
         {
             _agCatalog.CreateRepository(repName);
-            return new Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository.Repository(this, repName);
+            return new Repository(this, repName);
         }
         public void DeleteRepository(string repName)
         {
@@ -97,12 +110,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
             return _agCatalog.ListRepositories();
         }
         /// <summary>
-        /// 取出repository
+        /// get repository
         /// </summary>
-        /// <param name="name">repository名字</param>
-        /// <param name="AccessVerb">访问方式</param>
+        /// <param name="name">repository name</param>
+        /// <param name="AccessVerb">access method</param>
         /// <returns>Repository</returns>
-        public Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository.Repository GetRepository(string name, AccessVerb access_verb = AccessVerb.OPEN)
+        public Repository GetRepository(string name, AccessVerb access_verb = AccessVerb.OPEN)
         {
             string[] repositories = this.ListRepositories();
             bool exist = repositories.Contains(name);
@@ -134,7 +147,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
                     throw new Allegro_Graph_CSharp_Client.AGClient.Util.AGRequestException(string.Format("Can't open a triple store named {0} because there is none.", name));
                 }
             }
-            return new Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Repository.Repository(this, name);
+            return new Repository(this, name);
         }
     }
 }

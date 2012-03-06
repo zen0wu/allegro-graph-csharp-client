@@ -101,6 +101,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
+            Console.WriteLine(absUrl);
             string username = null, password = null;
             if (NeedsAuth)
             {

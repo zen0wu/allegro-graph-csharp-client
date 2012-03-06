@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
 {
-    class Statement
+    public class Statement
     {
         private string _subject;
         private string _predicate;
@@ -18,22 +18,27 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
             this._object = obj;
             this._context = context;
         }
-        public string getContext()
+        public string Subject
         {
-            return this._context;
+            get { return _subject; }
+            set { _subject = value; }
         }
-        string getObject()
+        public string Object
         {
-            return this._object;
+            get { return _object; }
+            set { _object = value; }
         }
-        string getPredicate()
+        public string Predicate
         {
-            return this._predicate;
+            get { return _predicate; }
+            set { _predicate = value; }
         }
-        string getSubject()
+        public string Context
         {
-            return this._subject;
+            get { return _context; }
+            set { _context = value; }
         }
+       
         //void setQuad(object string_tuple)
         //{
         //}

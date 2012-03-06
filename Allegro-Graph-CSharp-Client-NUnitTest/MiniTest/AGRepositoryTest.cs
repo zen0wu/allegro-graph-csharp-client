@@ -326,5 +326,29 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             }
         }
 
+        [Test]
+        public void GetBlankNodesTest()
+        {
+            string[] results = repository.GetBlankNodes(3);
+            if (results != null)
+            {
+                foreach (string result in results)
+                {
+                    Console.WriteLine(result);
+                }
+            }
+        }
+
+        [Test]
+        public void ListNamespaces()
+        {
+            Dictionary<string, string> results = repository.ListNamespaces();
+            foreach (string s in results.Keys)
+            {
+                Console.WriteLine(s);
+            }
+        }
+
+
     }
 }

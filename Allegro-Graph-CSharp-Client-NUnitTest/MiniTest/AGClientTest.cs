@@ -35,7 +35,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             AGClient agClient2 = new AGClient(server);
             Assert.AreNotSame(agClient1, agClient2);
         }
-        
+
         /// <summary>
         /// 测试 GetVersion()
         /// </summary>
@@ -73,6 +73,20 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             //Assert.IsInstanceOf(Type.GetType("Allegro_Graph_CSharp_Client.AGClient.Mini.AGCatalog"), agClient.OpenCatalog(catalogName));
             bool result = agClient.OpenCatalog(catalogName) is AGCatalog;
             Assert.IsTrue(result);
+        }
+        [Test]
+        public void OpenSessionTest()
+        {
+            AGRepository result = agClient.OpenSession("<chainyi:CSharpClient>");
+            Console.WriteLine(result.Url);
+            Console.WriteLine(result.Username);
+            Console.WriteLine(result.Password);
+            //foreach (string[] statements in result.GetStatements(null, null, null, null))
+            //{
+            //    foreach (string statement in statements)
+            //        Console.WriteLine(statement);
+            //}
+
         }
     }
 }

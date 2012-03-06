@@ -19,21 +19,21 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// 返回AG服务器的版本
+        /// Get the version of allegrograph server
         /// </summary>
         /// <returns></returns>
         public string GetVersion()
         {
-            return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version", null,false);
+            return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version", null, false);
         }
 
         /// <summary>
-        /// 列出所有的Catalog
+        /// List all of the Catalog's name
         /// </summary>
         /// <returns></returns>
         public string[] ListCatalogs()
         {
-            string result = AGRequestService.DoReqAndGet(Server, "GET", "/catalogs",null,false);
+            string result = AGRequestService.DoReqAndGet(Server, "GET", "/catalogs", null, false);
             JArray arr = JArray.Parse(result);
             string[] catalogs = new string[arr.Count];
             for (int i = 0; i < catalogs.Length; ++i)
@@ -42,24 +42,55 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// 打开特定的Catalog
+        /// Open Catalog
         /// </summary>
-        /// <param name="Name">Catalog的唯一名字</param>
-        /// <returns>返回打开的Catalog</returns>
+        /// <param name="Name">Catalog name</param>
+        /// <returns>Catalog</returns>
         public AGCatalog OpenCatalog(string Name)
         {
             return new AGCatalog(Server, Name);
         }
 
+
         /// <summary>
-        /// 取出init文件内容
+        /// Open a session on a federated, reasoning, or filtered store.
         /// </summary>
-        /// <param name="Name">Catalog的唯一名字</param>
-        /// <returns>返回打开的Catalog</returns>
+        /// <returns></returns>
+        public AGRepository OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
+        {
+            string param = string.Empty;
+            if (lifetime == -1)
+            {
+                param = string.Format("/session?autoCommit={0}&loadInitFile={1}&store={2}", autoCommit, loadInitFile, spec);
+            }
+            else
+            {
+                param = string.Format("/session?autoCommit={0}&loadInitFile={1}&store={2}&lifetime={3}", autoCommit, loadInitFile, spec, lifetime);
+            }
+            //Console.WriteLine(param);
+            string sessionUrl = AGRequestService.DoReqAndGet(this.Server, "POST", param);
+            return new AGRepository(sessionUrl, Server.Username, Server.Password);
+        }
+
+        /// <summary>
+        /// Get the initialization file contents
+        /// </summary>
+        /// <param name="Name">Catalog name</param>
+        /// <returns>return opened Catalog</returns>
         public string GetInitFile()
         {
             return AGRequestService.DoReqAndGet(Server, "GET", "/initfile", null, false);
         }
+
+        /// <summary>
+        /// Replace the current initialization file contents with the
+        /// 'content' string or remove if null. `restart`, which defaults
+        /// to true, specifies whether any running shared back-ends should
+        /// be shut down, so that subsequent requests will be handled by
+        /// back-ends that include the new code.
+        /// </summary>
+        /// <param name="Name">Catalog name</param>
+        /// <returns>return Catalog</returns>
 
         public void SetInitFile(string content = null, bool restart = true)
         {
@@ -71,7 +102,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             else
             {
                 //AGRequestService.DoReq(Server, "PUT", "/initfile?" + "restart="+restart, content,true);
-                AGRequestService.DoReq(Server, "PUT", string.Format("/initfile?restart={0}",restart), content,true);
+                AGRequestService.DoReq(Server, "PUT", string.Format("/initfile?restart={0}", restart), content, true);
             }
         }
     }
