@@ -135,5 +135,27 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             string result = DoReqAndGet(Base, Method, RelativeUrl, Body, NeedsAuth);
             return JsonConvert.DeserializeObject<T>(result);
         }
+
+        //add accept param
+        public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, string Accept,object Body = null, bool NeedsAuth = true)
+        {
+            string absUrl, contentType, bodyString;
+            PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
+            //Console.WriteLine(absUrl);
+            string username = null, password = null;
+            if (NeedsAuth)
+            {
+                username = Base.Username;
+                password = Base.Password;
+            }
+
+            return RequestUtil.DoJsonReq(absUrl, Method, bodyString,Accept, contentType, username, password);
+        }
+
+        public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl,string Accept, object Body = null, bool NeedsAuth = true)
+        {
+            string result = DoReqAndGet(Base, Method, RelativeUrl,Accept, Body, NeedsAuth);
+            return JsonConvert.DeserializeObject<T>(result);
+        }
     }
 }

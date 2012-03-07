@@ -81,5 +81,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
 
             return returnBody;
         }
+
+        public static string DoJsonReq(string Url, string Method, string Body, string Accept,
+                                       string ContentType = "application/json; utf-8",
+                                       string Username = null, string Password = null)
+        {
+            HttpStatusCode status;
+            string returnBody;
+            MakeReq(Url, Method, Body, ContentType, true, Accept, Username, Password, out status, out returnBody);
+
+            if ((int)status < 200 || (int)status > 204)
+                throw new AGRequestException("Error while performing the request with error code " + (int)status);
+
+            return returnBody;
+        }
     }
 }

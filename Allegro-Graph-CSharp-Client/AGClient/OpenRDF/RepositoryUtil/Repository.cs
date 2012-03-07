@@ -14,6 +14,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         private Catalog _catalog;
 
         public Catalog catalog { get { return this._catalog; } }
+        public string OldUrl { get; set; }
+        public string Url
+        {
+            get { return _agRepository.Url; }
+            set { _agRepository.Url = value; }
+        }
 
         public Repository(Catalog catalog, string name)
         {

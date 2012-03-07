@@ -49,7 +49,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.UtilTest
         public void DoReqGetReturnBodyTest()
         {
             url = "http://172.16.2.21:10035"; 
-            string returnBody =  RequestUtil.DoJsonReq(url, method, body,"text/html");
+            string returnBody =  RequestUtil.DoJsonReq(url, method, body,"text/html",null,null);
             Assert.Pass(returnBody);
         }
 

@@ -348,6 +348,15 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
                 Console.WriteLine(nspace.Prefix+"#"+nspace.NameSpace);
             }
         }
+        [Test]
+        public void ListIndicesTest()
+        {
+            string[] indexs = repository.ListIndices();
+            foreach (string index in indexs)
+            {
+                Console.WriteLine(index);
+            }
+        }
 
 
     }

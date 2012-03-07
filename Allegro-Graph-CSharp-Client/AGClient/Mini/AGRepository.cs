@@ -37,7 +37,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             this.Catalog = new AGCatalog(new AGServerInfo(repoUrl, userName, password), null);
         }
 
-        public string Url { get { return RepoUrl; } }
+        public string Url
+        {
+            get { return RepoUrl; }
+            set { RepoUrl = value; }
+        }
         public string Username { get { return Catalog.Username; } }
         public string Password { get { return Catalog.Password; } }
         public string DatabaseName { get { return this.Name; } }
@@ -58,6 +62,15 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
         }
 
+        public AGCatalog GetCatalog()
+        {
+            return this.Catalog;
+        }
+
+        public string[] ListContexts()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/contexts");
+        }
 
         public string[] GetBlankNodes(int amount = 1)
         {
@@ -187,6 +200,20 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", parameters);
         }
 
+        public string[][] GetStatementsById(string ids, bool returnIDs = true)
+        {
+            string accept = string.Empty;
+            if (returnIDs)
+            {
+                accept = "application/x-quints+json";
+            }
+            else
+            {
+                accept = "application/json";
+            }
+            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements/id/id=" + ids, accept, null, true);
+        }
+
         public void DeleteStatementsById(string[] ids)
         {
             AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(ids));
@@ -197,6 +224,25 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace>>(this, "GET", "/namespaces");
         }
 
+        public string GetNamespaces(string prefix)
+        {
+            return AGRequestService.DoReqAndGet<string>(this, "GET", "/namespaces/" + prefix);
+        }
+
+        public void AddNamespace(string prefix, string name)
+        {
+            AGRequestService.DoReq(this, "PUT", "/namespaces/" + prefix, "text/plain", null, true);
+        }
+
+        public void DeleteNamespace(string prefix)
+        {
+            AGRequestService.DoReq(this, "DELETE", "/namespaces/" + prefix);
+        }
+
+        public void ClearNamespaces(bool reset = true)
+        {
+            AGRequestService.DoReq(this, "DELETE", string.Format("/namespaces/reset={0}", reset));
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -224,9 +270,81 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 sr.Close();
                 filePath = null;
             }
-            string vars = string.Format("file={0}&context={1}&baseUrl={2}",HttpUtility.UrlEncode(filePath), HttpUtility.UrlEncode(context), HttpUtility.UrlEncode(baseUrl));
+            string vars = string.Format("file={0}&context={1}&baseUrl={2}", HttpUtility.UrlEncode(filePath), HttpUtility.UrlEncode(context), HttpUtility.UrlEncode(baseUrl));
             string relativeUrl = "/statements?" + vars;
             AGRequestService.DoReq(this, "POST", relativeUrl, contentType, fileContent);
+        }
+
+        public string[] ListIndices()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices");
+        }
+        public string[] ListValidIndices()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices?listValid=true");
+        }
+        public void AddIndex(string indexType)
+        {
+            AGRequestService.DoReq(this, "PUT", "/indices/" + indexType);
+        }
+        public void DropIndex(string indexType)
+        {
+            AGRequestService.DoReq(this, "DELETE", "/indices/" + indexType);
+        }
+
+        public string OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
+        {
+            string relativeUrl = string.Empty;
+            if (lifetime == -1)
+            {
+                relativeUrl = string.Format("/session?autoCommit={0},loadInitFile={1},store={2}", autocommit, loadinitfile, spec);
+            }
+            else
+            {
+                relativeUrl = string.Format("/session?autoCommit={0}, lifetime={1},loadInitFile={2}, store={3}", autocommit, lifetime, loadinitfile, spec);
+            }
+            return AGRequestService.DoReqAndGet<string>(this, "POST", relativeUrl);
+            //return new AGRepository(sessionUrl, this.Username, this.Password);
+        }
+        public void CloseSession()
+        {
+            try
+            {
+                AGRequestService.DoReq(this, "POST", "/session/close");
+            }
+            catch { }
+        }
+        public void Commit()
+        {
+            AGRequestService.DoReq(this, "POST", "/session/commit");
+        }
+        public void Rollback()
+        {
+            AGRequestService.DoReq(this, "POST", "/rollback");
+        }
+
+        public void EnableTripleCache(int size = -1)
+        {
+            string queryUrl = string.Empty;
+            if (size == -1)
+            {
+                queryUrl = string.Format("/tripleCache");
+            }
+            else
+            {
+                queryUrl = string.Format("/tripleCache?size={0}", size);
+            }
+            AGRequestService.DoReq(this, "PUT", queryUrl);
+        }
+
+        public void DisableTripleCache()
+        {
+            AGRequestService.DoReq(this, "DELETE", "/tripleCache");
+        }
+
+        public int GetTripleCacheSize()
+        {
+            return AGRequestService.DoReqAndGet<int>(this, "GET", "/tripleCache");
         }
     }
 }

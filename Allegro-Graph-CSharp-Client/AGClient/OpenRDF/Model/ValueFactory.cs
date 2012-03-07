@@ -11,7 +11,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         {
             if (nodeID == null)
             {
-                return null;
+                return new BNode((new Random()).Next().ToString());
             }
             else
             {

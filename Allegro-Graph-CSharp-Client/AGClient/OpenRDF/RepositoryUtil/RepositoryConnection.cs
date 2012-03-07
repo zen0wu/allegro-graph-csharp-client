@@ -17,6 +17,115 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             this._repository = repository;
         }
 
+        public int Size(List<string> contexts = null)
+        {
+            if (contexts == null)
+            {
+                return _repository.GetMiniRepository().GetSize();
+            }
+            else if (contexts.Count == 1)
+            {
+                return _repository.GetMiniRepository().GetSize(contexts[0]);
+            }
+            else
+            {
+                int count = 0;
+                foreach (string context in contexts)
+                {
+                    count += _repository.GetMiniRepository().GetSize(context);
+                }
+                return count;
+            }
+        }
+
+        public bool IsEmpty(List<string> contexts = null)
+        {
+            return Size(contexts) == 0;
+        }
+
+
+        public string GetSpec()
+        {
+            string catalogName = _repository.GetMiniRepository().GetCatalog().GetName();
+            if (catalogName == null || catalogName == "/")
+                catalogName = "";
+            else
+                catalogName += ":";
+            return string.Format("<{0}{1}>", catalogName, _repository.GetDatabaseName());
+        }
+
+        public string[] GetContextIDs()
+        {
+            return _repository.GetMiniRepository().ListContexts();
+        }
+
+        public List<Namespace> GetNamespaces()
+        {
+            return _repository.GetMiniRepository().ListNamespaces();
+        }
+
+        public string GetNamespaces(string prefix)
+        {
+            return _repository.GetMiniRepository().GetNamespaces(prefix);
+        }
+
+        /// <summary>
+        /// Sets the prefix for a namespace.
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="name"></param>
+        public void SetNamespace(string prefix, string name)
+        {
+            _repository.GetMiniRepository().AddNamespace(prefix, name);
+        }
+
+        /// <summary>
+        /// Removes a namespace declaration by removing the association between a prefix and a namespace name
+        /// </summary>
+        /// <param name="prefix"></param>
+        public void RemoveNamespace(string prefix)
+        {
+            _repository.GetMiniRepository().DeleteNamespace(prefix);
+        }
+
+        /// <summary>
+        ///    Deletes all namespaces in this repository for the current user. If a
+        ///    reset` argument of `True` is passed, the user's namespaces are reset
+        ///    to the default set of namespaces, otherwise all namespaces are cleared.
+        /// </summary>
+        /// <param name="reset"></param>
+        public void ClearNamespace(bool reset = true)
+        {
+            _repository.GetMiniRepository().ClearNamespaces(reset);
+        }
+
+        public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context,
+                                        string Infer = "false", int Limit = -1, int Offset = -1)
+        {
+            return _repository.GetMiniRepository().GetStatements(Subj, Pred, Obj, Context, Infer, Limit, Offset);
+        }
+
+
+        public string[][] GetStatementsById(string ids, bool returnIDs = true)
+        {
+            return _repository.GetMiniRepository().GetStatementsById(ids, returnIDs);
+        }
+
+        public Statement CreateStatement(string subj, string pred, string obj, string context = null)
+        {
+            return ValueFactory.CreateStatement(subj, pred, obj, context);
+        }
+
+        public URI CreateURI(string uri = null, string nameSpace = null, string localname = null)
+        {
+            return ValueFactory.CreateURI(uri, nameSpace, localname);
+        }
+
+        public BNode CreateBNode(string nodeID = null)
+        {
+            return ValueFactory.GetBNode(nodeID);
+        }
+
         /// <summary>
         ///     Loads a file into the triple store,a file can be loaded into only one context     
         /// </summary>
@@ -44,12 +153,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
                 fileFormat = "rdf/xml";
             }
             _repository.GetMiniRepository().LoadFile(filePath, fileFormat, null, context, false);
-
         }
+
+        /// <summary>
+        ///  Add the supplied statement to the specified contexts in the repository.
+        /// </summary>
+        /// <param name="statement"></param>
+        /// <param name="contexts"></param>
         public void AddStatement(Statement statement, string[] contexts = null)
         {
             AddTriple(statement.Subject, statement.Predicate, statement.Object, contexts);
         }
+
         public void AddStatement(string subj, string pred, string obj, string[] contexts = null)
         {
             AddTriple(subj, pred, obj, contexts);
@@ -87,13 +202,34 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             _repository.GetMiniRepository().AddStatements(triples_or_quads);
         }
 
-        public int RemoveTriples(string subj, string pred, string obj, string contexts = null)
+        /// <summary>
+        ///     Removes the statement(s) with the specified subject, predicate and object
+        ///     from the repository, optionally restricted to the specified contexts.
+        /// </summary>
+        /// <param name="subj"></param>
+        /// <param name="pred"></param>
+        /// <param name="obj"></param>
+        /// <param name="contexts"></param>
+        /// <returns></returns>
+        public int RemoveTriples(string subj, string pred, string obj, string[] contexts = null)
         {
-            return _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, contexts);
+            if (contexts == null || contexts.Length == 0)
+            {
+                return _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, null);
+            }
+            else
+            {
+                int count = 0;
+                foreach (string context in contexts)
+                {
+                    count += _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, context);
+                }
+                return count;
+            }
         }
-        public int RemoveStatement(Statement statement, string contexts = null)
+        public int RemoveStatement(Statement statement, string[] contexts = null)
         {
-            return _repository.GetMiniRepository().DeleteMatchingStatements(statement.Subject, statement.Predicate, statement.Object, contexts);
+            return RemoveTriples(statement.Subject, statement.Predicate, statement.Object, contexts);
         }
         /// <summary>
         /// Remove all quads with matching IDs.
@@ -105,9 +241,72 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             _repository.GetMiniRepository().DeleteStatementsById(tids);
         }
 
-        public List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> GetNamespaces()
+        public void RemoveQuads(string[][] Quads)
         {
-            return _repository.GetMiniRepository().ListNamespaces();
+            _repository.GetMiniRepository().DeleteStatements(Quads);
+        }
+
+        /// <summary>
+        ///  Removes all statements from designated contexts in the repository.  
+        ///  If 'contexts' is null, clears the repository of all statements.
+        /// </summary>
+        /// <param name="contexts"></param>
+        public void Clear(string[] contexts = null)
+        {
+            RemoveTriples(null, null, null, contexts);
+        }
+
+        public string[] ListIndices()
+        {
+            return _repository.GetMiniRepository().ListIndices();
+        }
+
+        public string[] ListValidIndices()
+        {
+            return _repository.GetMiniRepository().ListValidIndices();
+        }
+
+        public void AddIndex(string indexType)
+        {
+            _repository.GetMiniRepository().AddIndex(indexType);
+        }
+        public void DropIndex(string indexType)
+        {
+            _repository.GetMiniRepository().DropIndex(indexType);
+        }
+
+        public void OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
+        {
+            _repository.OldUrl = _repository.Url;
+            _repository.Url = _repository.GetMiniRepository().OpenSession(spec, autocommit, lifetime, loadinitfile);
+        }
+        public void CloseSession()
+        {
+            _repository.GetMiniRepository().CloseSession();
+            _repository.Url = _repository.OldUrl;
+        }
+        public void Commit()
+        {
+            _repository.GetMiniRepository().Commit();
+        }
+        public void Rollback()
+        {
+            _repository.GetMiniRepository().Rollback();
+        }
+
+        public void EnableTripleCache(int size = -1)
+        {
+            _repository.GetMiniRepository().EnableTripleCache();
+        }
+
+        public void DisableTripleCache()
+        {
+            _repository.GetMiniRepository().DisableTripleCache();
+        }
+
+        public int GetTripleCacheSize()
+        {
+            return _repository.GetMiniRepository().GetTripleCacheSize();
         }
     }
 }
