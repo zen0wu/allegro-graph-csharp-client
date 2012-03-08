@@ -128,8 +128,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="Limit">返回结果的最多个数</param>
         /// <param name="Offset">跳过部分返回结果</param>
         /// <returns></returns>
-        public DataTable EvalSPARQLQuery(string Query, string Infer = "false", string Context = null, string NamedContext = null,
-            Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
+        /// 
+        public string EvalSPARQLQuery(string Query, string Infer = "false", string Context = null, string NamedContext = null,
+           Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("query", Query);
@@ -145,8 +146,53 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             parameters.Add("checkVariables", CheckVariables.ToString());
             if (Limit >= 0) parameters.Add("limit", Limit.ToString());
             if (Offset >= 0) parameters.Add("offset", Offset.ToString());
+            return AGRequestService.DoReqAndGet(this, "GET", "", parameters);
+        }
 
-            JObject rawResult = JObject.Parse(AGRequestService.DoReqAndGet(this, "GET", "", parameters));
+
+        //public DataTable EvalSPARQLQuery(string Query, bool isReturnDataTable, string Infer = "false", string Context = null, string NamedContext = null,
+        //    Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
+        //{
+        //    JObject rawResult = JObject.Parse(EvalSPARQLQuery(Query,Infer,Context,NamedContext,Bindings,CheckVariables,Limit,Offset));
+        //    JArray headers = rawResult["names"] as JArray;
+        //    JArray contents = rawResult["values"] as JArray;
+
+        //    DataTable resultTable = new DataTable();
+        //    foreach (JToken columnName in headers)
+        //        resultTable.Columns.Add(new DataColumn(columnName.Value<string>()));
+
+        //    foreach (JArray rowObj in contents)
+        //    {
+        //        DataRow aRow = resultTable.NewRow();
+        //        int index = 0;
+        //        foreach (JToken cell in rowObj)
+        //            aRow[index++] = cell.Value<string>();
+        //        resultTable.Rows.Add(aRow);
+        //    }
+        //    return resultTable;
+        //}
+
+
+        public string EvalPrologQuery(string query, string infer = "false", int limit = -1, bool count = false, string accept = null)
+        {
+            if (accept == null){
+                if (count) accept = "text/integer";
+                else accept = "application/json";
+            }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("query", query);
+            parameters.Add("queryLn", "prolog");
+            parameters.Add("infer", infer);
+            parameters.Add("accept", accept);
+            if (limit >= 0) parameters.Add("limit", limit.ToString());
+
+            return AGRequestService.DoReqAndGet(this, "POST", null, parameters, true);
+        }
+
+        public DataTable QueryResultToDataTable(string result)
+        {
+            JObject rawResult = JObject.Parse(result);
             JArray headers = rawResult["names"] as JArray;
             JArray contents = rawResult["values"] as JArray;
 
@@ -162,9 +208,37 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                     aRow[index++] = cell.Value<string>();
                 resultTable.Rows.Add(aRow);
             }
-
             return resultTable;
         }
+        /// <summary>
+        /// Translate result to string array,the first row is names,the rests are values
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public string[][] QueryResultToArray(string result)
+        {
+            JObject rawResult = JObject.Parse(result);
+            JArray headers = rawResult["names"] as JArray;
+            JArray contents = rawResult["values"] as JArray;
+
+            string[][] resultArray = new string[headers.Count][];
+            int index = 0;
+            resultArray[0] = new string[headers.Count];
+            foreach (JToken columnName in headers)
+            {
+                resultArray[0][index++] = columnName.Value<string>();
+            }
+            int row = 1;
+            foreach (JArray rowObj in contents)
+            {
+                resultArray[row++] = new string[rowObj.Count];
+                index = 0;
+                foreach (JToken cell in rowObj)
+                    resultArray[row][index++] = cell.Value<string>();
+            }
+            return resultArray;
+        }
+
 
         /// <summary>
         /// 返回给定条件的triples

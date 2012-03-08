@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+using Allegro_Graph_CSharp_Client.AGClient.Mini;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Rio;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model;
+using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 {
@@ -52,6 +54,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             else
                 catalogName += ":";
             return string.Format("<{0}{1}>", catalogName, _repository.GetDatabaseName());
+        }
+
+        public AGRepository GetMiniRepository()
+        {
+            return _repository.GetMiniRepository();
         }
 
         public string[] GetContextIDs()
@@ -307,6 +314,38 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         public int GetTripleCacheSize()
         {
             return _repository.GetMiniRepository().GetTripleCacheSize();
+        }
+
+        public BooleanQuery PrepareBooleanQuery(string queryLanguage, string queryString,string contexts=null,
+                                                string namedContexts = null, bool includeInferred = false,
+                                                Dictionary<string,string> bindings=null,bool checkVariables=false)
+        {
+            BooleanQuery bQuery = new BooleanQuery();
+            bQuery.Querylanguage = queryLanguage;
+            bQuery.QueryString = queryString;
+            bQuery.Contexts = contexts;
+            bQuery.NamedContexts = namedContexts;
+            bQuery.IncludeInferred = includeInferred;
+            bQuery.Bindings = bindings;
+            bQuery.CheckVariables = checkVariables;
+            bQuery.Connection = this;
+            return bQuery;
+        }
+
+        public StringArrayQuery PrepareStringArrayQuery(string queryLanguage, string queryString, string contexts = null,
+                                                string namedContexts = null, bool includeInferred = false,
+                                                Dictionary<string, string> bindings = null, bool checkVariables = false)
+        {
+            StringArrayQuery sQuery = new StringArrayQuery();
+            sQuery.Querylanguage = queryLanguage;
+            sQuery.QueryString = queryString;
+            sQuery.Contexts = contexts;
+            sQuery.NamedContexts = namedContexts;
+            sQuery.IncludeInferred = includeInferred;
+            sQuery.Bindings = bindings;
+            sQuery.CheckVariables = checkVariables;
+            sQuery.Connection = this;
+            return sQuery;
         }
     }
 }

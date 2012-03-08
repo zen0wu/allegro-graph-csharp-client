@@ -153,7 +153,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void EvalSPARQLQueryTest()
         {
             string query = "select ?subj ?pred ?obj {?subj ?pred ?obj}";
-            DataTable dt = repository.EvalSPARQLQuery(query);
+            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
             foreach (DataColumn dc in dt.Columns)
                 Console.Write(dc.ColumnName + "\t");
             Console.WriteLine();
@@ -172,7 +172,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void EvalSPARQLQueryTest2()
         {
             string query = "select ?subj ?pred ?obj {?subj ?pre ?obj}";
-            DataTable dt = repository.EvalSPARQLQuery(query);
+            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
             foreach (DataColumn dc in dt.Columns)
                 Console.Write(dc.ColumnName + "\t");
             Console.WriteLine();
@@ -192,7 +192,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         {
             string query = "SELECT ?obj WHERE{ ?subj  <http://example.org/pred>  ?obj  . FILTER regex(?obj, \"ga\", \"i\") }";
             //Console.WriteLine(query);
-            DataTable dt = repository.EvalSPARQLQuery(query);
+            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
             foreach (DataColumn dc in dt.Columns)
                 Console.Write(dc.ColumnName + "\t");
             Console.WriteLine();
@@ -212,7 +212,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         {
             string query = "select ?subj ?pred ?obj {?subj ?pred ?obj}";
             int returnNum = 2;
-            DataTable dt = repository.EvalSPARQLQuery(query, "false", null, null, null, false, returnNum, -1);
+            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query, "false", null, null, null, false, returnNum, -1));
             foreach (DataColumn dc in dt.Columns)
                 Console.Write(dc.ColumnName + "\t");
             Console.WriteLine();

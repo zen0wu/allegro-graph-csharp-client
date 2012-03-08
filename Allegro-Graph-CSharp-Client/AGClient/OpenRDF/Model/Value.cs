@@ -27,6 +27,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         {
             return string.Format("<{0}>",Uri);
         }
+        public override string ToString()
+        {
+            return _uri;
+        }
     }
 
     public class BNode

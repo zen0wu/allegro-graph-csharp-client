@@ -60,12 +60,15 @@
     <Compile Include="AGClient\OpenRDF\Model\Statement.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Value.cs" />
     <Compile Include="AGClient\OpenRDF\Model\ValueFactory.cs" />
+    <Compile Include="AGClient\OpenRDF\Query\Query.cs" />
+    <Compile Include="AGClient\OpenRDF\Query\AGDataset.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\Repository.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnection.cs" />
     <Compile Include="AGClient\OpenRDF\Rio\RDFFormat.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\AllegroGraphServer.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\Spec.cs" />
     <Compile Include="AGClient\OpenRDF\Util\Uris.cs" />
+    <Compile Include="AGClient\OpenRDF\Vocabulary\XMLSchema.cs" />
     <Compile Include="AGClient\Util\AGRequestException.cs" />
     <Compile Include="AGClient\Util\RequestUtil.cs" />
     <Compile Include="AGClient\OpenRDF\Util\Misc.cs" />
@@ -75,10 +78,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AGClient\OpenRDF\Query\" />
-    <Folder Include="AGClient\OpenRDF\Vocabulary\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
