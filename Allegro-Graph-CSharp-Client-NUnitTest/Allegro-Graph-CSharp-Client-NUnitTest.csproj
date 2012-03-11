@@ -53,8 +53,11 @@
     <Compile Include="MiniTest\AGRepositoryTest.cs" />
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryTest.cs" />
     <Compile Include="OpenRDFTest\SailTest\AllegroGraphServerTest.cs" />
     <Compile Include="OpenRDFTest\SailTest\SpecTest.cs" />
+    <Compile Include="OpenRDFTest\UtilTest\MiscTest.cs" />
     <Compile Include="RunTest.cs" />
     <Compile Include="UtilTest\RequestUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

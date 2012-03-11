@@ -66,7 +66,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
                 if (uri == null && excludeNullContext) continue;//null context should not appear here
                 sb.Append("FROM ");
                 sb.Append(uri);
-                sb.Append("");
+                sb.Append(" ");
             }
             foreach (string uri in namedGraphs)
             {
