@@ -57,6 +57,7 @@
     <Compile Include="AGClient\Mini\AGRequestService.cs" />
     <Compile Include="AGClient\Mini\AGServerInfo.cs" />
     <Compile Include="AGClient\Mini\IAGUrl.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\GeoType.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Statement.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Value.cs" />
     <Compile Include="AGClient\OpenRDF\Model\ValueFactory.cs" />
@@ -64,6 +65,12 @@
     <Compile Include="AGClient\OpenRDF\Query\AGDataset.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\Repository.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnection.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForFreeTextSearch.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForNamespace.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForPrologRuleInference.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForSubjectTriplesCaching .cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForTransactions.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForTripleIndex.cs" />
     <Compile Include="AGClient\OpenRDF\Rio\RDFFormat.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\AllegroGraphServer.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\Spec.cs" />

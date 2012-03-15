@@ -147,6 +147,5 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
     {
         public static string SPARQL { get { return "SPARQL"; } }
         public static string PROLOG { get { return "PROLOG"; } }
-
     }
 }

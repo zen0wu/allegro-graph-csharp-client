@@ -175,7 +175,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 
         public string EvalPrologQuery(string query, string infer = "false", int limit = -1, bool count = false, string accept = null)
         {
-            if (accept == null){
+            if (accept == null)
+            {
                 if (count) accept = "text/integer";
                 else accept = "application/json";
             }
@@ -419,6 +420,178 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public int GetTripleCacheSize()
         {
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/tripleCache");
+        }
+        /// <summary>
+        /// Create a new free-text index
+        /// </summary>
+        public void ManipulateFreeTextIndex(string method, string name, string[] predicates = null, object indexLiterals = null,
+                                  string indexResources = "true", string[] indexFields = null,
+                                  int minimumWordSize = -1, string[] stopWords = null,
+                                  string[] wordFilters = null, char[] innerChars = null,
+                                  char[] borderChars = null, string tokenizer = null)
+        {
+            StringBuilder paramsBuilder = new StringBuilder();
+            Action<string, string> AddParam = delegate(string paramName, string paramValue)
+            {
+                if (paramsBuilder.Length > 0)
+                    paramsBuilder.Append(string.Format("&{0}={1}", paramName, paramValue));
+                else
+                    paramsBuilder.Append(string.Format("{0}={1}", paramName, paramValue));
+            };
+
+            if (predicates != null && predicates.Length > 0)
+            {
+                for (int i = 0; i < predicates.Length; i++)
+                {
+                    AddParam("predicate", predicates[i]);
+                }
+            }
+            else AddParam("predicate", "");
+
+            if (indexLiterals != null)
+            {
+                if (indexLiterals is string) AddParam("indexLiterals", indexLiterals.ToString());
+                else if (indexLiterals is string[])
+                {
+                    string[] index_Literals = indexLiterals as string[];
+                    for (int i = 0; i < index_Literals.Length; i++)
+                        AddParam("indexLiteralType", index_Literals[i]); //if indexLiteralType is an array of literal types to index,
+                }
+            }
+            else AddParam("indexLiterals", "");
+
+
+            if (indexResources != null) AddParam("indexResources", indexResources);
+            else AddParam("indexResources", "");
+
+            if (indexFields != null && indexFields.Length > 0)
+            {
+                for (int i = 0; i < indexFields.Length; i++)
+                    AddParam("indexField", indexFields[i]);
+            }
+            else AddParam("indexField", "");
+
+            if (minimumWordSize != -1)
+            {
+                AddParam("minimumWordSize", minimumWordSize.ToString());
+            }
+
+            if (stopWords != null && stopWords.Length > 0)
+            {
+                for (int i = 0; i < stopWords.Length; i++)
+                {
+                    AddParam("stopword", stopWords[i]);
+                }
+            }
+            else AddParam("stopword", "");
+
+            if (wordFilters != null & wordFilters.Length > 0)
+            {
+                for (int i = 0; i < wordFilters.Length; i++)
+                    AddParam("wordFilter", wordFilters[i]);
+            }
+            else AddParam("wordFilter", "");
+
+            if (innerChars != null && innerChars.Length > 0)
+            {
+                for (int i = 0; i < innerChars.Length; i++)
+                {
+                    AddParam("innerChars", innerChars[i].ToString());
+                }
+            }
+
+            if (borderChars != null && borderChars.Length > 0)
+            {
+                for (int i = 0; i < borderChars.Length; i++)
+                {
+                    AddParam("borderChars", borderChars[i].ToString());
+                }
+            }
+            if (tokenizer != null) AddParam("tokenizer", tokenizer);
+            else AddParam("tokenizer", "");
+
+            AGRequestService.DoReq(this, method, "/freetext/indices/" + name, paramsBuilder.ToString());
+        }
+
+        public void CreateFreeTextIndex(string name, string[] predicates = null, object indexLiterals = null,
+                                        string indexResources = "true", string[] indexFields = null,
+                                        int minimumWordSize = -1, string[] stopWords = null,
+                                        string[] wordFilters = null, char[] innerChars = null,
+                                        char[] borderChars = null, string tokenizer = null)
+        {
+            ManipulateFreeTextIndex("PUT", name, predicates, indexLiterals, indexResources, indexFields, minimumWordSize, stopWords, wordFilters, innerChars, borderChars, tokenizer);
+        }
+
+        public void ModifyFreeTextIndex(string name, string[] predicates = null, object indexLiterals = null,
+                                        string indexResources = "true", string[] indexFields = null,
+                                        int minimumWordSize = -1, string[] stopWords = null,
+                                        string[] wordFilters = null, char[] innerChars = null,
+                                        char[] borderChars = null, string tokenizer = null)
+        {
+            ManipulateFreeTextIndex("POST", name, predicates, indexLiterals, indexResources, indexFields, minimumWordSize, stopWords, wordFilters, innerChars, borderChars, tokenizer);
+        }
+
+        public string[] ListFreeTextIndices()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices");
+        }
+
+        /// <summary>
+        /// Delete the named free-text index
+        /// </summary>
+        /// <param name="indexName"></param>
+        public void DeleteFreeTextIndex(string name)
+        {
+            AGRequestService.DoReq(this, "DELETE", "/freetext/indices/" + name);
+        }
+
+        public string[] ListFreeTextPredicates()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/predicates");
+        }
+
+        public void RegisterFreeTextPredicate(string predicate)
+        {
+            AGRequestService.DoReq(this, "POST", "/freetext/predicates", "predicate=" + predicate);
+        }
+
+        public void DefinePrologFunctors(string rules)
+        {
+            AGRequestService.DoReq(this, "POST", "/functor", rules);
+        }
+        /// <summary>
+        ///     Returns a dictionary with fields "predicates",
+        ///     "indexLiterals","indexResources","indexFields",
+        ///     "minimumWordSize", "stopWords", and "wordFilters".
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Dictionary<string, string> GetFreeTextIndexConfiguration(string index)
+        {
+            return AGRequestService.DoReqAndGet<Dictionary<string, string>>(this, "GET", "/freetext/indices/" + index);
+        }
+
+       
+        public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
+        {
+            string urlParam = "";
+            if (indexs == null)
+            {
+                urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&index={3}", pattern, infer, limit, "");
+            }
+            else
+            {
+                if (indexs.Length > 0)
+                {
+                    StringBuilder indexParam = new StringBuilder(string.Format("index={0}",indexs[0]));
+                    for (int i = 1; i < indexs.Length; i++)
+                    {
+                        indexParam.Append(string.Format("&index={0}", indexs[i]));
+                    }
+                    urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&{3}", pattern, infer, limit,indexParam.ToString() );
+                }
+            }
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices/" + urlParam);
         }
     }
 }

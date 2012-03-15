@@ -11,7 +11,7 @@ using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 {
-    public class RepositoryConnection
+    public partial class RepositoryConnection
     {
         private Repository _repository;
         public RepositoryConnection(Repository repository)
@@ -45,7 +45,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return Size(contexts) == 0;
         }
 
-
         public string GetSpec()
         {
             string catalogName = _repository.GetMiniRepository().GetCatalog().GetName();
@@ -63,59 +62,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 
         public string[] GetContextIDs()
         {
-            return _repository.GetMiniRepository().ListContexts();
-        }
-
-        public List<Namespace> GetNamespaces()
-        {
-            return _repository.GetMiniRepository().ListNamespaces();
-        }
-
-        public string GetNamespaces(string prefix)
-        {
-            return _repository.GetMiniRepository().GetNamespaces(prefix);
-        }
-
-        /// <summary>
-        /// Sets the prefix for a namespace.
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="name"></param>
-        public void SetNamespace(string prefix, string name)
-        {
-            _repository.GetMiniRepository().AddNamespace(prefix, name);
-        }
-
-        /// <summary>
-        /// Removes a namespace declaration by removing the association between a prefix and a namespace name
-        /// </summary>
-        /// <param name="prefix"></param>
-        public void RemoveNamespace(string prefix)
-        {
-            _repository.GetMiniRepository().DeleteNamespace(prefix);
-        }
-
-        /// <summary>
-        ///    Deletes all namespaces in this repository for the current user. If a
-        ///    reset` argument of `True` is passed, the user's namespaces are reset
-        ///    to the default set of namespaces, otherwise all namespaces are cleared.
-        /// </summary>
-        /// <param name="reset"></param>
-        public void ClearNamespace(bool reset = true)
-        {
-            _repository.GetMiniRepository().ClearNamespaces(reset);
+            return this.GetMiniRepository().ListContexts();
         }
 
         public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context,
                                         string Infer = "false", int Limit = -1, int Offset = -1)
         {
-            return _repository.GetMiniRepository().GetStatements(Subj, Pred, Obj, Context, Infer, Limit, Offset);
+            return this.GetMiniRepository().GetStatements(Subj, Pred, Obj, Context, Infer, Limit, Offset);
         }
 
 
         public string[][] GetStatementsById(string ids, bool returnIDs = true)
         {
-            return _repository.GetMiniRepository().GetStatementsById(ids, returnIDs);
+            return this.GetMiniRepository().GetStatementsById(ids, returnIDs);
         }
 
         public Statement CreateStatement(string subj, string pred, string obj, string context = null)
@@ -134,7 +93,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         }
 
         /// <summary>
-        ///     Loads a file into the triple store,a file can be loaded into only one context     
+        ///  Loads a file into the triple store,a file can be loaded into only one context     
         /// </summary>
         /// <param name="filePath">the file to load</param>
         /// <param name="baseUrl">baseURI associate with loading a file</param>
@@ -201,12 +160,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
                 statements = new string[1][];
                 statements[0] = new string[] { subj, pred, obj };
             }
-            _repository.GetMiniRepository().AddStatements(statements);
+            this.GetMiniRepository().AddStatements(statements);
         }
 
         public void AddTriples(string[][] triples_or_quads)
         {
-            _repository.GetMiniRepository().AddStatements(triples_or_quads);
+            this.GetMiniRepository().AddStatements(triples_or_quads);
         }
 
         /// <summary>
@@ -222,18 +181,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         {
             if (contexts == null || contexts.Length == 0)
             {
-                return _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, null);
+                return this.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, null);
             }
             else
             {
                 int count = 0;
                 foreach (string context in contexts)
                 {
-                    count += _repository.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, context);
+                    count += this.GetMiniRepository().DeleteMatchingStatements(subj, pred, obj, context);
                 }
                 return count;
             }
         }
+
         public int RemoveStatement(Statement statement, string[] contexts = null)
         {
             return RemoveTriples(statement.Subject, statement.Predicate, statement.Object, contexts);
@@ -245,12 +205,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <returns></returns>
         public void RemoveQuadsByID(string[] tids)
         {
-            _repository.GetMiniRepository().DeleteStatementsById(tids);
+            this.GetMiniRepository().DeleteStatementsById(tids);
         }
 
         public void RemoveQuads(string[][] Quads)
         {
-            _repository.GetMiniRepository().DeleteStatements(Quads);
+            this.GetMiniRepository().DeleteStatements(Quads);
         }
 
         /// <summary>
@@ -263,62 +223,34 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             RemoveTriples(null, null, null, contexts);
         }
 
-        public string[] ListIndices()
+        public string EvalSPARQLQuery(string queryLanguage, string queryString, string contexts = null,
+                                               string namedContexts = null, bool includeInferred = false,
+                                               Dictionary<string, string> bindings = null, bool checkVariables = false,
+                                               string infer = "false", int limit = -1, int offset = -1)
         {
-            return _repository.GetMiniRepository().ListIndices();
+            string queryResult = string.Empty;
+            if (queryLanguage == QueryLanguage.SPARQL)
+            {
+                queryResult = this.GetMiniRepository().EvalSPARQLQuery(queryString,
+                                                                     infer,
+                                                                     contexts,
+                                                                     namedContexts,
+                                                                     bindings,
+                                                                     checkVariables,
+                                                                     limit,
+                                                                     offset);
+            }
+            else
+            {
+                queryResult = this.GetMiniRepository().EvalPrologQuery(queryString, infer, limit);
+            }
+            return queryResult;
         }
 
-        public string[] ListValidIndices()
-        {
-            return _repository.GetMiniRepository().ListValidIndices();
-        }
 
-        public void AddIndex(string indexType)
-        {
-            _repository.GetMiniRepository().AddIndex(indexType);
-        }
-        public void DropIndex(string indexType)
-        {
-            _repository.GetMiniRepository().DropIndex(indexType);
-        }
-
-        public void OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
-        {
-            _repository.OldUrl = _repository.Url;
-            _repository.Url = _repository.GetMiniRepository().OpenSession(spec, autocommit, lifetime, loadinitfile);
-        }
-        public void CloseSession()
-        {
-            _repository.GetMiniRepository().CloseSession();
-            _repository.Url = _repository.OldUrl;
-        }
-        public void Commit()
-        {
-            _repository.GetMiniRepository().Commit();
-        }
-        public void Rollback()
-        {
-            _repository.GetMiniRepository().Rollback();
-        }
-
-        public void EnableTripleCache(int size = -1)
-        {
-            _repository.GetMiniRepository().EnableTripleCache();
-        }
-
-        public void DisableTripleCache()
-        {
-            _repository.GetMiniRepository().DisableTripleCache();
-        }
-
-        public int GetTripleCacheSize()
-        {
-            return _repository.GetMiniRepository().GetTripleCacheSize();
-        }
-
-        public BooleanQuery PrepareBooleanQuery(string queryLanguage, string queryString,string contexts=null,
+        public BooleanQuery PrepareBooleanQuery(string queryLanguage, string queryString, string contexts = null,
                                                 string namedContexts = null, bool includeInferred = false,
-                                                Dictionary<string,string> bindings=null,bool checkVariables=false)
+                                                Dictionary<string, string> bindings = null, bool checkVariables = false)
         {
             BooleanQuery bQuery = new BooleanQuery();
             bQuery.Querylanguage = queryLanguage;
@@ -346,6 +278,67 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             sQuery.CheckVariables = checkVariables;
             sQuery.Connection = this;
             return sQuery;
+        }
+
+        /// <summary>
+        /// Exports all statements with a specific subject, predicate and/or object from the repository, 
+        /// optionally from the specified contexts.
+        /// </summary>
+        /// <param name="subj"></param>
+        /// <param name="pred"></param>
+        /// <param name="obj"></param>
+        /// <param name="type">represent the export file type.maybe N-Triple,N-Quads,RDF/XML,Trix</param>
+        /// <param name="contexts"></param>
+        /// <param name="infer"></param>
+        public void ExportStatements(string[] subj, string[] pred, string[] obj, string type, string[] contexts = null, string infer = "false")
+        {
+            string[][] statements = this.GetStatements(subj, pred, obj, contexts, infer);
+            if (type == "RDF/XML") type = ".xml";
+            else if (type == "N-Triple") type = ".nt";
+            else if (type == "N-Quads") type = ".np";
+            else type = ".trix";
+            string exportFile = this.GetMiniRepository().DatabaseName + type;
+            //FileInfo export = new FileInfo(exportFile);
+            Export2File(statements, exportFile, type);
+        }
+
+        public void Export(string type = "N-Triple", string[] contexts = null)
+        {
+            ExportStatements(null, null, null, type, contexts);
+        }
+
+        void Export2File(string[][] statements, string exportFile, string type)
+        {
+            //string fileName = "e:/" + exportFile;
+            //Console.WriteLine(fileName);
+            StreamWriter sw = new StreamWriter(new FileStream(exportFile, FileMode.CreateNew, FileAccess.Write));
+            if (type.Equals(".nt") || type.Equals(".nq"))
+            {
+                for (int i = 0; i < statements.GetLength(0); i++)
+                {
+                    foreach (string s in statements[i])
+                    {
+                        sw.Write(s);
+                        sw.Write(" ");
+                    }
+                    sw.Write(".");
+                    sw.WriteLine();
+                }
+            }
+            //else if (type.Equals(".xml"))
+            //{
+            //}
+            //else if (type.Equals(".trix"))
+            //{
+            //    sw.WriteLine("<?xml version=\"1.0\"?>");
+            //    sw.WriteLine("<TriX xmlns=\"http://www.w3.org/2004/03/trix/trix-1/\">");
+            //    sw.WriteLine("<graph>");
+            //    sw.WriteLine("<default/>");
+            //}
+            //sw.WriteLine("</graph>");
+            //sw.WriteLine("</TriX/>");
+            //sw.Close();
+
         }
     }
 }

@@ -97,5 +97,11 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             Assert.True(indices[0] == type);
             repoConn.DropIndex(type);
         }
+
+        [Test]
+        public void ExportTest()
+        {
+            repoConn.Export();
+        }
     }
 }
