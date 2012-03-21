@@ -66,6 +66,7 @@
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\Repository.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnection.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForFreeTextSearch.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForGeospatialReasoning.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForNamespace.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForPrologRuleInference.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForSubjectTriplesCaching .cs" />
