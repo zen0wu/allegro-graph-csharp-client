@@ -12,7 +12,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
     public class AGRequestService
     {
-
         private static string GenerateUrlParameters(Dictionary<string, object> parameters)
         {
             StringBuilder builder = new StringBuilder();
@@ -50,14 +49,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             else if (Body is Dictionary<string, object>)
             {
                 string parameters = GenerateUrlParameters((Dictionary<string, object>)Body);
-                // GET方法将参数加入到URL中
+                // If it's "GET" or "DELETE", put the parameters into the URL
                 if (Method == "GET" || Method == "DELETE")
                 {
                     if (parameters.Length > 0)
                         AbsUrl += "?" + parameters;
                 }
                 else if (Method == "POST" || Method == "PUT")
-                    // POST方法将参数放到Body中
+                    // Else, parameters will go into the body
                     BodyString = parameters;
             }
             else if (Body is string)
@@ -66,19 +65,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 BodyString = (string)Body;
             }
             else {
-                // 其他情况，如果Body不是String，将其转化成JSON格式
+                // If body is not string, jsonize it
                 BodyString = JsonConvert.SerializeObject(Body);
             }
         }
 
         /// <summary>
-        /// 执行HTTP请求，无返回
+        /// Execute a non-returning HTTP request
         /// </summary>
-        /// <param name="Base">URL信息</param>
-        /// <param name="Method">HTTP方法</param>
-        /// <param name="RelativeUrl">相对URL</param>
-        /// <param name="NeedsAuth">是否需要认证</param>
-        /// <param name="Body">发送的内容, null表示不发送内容</param>
+        /// <param name="Base">URL</param>
+        /// <param name="Method">HTTP Method</param>
+        /// <param name="RelativeUrl">Relative URL to the Base</param>
+        /// <param name="NeedsAuth">If authorization is needed, default true</param>
+        /// <param name="Body">HTTP Body</param>
         public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
         {
             string absUrl, contentType, bodyString;
@@ -93,7 +92,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             RequestUtil.DoReq(absUrl, Method, bodyString, contentType, username, password);
         }
 
-        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl,string ContentType, object Body = null, bool NeedsAuth = true)
+        /// <summary>
+        /// DoReq with specific content-type
+        /// <seealso cref="DoReq"/>
+        /// </summary>
+        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, string ContentType, object Body = null, bool NeedsAuth = true)
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
@@ -108,7 +111,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// 执行HTTP请求，返回JSON格式的结果
+        /// Make a HTTP request with return value in the JSON format
         /// </summary>
         /// <seealso cref="DoReq"/>
         public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
@@ -127,7 +130,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// 执行HTTP请求，返回JSON格式的结果，并将结果解析成T类型
+        /// Make a HTTP request with return value in the JSON format and deserialize into type T
         /// </summary>
         /// <seealso cref="DoReqAndGet"/>
         public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl, object Body = null, bool NeedsAuth = true) 
@@ -136,7 +139,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return JsonConvert.DeserializeObject<T>(result);
         }
 
-        //add accept param
+        /// <summary>
+        /// DoReqAndGet with specific accept headers
+        /// <seealso cref="DoReqAndGet"/>
+        /// </summary>
         public static string DoReqAndGet(IAGUrl Base, string Method, string RelativeUrl, string Accept,object Body = null, bool NeedsAuth = true)
         {
             string absUrl, contentType, bodyString;
@@ -152,7 +158,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return RequestUtil.DoJsonReq(absUrl, Method, bodyString,Accept, contentType, username, password);
         }
 
-        public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl,string Accept, object Body = null, bool NeedsAuth = true)
+        /// <summary>
+        /// DoReqAndGet with specific accept headers and type T
+        /// <seealso cref="DoReqAndGet"/>
+        /// </summary>
+        public static T DoReqAndGet<T>(IAGUrl Base, string Method, string RelativeUrl, string Accept, object Body = null, bool NeedsAuth = true)
         {
             string result = DoReqAndGet(Base, Method, RelativeUrl,Accept, Body, NeedsAuth);
             return JsonConvert.DeserializeObject<T>(result);

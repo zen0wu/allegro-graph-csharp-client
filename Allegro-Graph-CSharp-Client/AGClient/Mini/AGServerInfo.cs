@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
+    /// <summary>
+    /// The server object of Allegro Graph
+    /// </summary>
     public class AGServerInfo : IAGUrl
     {
         public AGServerInfo(string BaseUrl, string Username, string Password)
@@ -20,12 +23,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string Url { get; private set; }
 
         /// <summary>
-        /// 用户名
+        /// Username
         /// </summary>
         public string Username { get; private set; }
 
         /// <summary>
-        /// 密码
+        /// Password
         /// </summary>
         public string Password { get; private set; }
     }

@@ -17,21 +17,21 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Server">服务器</param>
-        /// <param name="Name">CatalogName,null 返回rootCatalog</param>
+        /// <param name="server">Server Object</param>
+        /// <param name="name">Catalog name, returns the root catalog if name is null</param>
         /// <returns></returns>
-        public AGCatalog(AGServerInfo Server, string Name)
+        public AGCatalog(AGServerInfo server, string name)
         {
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(name))
             {
-                CatalogUrl = Server.Url + "/";
+                CatalogUrl = server.Url + "/";
             }
             else
             {
-                CatalogUrl = Server.Url + "/catalogs/" + Name;
+                CatalogUrl = server.Url + "/catalogs/" + name;
             }
-            this.Name = Name;
-            this.Server = Server;
+            this.Name = name;
+            this.Server = server;
         }
 
         public string Url { get { return CatalogUrl; } }
@@ -39,7 +39,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string Password { get { return Server.Password; } }
 
         /// <summary>
-        /// 列出当前目录下的仓库
+        /// List the repositories in the current catalog
         /// </summary>
         public string[] ListRepositories()
         {
@@ -52,38 +52,38 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// 删除仓库
+        /// Delete a repository
         /// </summary>
-        /// <param name="Name">仓库名</param>
-        public void DeleteRepository(string Name)
+        /// <param name="name">Repository name</param>
+        public void DeleteRepository(string name)
         {
             //AGRequestService.DoReq(Server, "DELETE", "/repositories/" + Name);
-            AGRequestService.DoReq(this, "DELETE", "/repositories/" + Name);
+            AGRequestService.DoReq(this, "DELETE", "/repositories/" + name);
         }
 
         /// <summary>
-        /// 创建仓库
+        /// Create a repository
         /// </summary>
-        /// <param name="Name">仓库名</param>
-        public void CreateRepository(string Name)
+        /// <param name="name">Repository name</param>
+        public void CreateRepository(string name)
         {
-            AGRequestService.DoReq(this, "PUT", "/repositories/" + Name,null,true);
+            AGRequestService.DoReq(this, "PUT", "/repositories/" + name,null,true);
         }
 
         /// <summary>
-        /// 打开仓库
+        /// Open a repository
         /// </summary>
-        /// <param name="Name">仓库名</param>
-        /// <returns>打开的仓库</returns>
-        public AGRepository OpenRepository(string Name)
+        /// <param name="name">Repository name</param>
+        /// <returns>The opened repository</returns>
+        public AGRepository OpenRepository(string name)
         {
-            return new AGRepository(this, Name);
+            return new AGRepository(this, name);
         }
 
         /// <summary>
-        /// 获取catalog名称
+        /// Get the name of current catalog
         /// </summary>
-        /// <returns>catalog名称</returns>
+        /// <returns>catalog name</returns>
         public string GetName()
         {
             return this.Name;

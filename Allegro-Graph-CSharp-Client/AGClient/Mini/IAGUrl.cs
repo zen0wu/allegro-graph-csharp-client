@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
+    /// <summary>
+    /// An interface for basic URL with Username/Password
+    /// </summary>
     public interface IAGUrl
     {
         string Url { get; }

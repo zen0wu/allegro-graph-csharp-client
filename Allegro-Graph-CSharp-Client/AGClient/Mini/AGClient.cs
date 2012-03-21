@@ -13,9 +13,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
     {
         private AGServerInfo Server;
 
-        public AGClient(AGServerInfo Server)
+        public AGClient(AGServerInfo server)
         {
-            this.Server = Server;
+            this.Server = server;
         }
 
         /// <summary>
