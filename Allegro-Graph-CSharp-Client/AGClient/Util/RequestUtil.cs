@@ -44,12 +44,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
         }
 
         /// <summary>
-        /// 发起一个不需返回的HTTP请求
+        /// Make a null-returning HTTP request
         /// </summary>
-        /// <param name="Url">请求的URL</param>
-        /// <param name="Method">请求的方法</param>
-        /// <param name="Body">请求的内容</param>
-        /// <param name="ContentType">请求内容的类型，默认为JSON</param>
+        /// <param name="Url">Request URL</param>
+        /// <param name="Method">Request method</param>
+        /// <param name="Body">Request body</param>
+        /// <param name="ContentType">Content-type header, default set to JSON</param>
         public static void DoReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8",
             string Username = null, string Password = null)
         {
@@ -62,13 +62,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
         }
 
         /// <summary>
-        /// 发起一个有返回值的请求，返回值的形式是JSON
+        /// Make a JSON-returning HTTP request
         /// </summary>
-        /// <param name="Url">请求的URL</param>
-        /// <param name="Method">请求的方法</param>
-        /// <param name="Body">请求的内容</param>
-        /// <param name="ContentType">请求内容的类型，默认为JSON</param>
-        /// <returns>请求的返回内容</returns>
+        /// <param name="Url">Request URL</param>
+        /// <param name="Method">Request method</param>
+        /// <param name="Body">Request body</param>
+        /// <param name="ContentType">Content-type header, default set to JSON</param>
+        /// <returns>The raw http response content</returns>
         public static string DoJsonReq(string Url, string Method, string Body, string ContentType = "application/json; utf-8",
             string Username = null, string Password = null)
         {
@@ -82,6 +82,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
             return returnBody;
         }
 
+        /// <summary>
+        /// DoJsonReq with specific Accept type
+        /// </summary>
+        /// <seealso cref="DoJsonReq"/>
         public static string DoJsonReq(string Url, string Method, string Body, string Accept,
                                        string ContentType = "application/json; utf-8",
                                        string Username = null, string Password = null)

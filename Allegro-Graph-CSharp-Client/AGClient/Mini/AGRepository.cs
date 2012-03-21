@@ -18,6 +18,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         private AGCatalog Catalog;
         private string Name;
 
+        /// <summary>
+        /// Construct a repository from the catalog it belongs to
+        /// </summary>
+        /// <param name="Catalog"></param>
+        /// <param name="Name"></param>
         public AGRepository(AGCatalog Catalog, string Name)
         {
             RepoUrl = Catalog.Url + "/repositories/" + Name;
@@ -28,9 +33,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <summary>
         /// Constructor for OpenSession
         /// </summary>
-        /// <param name="repoUrl">Session Url</param>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
+        /// <param name="repoUrl">Session URL</param>
+        /// <param name="userName">User name</param>
+        /// <param name="password">Password</param>
         public AGRepository(string repoUrl, string userName, string password)
         {
             this.RepoUrl = repoUrl;
@@ -47,108 +52,120 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string DatabaseName { get { return this.Name; } }
 
         /// <summary>
-        /// 返回仓库的大小
+        /// Get the size of the repository
         /// </summary>
-        /// <param name="Context">可以指定一个Named Graph作为Context</param>
-        /// <returns>仓库的大小</returns>
-        public int GetSize(string Context = null)
+        /// <param name="context">Can specify a named graph as context</param>
+        /// <returns>The size of repository</returns>
+        public int GetSize(string context = null)
         {
             Dictionary<string, object> parameters = null;
-            if (Context != null)
+            if (context != null)
             {
                 parameters = new Dictionary<string, object>();
-                parameters.Add("context", Context);
+                parameters.Add("context", context);
             }
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
         }
-
+        
+        /// <summary>
+        /// Returns the catalog it belongs to
+        /// </summary>
+        /// <returns>The catalog it belongs to</returns>
         public AGCatalog GetCatalog()
         {
             return this.Catalog;
         }
 
+        /// <summary>
+        /// List the contexts in this repository
+        /// </summary>
+        /// <returns>The names of contexts</returns>
         public string[] ListContexts()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/contexts");
         }
 
+        /// <summary>
+        /// Get all blank nodes in this repository
+        /// </summary>
+        /// <param name="amount">The amount</param>
+        /// <returns>The URIs of blank nodes</returns>
         public string[] GetBlankNodes(int amount = 1)
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "POST", "/blankNodes", string.Format("amount={0}", amount));
         }
+
         /// <summary>
-        /// 增加三元组
+        /// Add a new statement
         /// </summary>
-        /// <param name="Quads">每个元素长度为4，分别为主语、谓语、宾语、上下文</param>
-        public void AddStatements(string[][] Quads)
+        /// <param name="quads">A list of quadtuple, which consists of subject, predicate, object, and context</param>
+        public void AddStatements(string[][] quads)
         {
-            AGRequestService.DoReq(this, "POST", "/statements", Quads);
+            AGRequestService.DoReq(this, "POST", "/statements", quads);
         }
 
         /// <summary>
-        /// 删除给定条件下的元组
+        /// Delete the matching statements
         /// </summary>
-        /// <param name="Subj">主语</param>
-        /// <param name="Pred">谓语</param>
-        /// <param name="Obj">宾语</param>
-        /// <param name="Context">上下文</param>
-        /// <returns></returns>
-        public int DeleteMatchingStatements(string Subj, string Pred, string Obj, string Context)
+        /// <param name="subj">Subject</param>
+        /// <param name="pred">Predicate</param>
+        /// <param name="obj">Object</param>
+        /// <param name="context">Context</param>
+        /// <returns>The number of tuples deleted</returns>
+        public int DeleteMatchingStatements(string subj, string pred, string obj, string context)
         {
             Dictionary<string, object> body = new Dictionary<string, object>();
-            if (Subj != null)
-                body.Add("subj", Subj);
-            if (Pred != null)
-                body.Add("pred", Pred);
-            if (Obj != null)
-                body.Add("obj", Obj);
-            if (Context != null)
-                body.Add("context", Context);
+            if (subj != null)
+                body.Add("subj", subj);
+            if (pred != null)
+                body.Add("pred", pred);
+            if (obj != null)
+                body.Add("obj", obj);
+            if (context != null)
+                body.Add("context", context);
             return AGRequestService.DoReqAndGet<int>(this, "DELETE", "/statements", body);
         }
 
         /// <summary>
-        /// 删除给定的元组
+        /// Remove the given statements
         /// </summary>
-        /// <param name="Quads">待删除的元组</param>
-        public void DeleteStatements(string[][] Quads)
+        /// <param name="quads">Statements to be deleted</param>
+        public void DeleteStatements(string[][] quads)
         {
-            AGRequestService.DoReq(this, "POST", "/statements/delete", Quads);
+            AGRequestService.DoReq(this, "POST", "/statements/delete", quads);
         }
 
         /// <summary>
-        /// 执行Sparql查询
+        /// Execute SPARQL Query
         /// </summary>
-        /// <param name="Query">查询</param>
-        /// <param name="Infer">推理类型</param>
-        /// <param name="Context">上下文</param>
-        /// <param name="NamedContext">命名的上下文</param>
-        /// <param name="Bindings">已知的变量绑定</param>
-        /// <param name="CheckVariables">是否检查不存在的变量</param>
-        /// <param name="Limit">返回结果的最多个数</param>
-        /// <param name="Offset">跳过部分返回结果</param>
-        /// <returns></returns>
-        /// 
-        public string EvalSPARQLQuery(string Query, string Infer = "false", string Context = null, string NamedContext = null,
-           Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
+        /// <param name="query">Query string</param>
+        /// <param name="infer">Infer option, can be "false","rdfs++","restriction"</param>
+        /// <param name="context">Context</param>
+        /// <param name="namedContext">Named Context</param>
+        /// <param name="bindings">Local bindings for variables</param>
+        /// <param name="checkVariables">Whether to check the non-existing variable</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        /// <returns>A raw string representing the result, encoded in JSON format</returns>
+        public string EvalSPARQLQuery(string query, string infer = "false", string context = null, string namedContext = null,
+           Dictionary<string, string> bindings = null, bool checkVariables = false, int limit = -1, int offset = -1)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("query", Query);
+            parameters.Add("query", query);
             parameters.Add("queryLn", "sparql");
-            parameters.Add("infer", Infer);
-            if (Context != null) parameters.Add("context", Context);
-            if (NamedContext != null) parameters.Add("namedContext", NamedContext);
-            if (Bindings != null)
+            parameters.Add("infer", infer);
+            if (context != null) parameters.Add("context", context);
+            if (namedContext != null) parameters.Add("namedContext", namedContext);
+            if (bindings != null)
             {
-                foreach (string vari in Bindings.Keys)
-                    parameters.Add("$" + vari, HttpUtility.UrlEncode(Bindings[vari]));
+                foreach (string vari in bindings.Keys)
+                    parameters.Add("$" + vari, HttpUtility.UrlEncode(bindings[vari]));
             }
-            parameters.Add("checkVariables", CheckVariables.ToString());
-            if (Limit >= 0) parameters.Add("limit", Limit.ToString());
-            if (Offset >= 0) parameters.Add("offset", Offset.ToString());
+            parameters.Add("checkVariables", checkVariables.ToString());
+            if (limit >= 0) parameters.Add("limit", limit.ToString());
+            if (offset >= 0) parameters.Add("offset", offset.ToString());
             return AGRequestService.DoReqAndGet(this, "GET", "", parameters);
         }
-
 
         //public DataTable EvalSPARQLQuery(string Query, bool isReturnDataTable, string Infer = "false", string Context = null, string NamedContext = null,
         //    Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
@@ -172,7 +189,15 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         //    return resultTable;
         //}
 
-
+        /// <summary>
+        /// Execute prolog query
+        /// </summary>
+        /// <param name="query">Query string</param>
+        /// <param name="infer">Infer type <see cref="EvalSPARQLQuery"/></param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="count">If true, counting number of the result will be returned</param>
+        /// <param name="accept">Accept header in HTTP request</param>
+        /// <returns>A raw result, either the query result, or the count of it</returns>
         public string EvalPrologQuery(string query, string infer = "false", int limit = -1, bool count = false, string accept = null)
         {
             if (accept == null)
@@ -191,6 +216,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet(this, "POST", null, parameters, true);
         }
 
+        /// <summary>
+        /// Translate result to Data.DataTable
+        /// </summary>
+        /// <param name="result">The raw result of query</param>
+        /// <returns>A datatable</returns>
         public DataTable QueryResultToDataTable(string result)
         {
             JObject rawResult = JObject.Parse(result);
@@ -211,11 +241,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             return resultTable;
         }
+
         /// <summary>
         /// Translate result to string array,the first row is names,the rests are values
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="result">The raw result</param>
+        /// <returns>The translated array</returns>
         public string[][] QueryResultToArray(string result)
         {
             JObject rawResult = JObject.Parse(result);
@@ -240,20 +271,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return resultArray;
         }
 
-
         /// <summary>
-        /// 返回给定条件的triples
+        /// Get the specified statements
         /// </summary>
-        /// <param name="Subj">主语限制</param>
-        /// <param name="Pred">谓语限制</param>
-        /// <param name="Obj">宾语限制</param>
-        /// <param name="Context">上下文限制</param>
-        /// <param name="Infer">推理类型，默认为false，即不推理</param>
-        /// <param name="Limit">返回结果的最多个数</param>
-        /// <param name="Offset">跳过部分返回结果</param>
-        /// <returns></returns>
-        public string[][] GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context, string Infer = "false",
-            int Limit = -1, int Offset = -1)
+        /// <param name="subj">Subject constraints, can be given multiple times</param>
+        /// <param name="pred">Predicate constraints, can be given multiple times</param>
+        /// <param name="obj">Object constraints, can be given multiple times</param>
+        /// <param name="context">Context constraints, can be given multiple times</param>
+        /// <param name="infer">Infer type, default set to "False"</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        /// <returns>Found statements</returns>
+        public string[][] GetStatements(string[] subj, string[] pred, string[] obj, string[] context, string infer = "false",
+            int limit = -1, int offset = -1)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             Action<string, string[]> addArrayParam = delegate(string Key, string[] param)
@@ -266,15 +296,21 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                         parameters.Add(Key, param);
                 }
             };
-            addArrayParam("subj", Subj);
-            addArrayParam("pred", Pred);
-            addArrayParam("obj", Obj);
-            addArrayParam("context", Context);
-            if (Limit >= 0) parameters.Add("limit", Limit.ToString());
-            if (Offset >= 0) parameters.Add("offset", Offset.ToString());
+            addArrayParam("subj", subj);
+            addArrayParam("pred", pred);
+            addArrayParam("obj", obj);
+            addArrayParam("context", context);
+            if (limit >= 0) parameters.Add("limit", limit.ToString());
+            if (offset >= 0) parameters.Add("offset", offset.ToString());
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", parameters);
         }
 
+        /// <summary>
+        /// Get the statements by their ids
+        /// </summary>
+        /// <param name="ids">Id constraints</param>
+        /// <param name="returnIDs">Whether to return ids</param>
+        /// <returns>A raw result, eithor the statements or their ids</returns>
         public string[][] GetStatementsById(string ids, bool returnIDs = true)
         {
             string accept = string.Empty;
@@ -289,43 +325,69 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements/id/id=" + ids, accept, null, true);
         }
 
+        /// <summary>
+        /// Delete statements by their ids
+        /// </summary>
+        /// <param name="ids">The ids of the statements</param>
         public void DeleteStatementsById(string[] ids)
         {
             AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(ids));
         }
 
+        /// <summary>
+        /// List the namespaces of the current repository
+        /// </summary>
+        /// <returns>A list of namespace</returns>
         public List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> ListNamespaces()
         {
             return AGRequestService.DoReqAndGet<List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace>>(this, "GET", "/namespaces");
         }
 
+        /// <summary>
+        /// Get a specific namespace
+        /// </summary>
+        /// <param name="prefix">The prefix of the namespace</param>
+        /// <returns>The namespace's name</returns>
         public string GetNamespaces(string prefix)
         {
             return AGRequestService.DoReqAndGet<string>(this, "GET", "/namespaces/" + prefix);
         }
 
+        /// <summary>
+        /// Add a namespace
+        /// </summary>
+        /// <param name="prefix">Prefix</param>
+        /// <param name="name">Namespace's name</param>
         public void AddNamespace(string prefix, string name)
         {
             AGRequestService.DoReq(this, "PUT", "/namespaces/" + prefix, "text/plain", null, true);
         }
 
+        /// <summary>
+        /// Delete all the namespaces with the prefix
+        /// </summary>
+        /// <param name="prefix">Given prefix</param>
         public void DeleteNamespace(string prefix)
         {
             AGRequestService.DoReq(this, "DELETE", "/namespaces/" + prefix);
         }
 
+        /// <summary>
+        /// Clear all the namespace
+        /// </summary>
+        /// <param name="reset">Whether to reset</param>
         public void ClearNamespaces(bool reset = true)
         {
             AGRequestService.DoReq(this, "DELETE", string.Format("/namespaces/reset={0}", reset));
         }
         /// <summary>
-        /// 
+        /// Load a given file into AG Server
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="format"></param>
-        /// <param name="baseUrl"></param>
-        /// <param name="context"></param>
-        /// <param name="serverSide"></param>
+        /// <param name="filePath">Path</param>
+        /// <param name="format">File format, can be "nttriples","rdf/xml"</param>
+        /// <param name="baseUrl">Base URL</param>
+        /// <param name="context">Context, default set to null</param>
+        /// <param name="serverSide">Whether this request is on server side</param>
         public void LoadFile(string filePath, string format, string baseUrl = null, string context = null, bool serverSide = false)
         {
             string contentType = string.Empty;
@@ -350,23 +412,43 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             AGRequestService.DoReq(this, "POST", relativeUrl, contentType, fileContent);
         }
 
+        /// <summary>
+        /// List all the indices
+        /// </summary>
         public string[] ListIndices()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices");
         }
+
+        /// <summary>
+        /// List the valid indices
+        /// </summary>
         public string[] ListValidIndices()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices?listValid=true");
         }
+        /// <summary>
+        /// Add an index with specific type
+        /// </summary>
+        /// <param name="indexType">Index type</param>
         public void AddIndex(string indexType)
         {
             AGRequestService.DoReq(this, "PUT", "/indices/" + indexType);
         }
+
+        /// <summary>
+        /// Drop an index with type
+        /// </summary>
+        /// <param name="indexType">index type to drop</param>
         public void DropIndex(string indexType)
         {
             AGRequestService.DoReq(this, "DELETE", "/indices/" + indexType);
         }
 
+        /// <summary>
+        /// Open a new session
+        /// </summary>
+        /// <returns></returns>
         public string OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
         {
             string relativeUrl = string.Empty;
@@ -381,6 +463,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string>(this, "POST", relativeUrl);
             //return new AGRepository(sessionUrl, this.Username, this.Password);
         }
+
+        /// <summary>
+        /// Close the current session
+        /// </summary>
         public void CloseSession()
         {
             try
@@ -389,15 +475,27 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             catch { }
         }
+
+        /// <summary>
+        /// Commit the current session
+        /// </summary>
         public void Commit()
         {
             AGRequestService.DoReq(this, "POST", "/session/commit");
         }
+
+        /// <summary>
+        /// Rollback the current session
+        /// </summary>
         public void Rollback()
         {
             AGRequestService.DoReq(this, "POST", "/rollback");
         }
 
+        /// <summary>
+        /// Enable the triple cache
+        /// </summary>
+        /// <param name="size">Triple cache size</param>
         public void EnableTripleCache(int size = -1)
         {
             string queryUrl = string.Empty;
@@ -412,15 +510,23 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             AGRequestService.DoReq(this, "PUT", queryUrl);
         }
 
+        /// <summary>
+        /// Remove the triple cache
+        /// </summary>
         public void DisableTripleCache()
         {
             AGRequestService.DoReq(this, "DELETE", "/tripleCache");
         }
 
+        /// <summary>
+        /// Get the size of the current triple cache size
+        /// </summary>
+        /// <returns>An integer denoting the triple cache size</returns>
         public int GetTripleCacheSize()
         {
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/tripleCache");
         }
+
         /// <summary>
         /// Create a new free-text index
         /// </summary>
@@ -513,6 +619,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             AGRequestService.DoReq(this, method, "/freetext/indices/" + name, paramsBuilder.ToString());
         }
 
+        /// <summary>
+        /// Crate a free text index
+        /// </summary>
+        /// <seealso cref="ManipulateFreeTextIndex"/>
         public void CreateFreeTextIndex(string name, string[] predicates = null, object indexLiterals = null,
                                         string indexResources = "true", string[] indexFields = null,
                                         int minimumWordSize = -1, string[] stopWords = null,
@@ -522,6 +632,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             ManipulateFreeTextIndex("PUT", name, predicates, indexLiterals, indexResources, indexFields, minimumWordSize, stopWords, wordFilters, innerChars, borderChars, tokenizer);
         }
 
+        /// <summary>
+        /// Modify a free text index
+        /// </summary>
+        /// <seealso cref="ManipulateFreeTextIndex"/>
         public void ModifyFreeTextIndex(string name, string[] predicates = null, object indexLiterals = null,
                                         string indexResources = "true", string[] indexFields = null,
                                         int minimumWordSize = -1, string[] stopWords = null,
@@ -545,20 +659,32 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             AGRequestService.DoReq(this, "DELETE", "/freetext/indices/" + name);
         }
 
+        /// <summary>
+        /// List all the free text predicates
+        /// </summary>
+        /// <returns>The URIs of the free text predicates</returns>
         public string[] ListFreeTextPredicates()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/predicates");
         }
 
+        /// <summary>
+        /// Register a new free text predicate
+        /// </summary>
+        /// <param name="predicate">the URI of predicate</param>
         public void RegisterFreeTextPredicate(string predicate)
         {
             AGRequestService.DoReq(this, "POST", "/freetext/predicates", "predicate=" + predicate);
         }
 
+        /// <summary>
+        /// Define a prolog functor
+        /// </summary>
         public void DefinePrologFunctors(string rules)
         {
             AGRequestService.DoReq(this, "POST", "/functor", rules);
         }
+
         /// <summary>
         ///     Returns a dictionary with fields "predicates",
         ///     "indexLiterals","indexResources","indexFields",
@@ -571,6 +697,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<Dictionary<string, string>>(this, "GET", "/freetext/indices/" + index);
         }
 
+        /// <summary>
+        /// Evaluate a free text search
+        /// </summary>
+        /// <param name="pattern">The search pattern</param>
+        /// <param name="infer">Whether to perform infer</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="indexs">The indices involved</param>
+        /// <returns></returns>
        
         public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
         {
