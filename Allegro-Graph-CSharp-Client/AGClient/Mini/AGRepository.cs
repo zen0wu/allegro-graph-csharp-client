@@ -9,6 +9,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Allegro_Graph_CSharp_Client.AGClient.Util;
+using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 {
@@ -66,7 +67,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
         }
-        
+
         /// <summary>
         /// Returns the catalog it belongs to
         /// </summary>
@@ -167,28 +168,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet(this, "GET", "", parameters);
         }
 
-        //public DataTable EvalSPARQLQuery(string Query, bool isReturnDataTable, string Infer = "false", string Context = null, string NamedContext = null,
-        //    Dictionary<string, string> Bindings = null, bool CheckVariables = false, int Limit = -1, int Offset = -1)
-        //{
-        //    JObject rawResult = JObject.Parse(EvalSPARQLQuery(Query,Infer,Context,NamedContext,Bindings,CheckVariables,Limit,Offset));
-        //    JArray headers = rawResult["names"] as JArray;
-        //    JArray contents = rawResult["values"] as JArray;
-
-        //    DataTable resultTable = new DataTable();
-        //    foreach (JToken columnName in headers)
-        //        resultTable.Columns.Add(new DataColumn(columnName.Value<string>()));
-
-        //    foreach (JArray rowObj in contents)
-        //    {
-        //        DataRow aRow = resultTable.NewRow();
-        //        int index = 0;
-        //        foreach (JToken cell in rowObj)
-        //            aRow[index++] = cell.Value<string>();
-        //        resultTable.Rows.Add(aRow);
-        //    }
-        //    return resultTable;
-        //}
-
         /// <summary>
         /// Execute prolog query
         /// </summary>
@@ -205,7 +184,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 if (count) accept = "text/integer";
                 else accept = "application/json";
             }
-
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("query", query);
             parameters.Add("queryLn", "prolog");
@@ -527,14 +505,20 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/tripleCache");
         }
 
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //  FreeText
+        ///////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Create a new free-text index
         /// </summary>
-        public void ManipulateFreeTextIndex(string method, string name, string[] predicates = null, object indexLiterals = null,
-                                  string indexResources = "true", string[] indexFields = null,
-                                  int minimumWordSize = -1, string[] stopWords = null,
-                                  string[] wordFilters = null, char[] innerChars = null,
-                                  char[] borderChars = null, string tokenizer = null)
+        public void ManipulateFreeTextIndex(string method, string name, string[] predicates = null,
+                                            object indexLiterals = null,
+                                            string indexResources = "true", string[] indexFields = null,
+                                            int minimumWordSize = -1, string[] stopWords = null,
+                                            string[] wordFilters = null, char[] innerChars = null,
+                                            char[] borderChars = null, string tokenizer = null)
         {
             StringBuilder paramsBuilder = new StringBuilder();
             Action<string, string> AddParam = delegate(string paramName, string paramValue)
@@ -705,7 +689,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="limit">The size limit of result</param>
         /// <param name="indexs">The indices involved</param>
         /// <returns></returns>
-       
+
         public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
         {
             string urlParam = "";
@@ -717,15 +701,169 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             {
                 if (indexs.Length > 0)
                 {
-                    StringBuilder indexParam = new StringBuilder(string.Format("index={0}",indexs[0]));
+                    StringBuilder indexParam = new StringBuilder(string.Format("index={0}", indexs[0]));
                     for (int i = 1; i < indexs.Length; i++)
                     {
                         indexParam.Append(string.Format("&index={0}", indexs[i]));
                     }
-                    urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&{3}", pattern, infer, limit,indexParam.ToString() );
+                    urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&{3}", pattern, infer, limit, indexParam.ToString());
                 }
             }
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices/" + urlParam);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Geo-spatial               
+        //////////////////////////////////////////////////////////////////////////////////////////////////// 
+        public string[] ListGeoTypes()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/geo/types");
+        }
+
+        public List<Statement> GetStatementsInsideBox(string type, string predicate,
+                                           float xMin, float xMax, float yMin, float yMax,
+                                           float limit = -1, float offset = -1)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("type={0}", type));
+            parameters.Append(string.Format("&predicate={0}", predicate));
+            parameters.Append(string.Format("&xMin={0}", xMin));
+            parameters.Append(string.Format("&xMax={0}", xMax));
+            parameters.Append(string.Format("&yMin={0}", yMin));
+            parameters.Append(string.Format("&yMax={0}", yMax));
+            if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
+            if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box", parameters.ToString());
+        }
+        public List<Statement> GetStatementsInsideCircle(string type, string predicate,
+                                                         float x, float y, float radius,
+                                                         float limit = -1, float offset = -1)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("type={0}", type));
+            parameters.Append(string.Format("&predicate={0}", predicate));
+            parameters.Append(string.Format("&x={0}", x));
+            parameters.Append(string.Format("&y={0}", y));
+            parameters.Append(string.Format("&radius={0}", radius));
+            if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
+            if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/circle", parameters.ToString());
+        }
+        /// <summary>
+        /// Get all the triples with a given predicate whose object lies within radius units 
+        /// from the given latitude/longitude.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="predicate"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="radius"></param>
+        /// <param name="unit"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public List<Statement> GetStatementsHaversine(string type, string predicate,
+                                                         float latitude, float longitude, float radius,
+                                                         string unit = "km", float limit = -1, float offset = -1)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("type={0}", type));
+            parameters.Append(string.Format("&predicate={0}", predicate));
+            parameters.Append(string.Format("&lat={0}", latitude));
+            parameters.Append(string.Format("&long={0}", longitude));
+            parameters.Append(string.Format("&unit={0}", unit));
+            parameters.Append(string.Format("&radius={0}", radius));
+            if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
+            if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/haversine", parameters.ToString());
+        }
+
+        public List<Statement> GetStatementsInsidePolygon(string type, string predicate, object polygon,
+                                                          float limit = -1, float offset = -1)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("type={0}", type));
+            parameters.Append(string.Format("&predicate={0}", predicate));
+            parameters.Append(string.Format("&polygon={0}", polygon));
+
+            if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
+            if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/polygon", parameters.ToString());
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        // SNA   Social Network Analysis Methods
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        
+        
+        /// <summary>
+        /// subjectOf, objectOf, and undirected can be either a single predicate or a list of predicates.
+        /// query should be a prolog query in the form (select ?x (q- ?node !<mypredicate> ?x)),
+        /// where ?node always returns to the argument passed to the generator.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subjectOf"></param>
+        /// <param name="objectOf"></param>
+        /// <param name="undirected"></param>
+        /// <param name="query"></param>
+        public void RegisterSNAGenerator(string name, string[] subjectOf=null,string[] objectOf=null, string[] undirected=null,string query=null)
+        {
+            StringBuilder parameters = new StringBuilder(string.Format("/snaGenerators/{0}?",name));
+            if (subjectOf != null)
+            {
+                foreach (string pred in subjectOf) parameters = AddParams("subjectOf", pred, parameters);
+            }
+            if (objectOf != null)
+            {
+                foreach (string pred in objectOf) parameters = AddParams("objectOf", pred, parameters);
+            }
+            if (undirected != null)
+            {
+                foreach (string pred in undirected) parameters = AddParams("undirected", pred, parameters);
+            }
+            if (query != null) parameters = AddParams("query", query, parameters);
+            AGRequestService.DoReq(this, "PUT", parameters.ToString());
+        }
+
+        /// <summary>
+        ///     Create a neighbor-matrix, which is a pre-computed generator
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="group">
+        ///     A set of N-Triples terms (can be passed multiple times)
+        ///     which serve as start nodes for building up the matrix. 
+        ///</param>
+        /// <param name="generator">The generator to use, by name</param>
+        /// <param name="depth">
+        /// An integer specifying the maximum depth to which to compute the matrix. Defaults to 1
+        /// </param>
+        public void RegisterNeighborMatrix(string name, string[] group, string generator,int depth=1)
+        {
+            StringBuilder parameters = new StringBuilder(string.Format("/neighborMatrices/{0}?", name));
+            if (group != null)
+            {
+                foreach (string s in group) parameters = AddParams("group", s, parameters);
+            }
+            if (generator != null) parameters = AddParams("generator", generator, parameters);
+            AddParams("depth", depth.ToString(), parameters);
+            AGRequestService.DoReq(this, "PUT", parameters.ToString());
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        // Tools
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        public static StringBuilder AddParams(string paramName, string paramValue, StringBuilder parameters)
+        {
+            if (parameters.Length > 0 && parameters.ToString().Contains("&"))
+                parameters.Append(string.Format("&{0}={1}", paramName, paramValue));
+            else
+                parameters.Append(string.Format("{0}={1}", paramName, paramValue));
+            return parameters;
         }
     }
 }
