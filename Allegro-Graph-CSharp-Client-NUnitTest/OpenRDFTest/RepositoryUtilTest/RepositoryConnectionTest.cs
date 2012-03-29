@@ -42,7 +42,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         public void ClearTripleStore()
         {
             repoConn.Clear();
-            Assert.True(repoConn.Size() == 0);
+            Assert.True(repoConn.GetSize() == 0);
             Assert.True(repoConn.IsEmpty());
         }
 
@@ -59,6 +59,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             repoConn.Clear();
             for (int i = 0; i < 10; ++i)
                 repoConn.AddStatement(CreateSampleStatement(i));
+            Assert.True(repoConn.GetSize() == 10);
         }
 
         [Test]
@@ -87,7 +88,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             repoConn.Commit();
             repoConn.CloseSession();
 
-            Assert.AreEqual(repoConn.Size(), bn);
+            Assert.AreEqual(repoConn.GetSize(), bn);
         }
 
         [Test]

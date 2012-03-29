@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model;
-namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Vocabulary
+namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
 {
     class XMLSchema
     {

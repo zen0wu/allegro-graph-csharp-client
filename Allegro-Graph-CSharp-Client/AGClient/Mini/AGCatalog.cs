@@ -57,7 +57,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="name">Repository name</param>
         public void DeleteRepository(string name)
         {
-            //AGRequestService.DoReq(Server, "DELETE", "/repositories/" + Name);
             AGRequestService.DoReq(this, "DELETE", "/repositories/" + name);
         }
 
