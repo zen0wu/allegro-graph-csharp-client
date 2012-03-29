@@ -88,7 +88,7 @@ namespace Allegro_Graph_CSharp_Client
             Catalog ca = server.OpenCatalog("chainyi");
             Repository re = ca.GetRepository("CSClient2");
             RepositoryConnection conn = re.GetConnection();
-            Console.WriteLine("size=" + conn.Size());
+            Console.WriteLine("size=" + conn.GetSize());
             for (int i = 3; i < 13; ++i)
             {
                 Console.WriteLine(i);
