@@ -49,10 +49,16 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         [Test]
         public void TestSize()
         {
+            TestAdd();
+            Assert.True(repoConn.Size() == 10);
+        }
+
+        [Test]
+        public void TestAdd()
+        {
             repoConn.Clear();
             for (int i = 0; i < 10; ++i)
                 repoConn.AddStatement(CreateSampleStatement(i));
-            Assert.True(repoConn.Size() == 10);
         }
 
         [Test]
