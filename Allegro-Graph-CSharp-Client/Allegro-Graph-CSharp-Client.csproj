@@ -24,6 +24,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -57,6 +59,8 @@
     <Compile Include="AGClient\Mini\AGRequestService.cs" />
     <Compile Include="AGClient\Mini\AGServerInfo.cs" />
     <Compile Include="AGClient\Mini\IAGUrl.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\DataType.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\FreeTextIndex.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Statement.cs" />
     <Compile Include="AGClient\OpenRDF\Model\Value.cs" />
     <Compile Include="AGClient\OpenRDF\Model\ValueFactory.cs" />
@@ -70,13 +74,14 @@
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForPrologRuleInference.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForSocialNetworkAnalysis .cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForSubjectTriplesCaching .cs" />
-    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForTransactions.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionUnderSession.cs" />
     <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForTripleIndex.cs" />
+    <Compile Include="AGClient\OpenRDF\RepositoryUtil\RepositoryConnectionForTypeMapping.cs" />
     <Compile Include="AGClient\OpenRDF\Rio\RDFFormat.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\AllegroGraphServer.cs" />
     <Compile Include="AGClient\OpenRDF\Sail\Spec.cs" />
     <Compile Include="AGClient\OpenRDF\Util\Uris.cs" />
-    <Compile Include="AGClient\OpenRDF\Vocabulary\XMLSchema.cs" />
+    <Compile Include="AGClient\OpenRDF\Model\XMLSchema.cs" />
     <Compile Include="AGClient\Util\AGRequestException.cs" />
     <Compile Include="AGClient\Util\RequestUtil.cs" />
     <Compile Include="AGClient\OpenRDF\Util\Misc.cs" />

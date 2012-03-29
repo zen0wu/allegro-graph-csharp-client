@@ -28,6 +28,25 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
+        /// Return the date on which the server was built
+        /// </summary>
+        /// <returns></returns>
+        public DateTime GetBuiltDate()
+        {
+            return AGRequestService.DoReqAndGet<DateTime>(Server, "GET", "/version/date", null, false);
+        }
+
+        public void ReConfigure()
+        {
+            AGRequestService.DoReq(Server, "POST", "/reconfigure ");
+        }
+
+        public void ReopenLog()
+        {
+            AGRequestService.DoReq(Server, "POST", "/reopenLog");
+        }
+
+        /// <summary>
         /// List all of the Catalog's name
         /// </summary>
         /// <returns></returns>
@@ -42,6 +61,24 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
+        /// Create catalog,if exist return null else return new catalog
+        /// </summary>
+        /// <param name="Name">catalog name</param>
+        /// <returns></returns>
+        public AGCatalog CreateCatalog(string Name)
+        {
+            if (ListCatalogs().Contains(Name))
+            {
+                return null;
+            }
+            else
+            {
+                AGRequestService.DoReq(Server, "PUT", "/Catalogs/" + Name);
+                return new AGCatalog(Server, Name);
+            }
+        }
+
+        /// <summary>
         /// Open Catalog
         /// </summary>
         /// <param name="Name">Catalog name</param>
@@ -49,6 +86,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public AGCatalog OpenCatalog(string Name)
         {
             return new AGCatalog(Server, Name);
+        }
+
+        public void DeleteCatalog(string Name)
+        {
+            AGRequestService.DoReq(Server, "DELETE", "/Catalogs/" + Name);
         }
 
 
@@ -83,27 +125,32 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Replace the current initialization file contents with the
-        /// 'content' string or remove if null. `restart`, which defaults
-        /// to true, specifies whether any running shared back-ends should
-        /// be shut down, so that subsequent requests will be handled by
-        /// back-ends that include the new code.
+        ///  Replace the current initialization file contents with the
+        /// 'content' string or remove if null. 
         /// </summary>
-        /// <param name="Name">Catalog name</param>
-        /// <returns>return Catalog</returns>
-
+        /// <param name="content">init file content</param>
+        /// <param name="restart">
+        ///     defaults to true, specifies whether any running shared back-ends should
+        ///     be shut down, so that subsequent requests will be handled by
+        ///     back-ends that include the new code.
+        /// </param>
         public void SetInitFile(string content = null, bool restart = true)
         {
             //Console.WriteLine(Server.Url + "/initfile");
             if (string.IsNullOrEmpty(content))
             {
-                AGRequestService.DoReq(Server, "DELETE", "/initfile");
+                DeleteInitFile();
             }
             else
             {
                 //AGRequestService.DoReq(Server, "PUT", "/initfile?" + "restart="+restart, content,true);
                 AGRequestService.DoReq(Server, "PUT", string.Format("/initfile?restart={0}", restart), content, true);
             }
+        }
+
+        public void DeleteInitFile()
+        {
+            AGRequestService.DoReq(Server, "DELETE", "/initfile");
         }
     }
 }

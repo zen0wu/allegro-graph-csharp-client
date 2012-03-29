@@ -93,7 +93,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns>The URIs of blank nodes</returns>
         public string[] GetBlankNodes(int amount = 1)
         {
-            return AGRequestService.DoReqAndGet<string[]>(this, "POST", "/blankNodes", string.Format("amount={0}", amount));
+            return AGRequestService.DoReqAndGet<string[]>(this, "POST", string.Format("/blankNodes?amount={0}", amount));
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Get the statements by their ids
+        /// Return all statements whose triple ID matches an ID in the set 'ids'.
         /// </summary>
         /// <param name="ids">Id constraints</param>
         /// <param name="returnIDs">Whether to return ids</param>
@@ -313,16 +313,25 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// List the namespaces of the current repository
+        /// Deletes all duplicate statements that are currently present in the store
         /// </summary>
-        /// <returns>A list of namespace</returns>
-        public List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> ListNamespaces()
+        /// <param name="indexMode">The indexmode can be either spog (the default) or spo to indicate</param>
+        public void DeleteDuplicateStatements(string indexMode = "spog")
         {
-            return AGRequestService.DoReqAndGet<List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace>>(this, "GET", "/namespaces");
+            AGRequestService.DoReq(this, "DELETE", "/statements/duplicates?mode=" + indexMode);
         }
 
         /// <summary>
-        /// Get a specific namespace
+        /// List the namespaces of the current repository
+        /// </summary>
+        /// <returns>A list of namespace</returns>
+        public List<Namespace> ListNamespaces()
+        {
+            return AGRequestService.DoReqAndGet<List<Namespace>>(this, "GET", "/namespaces");
+        }            
+       
+        /// <summary>
+        /// Returns the namespace URI defined for the given prefix. 
         /// </summary>
         /// <param name="prefix">The prefix of the namespace</param>
         /// <returns>The namespace's name</returns>
@@ -335,10 +344,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// Add a namespace
         /// </summary>
         /// <param name="prefix">Prefix</param>
-        /// <param name="name">Namespace's name</param>
-        public void AddNamespace(string prefix, string name)
+        /// <param name="nsUrl">Namespace's URL</param>
+        public void AddNamespace(string prefix, string nsUrl)
         {
-            AGRequestService.DoReq(this, "PUT", "/namespaces/" + prefix, "text/plain", null, true);
+            AGRequestService.DoReq(this, "POST", "/namespaces/" + prefix, "text/plain",nsUrl, true);
         }
 
         /// <summary>
@@ -351,13 +360,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Clear all the namespace
+        /// Deletes all namespaces in this repository for the current user.
         /// </summary>
-        /// <param name="reset">Whether to reset</param>
+        /// <param name="reset">
+        /// If a reset argument of true is passed, the user's namespaces are reset to the default set of namespaces. 
+        ///</param>
         public void ClearNamespaces(bool reset = true)
         {
             AGRequestService.DoReq(this, "DELETE", string.Format("/namespaces/reset={0}", reset));
         }
+
         /// <summary>
         /// Load a given file into AG Server
         /// </summary>
@@ -390,6 +402,93 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             AGRequestService.DoReq(this, "POST", relativeUrl, contentType, fileContent);
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///Type mapping
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Fetches a result set of currently specified mappings. 
+        /// </summary>
+        /// <returns>List<DataType></returns>
+        public List<DataType> ListTypeMapping()
+        {
+            return AGRequestService.DoReqAndGet<List<DataType>>(this, "GET", "/mapping");
+        }
+
+       /// <summary>
+       /// Clear type mappings for this repository. 
+       /// </summary>
+       /// <param name="isAll">
+        ///      if true Clear all type mappings for this repository including the automatic ones.
+        ///      else Clear all non-automatic type mappings for this repository. 
+       /// </param>
+        public void ClearTypeMapping(bool isAll=false)
+        {
+            AGRequestService.DoReq(this, "DELETE", "/mapping");
+        }
+
+        /// <summary>
+        /// Yields a list of literal types for which datatype mappings have been defined in this store.
+        /// </summary>
+        /// <returns>The set of type</returns>
+        public string[] ListMappedTypes()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/mapping/type");
+        }
+
+        /// <summary>
+        /// Takes two arguments, type (the RDF literal type) and encoding, 
+        /// and defines a datatype mapping from the first to the second
+        /// </summary>
+        /// <param name="type">the RDF literal type</param>
+        /// <param name="encoding">Encoding</param>
+        public void AddMappedType(string type, string encoding)
+        {
+            AGRequestService.DoReq(this, "PUT", string.Format("/mapping/type?type={0}&encoding={1}",type,encoding));
+        }
+
+        /// <summary>
+        /// Deletes a datatype mapping
+        /// </summary>
+        /// <param name="type">type should be an RDF resource</param>
+        public void DeleteMappedType(string type)
+        {
+            AGRequestService.DoReq(this, "DELETE", string.Format("/mapping/type?type={0}", type));
+        }
+
+        /// <summary>
+        /// Yields a list of literal types for which predicate mappings have been defined in this store. 
+        /// </summary>
+        /// <returns></returns>
+        public string[] ListMappedPredicates()
+        {
+            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/mapping/predicate");
+        }
+
+        /// <summary>
+        /// Takes two arguments, predicate and encoding, and defines a predicate mapping on them. 
+        /// </summary>
+        /// <param name="predicate">predicate</param>
+        /// <param name="encoding">encoding</param>
+        public void AddMappedPredicate(string predicate, string encoding)
+        {
+            AGRequestService.DoReq(this, "POST", string.Format("/mapping/predicate?predicate={0}&encoding={1}",predicate,encoding));
+        }
+
+        /// <summary>
+        /// Deletes a predicate mapping. Takes one parameter, predicate. 
+        /// </summary>
+        /// <param name="predicate">predicate</param>
+        public void DeleteMappedPredicate(string predicate)
+        {
+            AGRequestService.DoReq(this, "DELETE", string.Format("/mapping/predicate?predicate={0}",predicate));
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///triple index
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// List all the indices
         /// </summary>
@@ -398,13 +497,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices");
         }
 
+
         /// <summary>
         /// List the valid indices
         /// </summary>
+        /// <returns>set of index</returns>
         public string[] ListValidIndices()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/indices?listValid=true");
         }
+
         /// <summary>
         /// Add an index with specific type
         /// </summary>
@@ -421,6 +523,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public void DropIndex(string indexType)
         {
             AGRequestService.DoReq(this, "DELETE", "/indices/" + indexType);
+        }
+
+        /// <summary>
+        /// Tells the server to try and optimize the indices for this store
+        /// </summary>
+        /// <param name="wait">
+        ///  Defaulting to false,Indicates whether the HTTP request should return right away or
+        ///  whether it should wait for the operation to complete.
+        /// </param>
+        /// <param name="level">Level determines how much work should be done. </param>
+        public void OptimizeIndex(bool wait = false, string level = null)
+        {
+            AGRequestService.DoReq(this, "POST", string.Format("/indices/optimize?wait={0}&level={1}",wait,level));
         }
 
         /// <summary>
@@ -455,6 +570,83 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
+        /// Prepares a query,Preparing queries is only supported in a dedicated session,
+        /// and the prepared queries will only be available in that session. 
+        /// </summary>
+        /// <param name="PQueryID">prepares query id</param>
+        /// <param name="query">Query string</param>
+        /// <param name="infer">Infer option, can be "false","rdfs++","restriction"</param>
+        /// <param name="context">Context</param>
+        /// <param name="namedContext">Named Context</param>
+        /// <param name="bindings">Local bindings for variables</param>
+        /// <param name="checkVariables">Whether to check the non-existing variable</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        /// <returns>prepares query and saves query under id.</returns>
+        public void PreparingQueries(string PQueryID, string query, string infer = "false", string context = null, string namedContext = null,
+           Dictionary<string, string> bindings = null, bool checkVariables = false, int limit = -1, int offset = -1)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("query", query);
+            parameters.Add("queryLn", "sparql");
+            parameters.Add("infer", infer);
+            if (context != null) parameters.Add("context", context);
+            if (namedContext != null) parameters.Add("namedContext", namedContext);
+
+            if (bindings != null)
+            {
+                foreach (string vari in bindings.Keys)
+                    parameters.Add("$" + vari, HttpUtility.UrlEncode(bindings[vari]));
+            }
+            parameters.Add("checkVariables", checkVariables.ToString());
+            if (limit >= 0) parameters.Add("limit", limit.ToString());
+            if (offset >= 0) parameters.Add("offset", offset.ToString());
+            AGRequestService.DoReq(this, "PUT", "/queries/" + PQueryID, parameters);
+        }
+
+        /// <summary>
+        ///  Executes a prepared query stored under the name id 
+        /// </summary>
+        /// <param name="PQueryID">prepared query id</param>
+        public void ExecutePreparingQueries(string PQueryID)
+        {
+            AGRequestService.DoReq(this, "GET", "/queries/" + PQueryID);
+        }
+
+        /// <summary>
+        /// Executes a prepared query stored under the name id with some parameters
+        /// </summary>
+        /// <param name="PQueryID">prepared query id</param>
+        /// <param name="bindings">Local bindings for variables</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        public void ExecutePreparingQueries(string PQueryID, Dictionary<string, string> bindings = null, int limit = -1, int offset = -1)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            AGRequestService.DoReq(this, "POST", "/queries/" + PQueryID, parameters);
+        }
+
+        /// <summary>
+        /// Deletes the prepared query stored under id
+        /// </summary>
+        /// <param name="PQueryID">prepared query id</param>
+        public void DeletePreparingQueries(string PQueryID)
+        {
+            AGRequestService.DoReq(this, "DELETE", "/queries/" + PQueryID);
+        }
+
+        /// <summary>
+        /// Define Prolog functors, 
+        /// which can be used in Prolog queries. 
+        /// This is only allowed when accessing a dedicated session. 
+        /// </summary>
+        /// <param name="prologFunction">prolog function content</param>
+        public void DefinePrologFunction(string prologFunction)
+        {
+            AGRequestService.DoReq(this, "POST", "/functor", prologFunction);
+        }
+
+        /// <summary>
         /// Commit the current session
         /// </summary>
         public void Commit()
@@ -471,7 +663,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Enable the triple cache
+        ///     Enable the spogi cache in this repository. 
+        ///     Takes an optional size argument to set the size of the cache.
         /// </summary>
         /// <param name="size">Triple cache size</param>
         public void EnableTripleCache(int size = -1)
@@ -489,7 +682,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Remove the triple cache
+        /// Disable the spogi cache for this repository. 
         /// </summary>
         public void DisableTripleCache()
         {
@@ -497,7 +690,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Get the size of the current triple cache size
+        /// Find out whether the 'SPOGI cache' is enabled, 
+        /// and what size it has. Returns an integer 
+        /// 0 when the cache is disabled, the size of the cache otherwise. 
         /// </summary>
         /// <returns>An integer denoting the triple cache size</returns>
         public int GetTripleCacheSize()
@@ -511,12 +706,84 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         ///////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// Create a new free-text index
+        /// Use free-text indices to search for the given pattern.
         /// </summary>
+        /// <param name="pattern">The text to search for</param>
+        /// <param name="expression">An S-expression combining search strings using and, or, phrase, match, and fuzzy. </param>
+        /// <param name="index">
+        ///   An optional parameter that restricts the search to a specific free-text index.
+        ///   If not given, all available indexes are used
+        /// </param>
+        /// <param name="sorted"> 
+        ///     indicating whether the results should be sorted by relevance. Default is false. 
+        /// </param>
+        /// <param name="limit">An integer limiting the amount of results that can be returned.</param>
+        /// <param name="offset">An integer telling the server to skip the first few results</param>
+        /// <returns>an array of statements</returns>
+        public string[][] EvalFreeTextIndex(string pattern, string expression = null, string index = null, bool sorted = false, int limit = -1, int offset = -1)
+        {
+            StringBuilder sbParameter = new StringBuilder(string.Format("?pattern={0}", pattern));
+            if (expression != null)
+            {
+                sbParameter.Append(string.Format("&expression={0}", expression));
+            }
+            if (index != null)
+            {
+                sbParameter.Append(string.Format("&index={0}", index));
+            }
+            sbParameter.Append(string.Format("&sorted={0}", sorted));
+            if (limit != -1)
+            {
+                sbParameter.Append(string.Format("&limit={0}", limit));
+            }
+            if (offset != -1)
+            {
+                sbParameter.Append(string.Format("&offset={0}", offset));
+            }
+            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/freetext" + sbParameter.ToString());
+        }
+
+
+
+        /// <summary>
+        /// Create a free-text index with the given parameters
+        /// </summary>
+        /// <param name="method">http method</param>
+        /// <param name="name">string identifying the new index </param>
+        /// <param name="predicates">If no predicates are given, triples are indexed regardless of predicate</param>
+        /// <param name="indexLiterals">
+        ///     IndexLiterals determines which literals to index.
+        ///     It can be True (the default), False, or a list of resources, 
+        ///     indicating the literal types that should be indexed
+        /// </param>
+        /// <param name="indexResources">
+        ///     IndexResources determines which resources are indexed. 
+        ///     It can be True, False (the default), or "short", 
+        ///     to index only the part of resources after the last slash or hash character.
+        /// </param>
+        /// <param name="indexFields">
+        ///     IndexFields can be a list containing any combination of the elements
+        ///     "subject", "predicate", "object", and "graph".The default is ["object"]. 
+        /// </param>
+        /// <param name="minimumWordSize"> 
+        ///     Determines the minimum size a word must have to be indexed.
+        ///     The default is 3
+        /// </param>
+        /// <param name="stopWords">
+        ///     StopWords should hold a list of words that should not be indexed. 
+        ///     When not given, a list of common English words is used. 
+        /// </param>
+        /// <param name="wordFilters">
+        ///     WordFilters can be used to apply some normalizing filters to words as they are indexed or queried.
+        ///     Can be a list of filter names.  Currently, only "drop-accents" and "stem.english" are supported. 
+        /// </param>
+        /// <param name="innerChars">The character set to be used as the constituent characters of a word</param>
+        /// <param name="borderChars"> The character set to be used as the border characters of indexed words. </param>
+        /// <param name="tokenizer">An optional string. Can be either default or japanese.</param>
         public void ManipulateFreeTextIndex(string method, string name, string[] predicates = null,
                                             object indexLiterals = null,
                                             string indexResources = "true", string[] indexFields = null,
-                                            int minimumWordSize = -1, string[] stopWords = null,
+                                            int minimumWordSize = 3, string[] stopWords = null,
                                             string[] wordFilters = null, char[] innerChars = null,
                                             char[] borderChars = null, string tokenizer = null)
         {
@@ -629,6 +896,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             ManipulateFreeTextIndex("POST", name, predicates, indexLiterals, indexResources, indexFields, minimumWordSize, stopWords, wordFilters, innerChars, borderChars, tokenizer);
         }
 
+        /// <summary>
+        /// Returns a list of names of free-text indices defined in this repository. 
+        /// </summary>
+        /// <returns></returns>
         public string[] ListFreeTextIndices()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices");
@@ -662,11 +933,24 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Define a prolog functor
+        /// Returns the configuration parameters of the named free-text index
         /// </summary>
-        public void DefinePrologFunctors(string rules)
+        /// <param name="indexName">Free text index name</param>
+        /// <returns></returns>
+        public FreeTextIndex GetFreeTextIndex(string indexName)
         {
-            AGRequestService.DoReq(this, "POST", "/functor", rules);
+            return AGRequestService.DoReqAndGet<FreeTextIndex>(this, "GET", "/freetext/indices/" + indexName);
+        }
+
+        /// <summary>
+        /// Returns the configuration parameter of the named free-text index
+        /// </summary>
+        /// <param name="indexName">Free text index name</param>
+        /// <param name="paramName">parameter name</param>
+        /// <returns></returns>
+        public string GetFreeTextIndexConfiguration(string indexName, string paramName)
+        {
+            return AGRequestService.DoReqAndGet<string>(this, "GET", string.Format("/freetext/indices/{0}/{1}", indexName, paramName));
         }
 
         /// <summary>
@@ -674,11 +958,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         ///     "indexLiterals","indexResources","indexFields",
         ///     "minimumWordSize", "stopWords", and "wordFilters".
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">Free text index name</param>
         /// <returns></returns>
-        public Dictionary<string, string> GetFreeTextIndexConfiguration(string index)
+        public Dictionary<string, string> GetFreeTextIndexConfiguration(string indexName)
         {
-            return AGRequestService.DoReqAndGet<Dictionary<string, string>>(this, "GET", "/freetext/indices/" + index);
+            return AGRequestService.DoReqAndGet<Dictionary<string, string>>(this, "GET", "/freetext/indices/" + indexName);
         }
 
         /// <summary>
@@ -710,6 +994,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 }
             }
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices/" + urlParam);
+        }
+
+        /// <summary>
+        /// Define a prolog functor
+        /// </summary>
+        public void DefinePrologFunctors(string rules)
+        {
+            AGRequestService.DoReq(this, "POST", "/functor", rules);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -799,8 +1091,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         // SNA   Social Network Analysis Methods
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        
-        
+
+
         /// <summary>
         /// subjectOf, objectOf, and undirected can be either a single predicate or a list of predicates.
         /// query should be a prolog query in the form (select ?x (q- ?node !<mypredicate> ?x)),
@@ -811,9 +1103,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="objectOf"></param>
         /// <param name="undirected"></param>
         /// <param name="query"></param>
-        public void RegisterSNAGenerator(string name, string[] subjectOf=null,string[] objectOf=null, string[] undirected=null,string query=null)
+        public void RegisterSNAGenerator(string name, string[] subjectOf = null, string[] objectOf = null, string[] undirected = null, string query = null)
         {
-            StringBuilder parameters = new StringBuilder(string.Format("/snaGenerators/{0}?",name));
+            StringBuilder parameters = new StringBuilder(string.Format("/snaGenerators/{0}?", name));
             if (subjectOf != null)
             {
                 foreach (string pred in subjectOf) parameters = AddParams("subjectOf", pred, parameters);
@@ -842,7 +1134,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="depth">
         /// An integer specifying the maximum depth to which to compute the matrix. Defaults to 1
         /// </param>
-        public void RegisterNeighborMatrix(string name, string[] group, string generator,int depth=1)
+        public void RegisterNeighborMatrix(string name, string[] group, string generator, int depth = 1)
         {
             StringBuilder parameters = new StringBuilder(string.Format("/neighborMatrices/{0}?", name));
             if (group != null)

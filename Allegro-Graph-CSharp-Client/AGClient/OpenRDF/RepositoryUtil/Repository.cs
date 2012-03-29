@@ -32,17 +32,26 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             _agRepository = agRepository;
         }
 
+        
+
+        /// <summary>
+        /// Get RepositoryConnection
+        /// </summary>
+        /// <returns>RepositroyConnection object</returns>
         public RepositoryConnection GetConnection()
         {
             return new RepositoryConnection(this);
         }
 
+        /// <summary>
+        /// Get AGRepository Object
+        /// </summary>
+        /// <returns>_agRepository</returns>
         public AGRepository GetMiniRepository()
         {
             return this._agRepository;
         }
         
-
         /// <summary>
         ///  Return the name of the database (remote triple store) that this repository is interfacing with.
         /// </summary>
@@ -52,6 +61,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return _agRepository.DatabaseName;
         }
 
+        /// <summary>
+        /// Returns a string composed of the catalog name concatenated with the repository name.
+        /// </summary>
+        /// <returns></returns>
         public string GetSpec()
         {
             string catName = this.catalog.GetName();
@@ -73,6 +86,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         {
             return this;
         }
+
         /// <summary>
         ///     Register an inlined datatype. 
         ///     Predicate is the URI of predicate used in the triple store. 
