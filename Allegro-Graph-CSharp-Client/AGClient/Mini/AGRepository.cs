@@ -43,6 +43,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             this.Catalog = new AGCatalog(new AGServerInfo(repoUrl, userName, password), null);
         }
 
+        /// <summary>
+        /// Repository Url
+        /// </summary>
         public string Url
         {
             get { return RepoUrl; }
@@ -1007,11 +1010,28 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //Geo-spatial               
         //////////////////////////////////////////////////////////////////////////////////////////////////// 
+        
+        /// <summary>
+        /// List the geo-spatial types registered in the store.
+        /// </summary>
+        /// <returns></returns>
         public string[] ListGeoTypes()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/geo/types");
         }
 
+        /// <summary>
+        /// Fetch all triples with a given predicate whose object is a geospatial value inside the given box. 
+        /// </summary>
+        /// <param name="type">The geospatial type of the object field.</param>
+        /// <param name="predicate">The predicate to look for</param>
+        /// <param name="xMin">The bounding box</param>
+        /// <param name="xMax">The bounding box</param>
+        /// <param name="yMin">The bounding box</param>
+        /// <param name="yMax">The bounding box</param>
+        /// <param name="limit">Optional. Used to limit the amount of returned triples</param>
+        /// <param name="offset">Optional. Used to skip a number of returned triples.</param>
+        /// <returns></returns>
         public List<Statement> GetStatementsInsideBox(string type, string predicate,
                                            float xMin, float xMax, float yMin, float yMax,
                                            float limit = -1, float offset = -1)
@@ -1028,6 +1048,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
 
             return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box", parameters.ToString());
         }
+
+        /// <summary>
+        /// Retrieve triples within a circle.parameters reference GetStatementsInsideBox(...)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="predicate"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="radius"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
         public List<Statement> GetStatementsInsideCircle(string type, string predicate,
                                                          float x, float y, float radius,
                                                          float limit = -1, float offset = -1)

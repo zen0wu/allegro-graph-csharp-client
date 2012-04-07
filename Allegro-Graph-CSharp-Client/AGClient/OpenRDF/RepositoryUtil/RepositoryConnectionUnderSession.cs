@@ -7,12 +7,22 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 {
     public partial class RepositoryConnection
     {
+        /// <summary>
+        /// Open a dedicated session. 
+        /// </summary>
+        /// <param name="spec">session url</param>
+        /// <param name="autocommit">If autocommit is True, commits are done on each request, otherwise you will need to call commit() or rollback() as appropriate for your application.</param>
+        /// <param name="lifetime">lifetime is an integer specifying the time to live in seconds of the session.</param>
+        /// <param name="loadinitfile">If loadinitfile is True, then the current initfile will be loaded for you when the session starts.</param>
         public void OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
         {
             _repository.OldUrl = _repository.Url;
             _repository.Url = _repository.GetMiniRepository().OpenSession(spec, autocommit, lifetime, loadinitfile);
         }
 
+        /// <summary>
+        /// Close a dedicated session connection. 
+        /// </summary>
         public void CloseSession()
         {
             _repository.GetMiniRepository().CloseSession();

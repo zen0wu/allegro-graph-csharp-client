@@ -26,6 +26,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
         public RepositoryConnection Connection { get; set; }
         public bool CheckVariables { get; set; }
 
+
+        /// <summary>
+        /// Binds the named key to the supplied value. 
+        /// Any value that was previously bound to the specified attribute will be overwritten. 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void SetBindings(string key, string value)
         {
             if (Bindings == null)
@@ -35,6 +42,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
             Bindings[key] = value;
         }
 
+        /// <summary>
+        /// Sets multiple bindings using a dictionary of attribute keys and values.
+        /// </summary>
+        /// <param name="dictionary"></param>
         public void SetBindings(Dictionary<string, string> dictionary)
         {
             if (Bindings == null)
@@ -46,6 +57,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
                 Bindings[key] = dictionary[key];
             }
         }
+
+        /// <summary>
+        /// Removes the named binding so that it has no value.
+        /// </summary>
+        /// <param name="key">binding key</param>
         public void RemoveBinding(string key)
         {
             if (Bindings != null && Bindings.ContainsKey(key))
@@ -84,14 +100,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query
         }
 
         /// <summary>
-        ///     Evaluate a SPARQL or PROLOG query, 
-        ///     which may be a 'select', 'construct', 'describe' or 'ask' query (in the SPARQL case).  
-        ///     Return an appropriate response.
-        ///     If analysis is True it will perform query analysis for SPARQL queries.
-        ///     analysisTechnique defaults to "", which executes the query to perform dynamic analysis.
-        ///     "static" analysis is the other option.
-        ///     For analysisTimeout, pass a float of the number of seconds to run the query if executed.
+        ///  Evaluate a SPARQL or PROLOG query.
         /// </summary>
+        /// <param name="infer">Infer option, can be "false","rdfs++","restriction"</param>
+        /// <param name="limit">The size limit of result<</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        /// <returns></returns>
         public string evaluate_generic_query(string infer = "false", int limit = -1, int offset = -1)
         {
             RepositoryConnection conn = this.Connection;

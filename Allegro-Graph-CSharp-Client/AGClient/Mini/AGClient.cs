@@ -97,7 +97,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <summary>
         /// Open a session on a federated, reasoning, or filtered store.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="spec"></param>
+        /// <param name="autoCommit"></param>
+        /// <param name="lifetime"></param>
+        /// <param name="loadInitFile"></param>
+        /// <returns>AGRepository</returns>
+        
         public AGRepository OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
         {
             string param = string.Empty;

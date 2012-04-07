@@ -8,11 +8,24 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 {
     public partial class RepositoryConnection
     {
+        /// <summary>
+        /// List the geo-spatial types registered in the store.
+        /// </summary>
+        /// <returns>geo-spatial types</returns>
         public string[] ListGeoTypes()
         {
             return this.GetMiniRepository().ListGeoTypes();
         }
-        public List<Statement> GetStatements(string predicate, GeoSpatial region, string[] contexts, int limit = -1, int offset = -1)
+
+        /// <summary>
+        /// Fetch all triples with a given predicate whose object is a geospatial value inside the given region. 
+        /// </summary>
+        /// <param name="predicate">The geospatial type of the object field.</param>
+        /// <param name="region">region</param>
+        /// <param name="limit">Optional. Used to limit the amount of returned triples</param>
+        /// <param name="offset">Optional. Used to skip a number of returned triples.</param>
+        /// <returns></returns>
+        public List<Statement> GetStatements(string predicate, GeoSpatial region,int limit = -1, int offset = -1)
         {
             string geoDataType = region.GeoDataType;
             if (region is GeoBox)
@@ -50,10 +63,34 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return null;
         }
 
+        /// <summary>
+        /// Create a rectangular search region (a box) for geospatial search.
+        /// This method works for both Cartesian and spherical coordinate systems.
+        /// xMin, xMax may be used to input latitude. yMin, yMax may be used to input longitude.
+        /// </summary>
+        /// <param name="xMin"></param>
+        /// <param name="xMax"></param>
+        /// <param name="yMin"></param>
+        /// <param name="yMax"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
         public GeoBox CreateBox(float xMin = 0, float xMax = 0, float yMin = 0, float yMax = 0, string unit = null)
         {
             return new GeoBox(xMin, xMax, yMin, yMax, unit);
         }
+
+        /// <summary>
+        /// Create a circular search region for geospatial search. 
+        /// This method works for both Cartesian and spherical coordinate systems. 
+        /// radius is the radius of the circle expressed in the designated unit,
+        /// which defaults to the unit assigned to the coordinate system.
+        /// x and y locate the center of the circle and may be used for latitude and longitude. 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="radius"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
         public GeoCircle CreateCircle(float x, float y, float radius, string unit = null)
         {
             return new GeoCircle(x, y, radius, unit);

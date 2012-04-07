@@ -38,10 +38,5 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
             get { return _context; }
             set { _context = value; }
         }
-       
-        //void setQuad(object string_tuple)
-        //{
-        //}
-
     }
 }

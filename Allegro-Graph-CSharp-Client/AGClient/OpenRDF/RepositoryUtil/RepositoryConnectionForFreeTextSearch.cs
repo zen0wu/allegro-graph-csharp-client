@@ -142,6 +142,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
            return this.GetMiniRepository().ListFreeTextIndices();
         }
 
+
+        /// <summary>
+        /// Register a new free text predicate
+        /// </summary>
+        /// <param name="predicate">the URI of predicate</param>
         public void RegisterFreeTextPredicate(string predicate)
         {
             this.GetMiniRepository().RegisterFreeTextPredicate(predicate);
