@@ -88,20 +88,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         }
 
         /// <summary>
-        ///     Register an inlined datatype. 
-        ///     Predicate is the URI of predicate used in the triple store. 
-        ///     Datatype may be one of: XMLSchema.INT, XMLSchema.LONG, XMLSchema.FLOAT, XMLSchema.DATE, and XMLSchema.DATETIME.  
-        ///     NativeType may be "int", "datetime", or "float".
-        ///     You must supply nativeType and either predicate or datatype. 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <param name="datatype"></param>
-        /// <param name="nativeType"></param>
-        //public void RegisterDatatypeMapping(string predicate = null, string datatype = null, string nativeType = null)
-        //{
-        //}
-
-        /// <summary>
         ///   Shuts the store down, releasing any resources that it keeps hold of.
         ///   Once shut down, the store can no longer be used.
         /// </summary>

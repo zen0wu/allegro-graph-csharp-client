@@ -136,12 +136,36 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
             _agClient.DeleteInitFile();
         }
 
+        /// <summary>
+        /// Creates a new session
+        /// </summary>
+        /// <param name="spec">A string indicating the kind of store that has to be opened</param>
+        /// <param name="autoCommit">
+        /// A boolean, which determines whether the session uses transactions 
+        /// (default is false, meaning transactions are enabled). 
+        /// </param>
+        /// <param name="lifetime">
+        /// An integer, specifying the amount of seconds the session can be idle before being collected. 
+        /// </param>
+        /// <param name="loadInitFile">
+        /// A boolean, defaulting to false, 
+        /// which determines whether the initfile is loaded into this session
+        /// </param>
+        /// <returns></returns>
         public Repository OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
         {
             AGRepository _agRepository = _agClient.OpenSession(spec, autoCommit, lifetime, loadInitFile);
             return new Repository(_agRepository);
         }
 
+        /// <summary>
+        /// Reference OpenSession()
+        /// </summary>
+        /// <param name="specs"></param>
+        /// <param name="autoCommit"></param>
+        /// <param name="lifetime"></param>
+        /// <param name="loadInitFile"></param>
+        /// <returns></returns>
         public Repository OpenFederated(string[] specs, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
         {
             string spec = Spec.Federate(specs);

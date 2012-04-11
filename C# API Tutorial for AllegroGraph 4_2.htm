@@ -1,0 +1,1217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>C# API Tutorial for AllegroGraph</TITLE>
+<META content="text/html; charset=ISO-8859-1" http-equiv=Content-Type>
+<STYLE type=text/css>
+.input {
+	BACKGROUND-COLOR: #addfff;
+	MARGIN-LEFT: 4em
+}
+.output {
+	BACKGROUND-COLOR: #f1f1f1;
+	MARGIN-LEFT: 4em
+}
+.returnlink {
+	FONT-SIZE: small;
+	FONT-WEIGHT: normal
+}
+</STYLE>
+<META name=GENERATOR content="MSHTML 8.00.7600.16912">
+</HEAD>
+<BODY>
+<H1>C# API Reference for AllegroGraph 4.2</H1>
+<P>This is a description of the c# Application Programmer's Interface (API) 
+  to AllegroGraph RDFStore</P>
+<P>The C# API offers convenient and efficient access to an AllegroGraph 
+  server from a C#-based application. This API provides methods for creating, 
+  querying and maintaining RDF data, and for managing the stored triples. </P>
+<TABLE border=1>
+  <TBODY>
+    <TR>
+      <TD width=867>The C# API deliberately emulates the Aduna Sesame API to 
+        make it easier to migrate from Sesame to AllegroGraph.&nbsp; The C# 
+        API has also been extended in ways that make it easier and more intuitive 
+        than the Sesame API.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id=Contents>Contents</H2>
+<UL>
+  <LI><A href=" #AllegroGraphServer Class">AllegroGraphServer Class</A>
+  <LI><A href=" #Catalog Class">Catalog  Class</A>
+  <LI><A href=" #Repository Class">Repository Class</A>
+  <LI><A href=" #RepositoryConnection Class">RepositoryConnection  Class</A>
+  <LI><A href=" #AbstractQuery Class">AbstractQuery  Class</A>
+    <UL>      
+      <LI><A  href=" #Subclass BooleanQuery">Subclass  BooleanQuery</A> </LI>
+      <LI><A  href=" #Subclass StringArrayQuery">Subclass  StringArrayQuery</A> </LI>
+    </UL>
+  <LI><A href="#Statement Class">Statement  Class</A>
+  <LI><A href="#Spec Class">Spec Class</A> </LI>
+  <li><A href="#DataType Class">DataType Class</A> </li>
+  <li><a href="#Namespace Class">Namespace Class</a></li>
+</UL>
+<H2 id="AllegroGraphServer Class">AllegroGraphServer Class&nbsp;&nbsp;&nbsp;<A 
+class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>The AllegroGraphServer object represents a remote AllegroGraph server on the 
+  network.&nbsp; It is used to inventory and access the catalogs of that 
+  server.</P>
+<p>Namespace:
+  Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail</p>
+<H3>Constructor</H3>
+<P> public AllegroGraphServer(string host, int port = 10035, string user = null, string password = null)</P>
+<UL>
+  <LI><EM>host</EM> is a string describing the network path to the AllegroGraph 
+    server. No default.
+  <LI><EM>port</EM> is the AllegroGraph HTTP port on the server. It is an 
+    integer that defaults to 10035.
+  <LI><EM>user</EM> is an AllegroGraph user name. defaults to null.
+  <LI><EM>password</EM> is the user's password.defaults to null </LI>
+</UL>
+<DL>
+  <DT>Example: </DT>
+</DL>
+<PRE> AllegroGraphServer server =new AllegroGraphServer("localhost","8080", "test","pw") </PRE>
+<H3>Property</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=937>
+  <TBODY>
+    <TR>
+      <TD width="113">string</TD>
+      <TD width="92">Url</TD>
+      <TD width="690">ReadOnly,Return the server's URL. </TD>
+    </TR>
+    <TR>
+      <TD>string</TD>
+      <TD>Version</TD>
+      <TD>Returns the version of the AllegroGraph server. </TD>
+    </TR>
+    <tr>
+      <TD>DateTime</TD>
+      <TD>Date</TD>
+      <TD>Return the date on which the server was built.</TD>
+    </tr>
+  </TBODY>
+</TABLE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=936>
+  <TBODY>
+    <TR>
+      <TD width="111">public void</TD>
+      <TD width="197">ServerReConfigure()</TD>
+      <TD width="586">Cause the server to re-read its configuration file, 
+        and update itself to reflect the new configuration</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD>ReopenLog() </TD>
+      <TD>re-open server log file </TD>
+    </TR>
+    <TR>
+      <TD>public string[] </TD>
+      <TD>ListCatalogs() </TD>
+      <TD>Returns string set containing the names of the server's catalogs. </TD>
+    </TR>
+    <TR>
+      <TD> public Catalog </TD>
+      <TD>CreateCatalog(string name) </TD>
+      <TD> Create catalog,if exist return null else return new catalog.</TD>
+    </TR>
+    <TR>
+      <TD>public Catalog </TD>
+      <TD>OpenCatalog(string name = null) </TD>
+      <TD>Open a catalog.</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD> DeleteCatalog(string name)</TD>
+      <TD> Delete catalog.</TD>
+    </TR>
+    <TR>
+      <TD>public string </TD>
+      <TD> GetInitFile()</TD>
+      <TD> Retrieve the contents of the server initialization file,only for superuser.</TD>
+    </TR>
+    <TR>
+      <TD> public void </TD>
+      <TD>SetInitFile(string content = null, bool restart = true) </TD>
+      <TD> Replace the current initialization file contents with the
+        "content" string or remove if null. 
+        "restart" defaults to true, specifies whether any running shared back-ends should
+        be shut down, so that subsequent requests will be handled by
+        back-ends that include the new code.</TD>
+    </TR>
+    <TR>
+      <TD> public void</TD>
+      <TD> DeleteInitFile() </TD>
+      <TD> Remove the server's initialization file.</TD>
+    </TR>
+    <TR>
+      <TD>public Repository </TD>
+      <TD>OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false) </TD>
+      <TD> Creates a new session.spec,A string indicating the kind of store that has to be opened. autoCommit,
+        A boolean, which determines whether the session uses transactions.lifetime,An integer, 
+        specifying the amount of seconds the session can be idle before being collected.loadInitFile,
+        A boolean, defaulting to false,which determines whether the initfile is loaded into this session. </TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD></TD>
+      <TD></TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD></TD>
+      <TD></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="Catalog Class">Catalog Class&nbsp;&nbsp;&nbsp;<A class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>A Catalog object is a container for multiple repositories.&nbsp; </P>
+<P>NameSpace: 
+  Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail</P>
+<H3>Constructor</H3>
+<P>Invoke the Catalog constructor using the <A 
+href=" #AllegroGraphServer Class">AllegroGraphServer</A>.openCatalog() 
+  method.</P>
+<PRE>    catalog = server.openCatalog('scratch') </PRE>
+<H3>Property</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=795>
+  <TBODY>
+    <TR>
+      <TD width="113">string</TD>
+      <TD width="92">Url</TD>
+      <TD width="548">ReadOnly,Return the Catalog's URL. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=969>
+  <TBODY>
+    <TR>
+      <TD width="125">public string </TD>
+      <TD >GetSesameProtocolVersion()</TD>
+      <TD>Get the protocol version of the Sesame interface </TD>
+    </TR>
+    <TR>
+      <TD>public Repository </TD>
+      <TD >CreateRepository(string repName)</TD>
+      <TD>Creates a new Repository within the Catalog. <EM>repName</EM> is a string 
+        identifying the repository. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >DeleteRepository(string repName) </TD>
+      <TD>Deletes the named Respository from the Catalog. </TD>
+    </TR>
+    <TR>
+      <TD>public string </TD>
+      <TD  width=211>GetName()</TD>
+      <TD width=591>Returns a string containing the name of this Catalog. </TD>
+    </TR>
+    <TR>
+      <TD>public Repository </TD>
+      <TD vAlign="middle">GetRepository(string name, AccessVerb access_verb = AccessVerb.OPEN)</TD>
+      <TD>Returns a <A 
+      href=" #Repository Class">Repository</A> object.&nbsp; <EM>name </EM>is a repository name from listRepositories(). <EM>access_verb</EM> is enum type:
+        <UL>
+          <LI><STRONG>AccessVerb.RENEW</STRONG> clears the contents of an existing 
+            repository before opening. If the indicated repository does not exist, 
+            it creates one.
+          <LI><STRONG>AccessVerb.OPEN</STRONG> opens an existing repository, or 
+            throws an exception if the repository is not found.
+          <LI><STRONG>AccessVerb.ACCESS</STRONG> opens an existing repository, or 
+            creates a new one if the repository is not found.
+          <LI><STRONG>AccessVerb.CREATE</STRONG> creates a new repository, or 
+            throws an exception if one by that name already exists. </LI>
+        </UL></TD>
+    </TR>
+    <TR>
+      <TD>public string[] </TD>
+      <TD >ListRepositories()</TD>
+      <TD>Returns a list of repository names (triple stores) managed by this 
+        Catalog.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="Repository Class">Repository Class&nbsp;&nbsp;&nbsp;<A class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>A repository contains RDF data that can be queried and updated. Access to the 
+  repository can be acquired by opening a connection to it. This connection can 
+  then be used to query and/or update the contents of the repository. Depending on 
+  the implementation of the repository, it may or may not support multiple 
+  concurrent connections.</P>
+<P>Please note that a repository needs to be initialized before it can be used 
+  and that it should be shut down before it is discarded/garbage collected. 
+  Forgetting the latter can result in loss of data (depending on the Repository 
+  implementation)! </P>
+<P>NameSpace: 
+  Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil</P>
+<H3>Constructor</H3>
+<P>Invoke the Repository constructor using the <A 
+href=" #AllegroGraphServer Class">AllegroGraphServer</A>.getRepository() 
+  method.</P>
+<PRE>    myRepository = catalog.getRepository("agraph_test", accessMode)</PRE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=969>
+  <TBODY>
+    <TR>
+      <TD>public RepositoryConnection</TD>
+      <TD >GetConnection()</TD>
+      <TD><P>Creates a <A 
+      href=" #RepositoryConnection Class">RepositoryConnection</A> object that can be used for querying and<BR>
+          updating the contents of the 
+          Repository.&nbsp; Returns the RepositoryConnection object. </P></TD>
+    </TR>
+    <TR>
+      <TD>public string</TD>
+      <TD  width=168>GetDatabaseName()</TD>
+      <TD width=591>Returns a string containing the name of this Repository. </TD>
+    </TR>
+    <TR>
+      <TD> public string</TD>
+      <TD >GetSpec()</TD>
+      <TD>Returns a string consisting of the catalog name concatenated with the 
+        repository name. </TD>
+    </TR>
+    <TR>
+      <TD>public Repository</TD>
+      <TD >Initialize()</TD>
+      <TD>A Repository must be initialized before it can be used.&nbsp; Returns 
+        the initialized Repository object. </TD>
+    </TR>
+    <TR>
+      <TD> public void</TD>
+      <TD >ShuTDown()</TD>
+      <TD><P>Shuts the Repository down, releasing any resources that it keeps hold 
+          of.<BR>
+          Once shut down, the store can no longer be 
+          used.</P></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="RepositoryConnection Class">RepositoryConnection 
+  Class&nbsp;&nbsp;&nbsp;<A class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>The RepositoryConnection class is the main interface for updating data in and 
+  performing queries on a <A 
+href=" #Repository Class">Repository</A>. 
+  By default, a RespositoryConnection is in autoCommit mode, meaning that each 
+  operation corresponds to a single transaction on the underlying triple store. 
+  autoCommit can be switched off, in which case it is up to the user to handle 
+  transaction commit/rollback. Note that care should be taken to always properly 
+  close a RepositoryConnection after one is finished with it, to free up resources 
+  and avoid unnecessary locks. </P>
+<P>NameSpace: 
+  Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil</P>
+<H3>Constructor</H3>
+<P>public RepositoryConnection(Repository repository)</P>
+<P>where <EM>repository</EM> is the <A 
+href=" #Repository Class">Repository</A> object that created this RepositoryConnection. </P>
+<P>Example: The best practice is to use the <A 
+href=" #Repository Class">Repository</A>.getConnection() 
+  method, which supplies the <EM>repository</EM> parameter to the construction 
+  method. .</P>
+<PRE>&nbsp;&nbsp;&nbsp; connection = myRepository.getConnection()</PRE>
+<H3>General Connection Methods</H3>
+<P>This table contains the repositoryConnection methods that create, maintain, 
+  search, and delete triple stores. There are following tables that list special 
+  methods for <A 
+href=" #Free Text Search Methods">Free 
+  Text Search</A>, <A 
+href=" #Prolog Rule Inference Methods">Prolog 
+  Rule Inference</A>, <A 
+href=" #Geospatial Reasoning Methods">Geospatial 
+  Reasoning</A>, <A 
+href=" #Social Network Analysis Methods">Social 
+  Network Analysis,</A> <A 
+href=" #Transactions">Transactions</A> and <A 
+href=" #SPOGI">Subject 
+  Triples Caching</A>. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=1057>
+  <TBODY>
+    <TR>
+      <TD width="117">public void</TD>
+      <TD width="387" >AddFile(string filePath, string baseUrl = null, RDFFormat format = null, string context = null, 		
+        bool serverSide = false)</TD>
+      <TD width="511"> Loads a file into the triple store,a file can be loaded into only one context </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >AddStatement(Statement statement, string[] contexts = null)</TD>
+      <TD>Add the supplied <EM><A 
+      href=" #Statement Class">Statement</A></EM> to the specified <EM>contexts</EM> of the repository.&nbsp; <EM>contexts</EM> defaults to null, which adds the statement to the null 
+        context (the default or background graph).</TD>
+    </TR>
+    <TR>
+      <TD> public void</TD>
+      <TD > AddTriple(string subj, string pred, string obj, string[] contexts = null) </TD>
+      <TD>Adds a single triple to the repository.&nbsp; <EM>subject, 
+        predicate</EM> and <EM>object</EM> are the three values of the triple. <EM>contexts </EM>is an optional list of context URIs to add the triple 
+        to, defaulting to None.&nbsp; If None, the triple will be added to the 
+        null context (the default or background graph). </TD>
+    </TR>
+    <TR>
+      <TD>public void</TD>
+      <TD > AddTriples(string[][] triples_or_quads) </TD>
+      <TD>Add the supplied <EM>triples_or_quads</EM> is list of quadtuple, which consists of subject, predicate, object, and context. </TD>
+    </TR>
+    <TR>
+      <TD>public void</TD>
+      <TD >Clear(string[] contexts = null)</TD>
+      <TD>Removes all statements from the designated list of <EM>contexts</EM> (subgraphs) in the repository. If <EM>contexts</EM> is null (the 
+        default), it clears the repository of all statements. </TD>
+    </TR>
+    <TR>
+      <TD> public void</TD>
+      <TD >ClearNamespace(bool reset = true)</TD>
+      <TD>Remove all namespace declarations from the current environment.
+        If a <em>reset</em> argument of true is passed, the user's namespaces are reset to the default set of namespaces. </TD>
+    </TR>
+    <TR>
+      <TD>public Statement</TD>
+      <TD >CreateStatement(string subj, string pred, string obj, string context = null)</TD>
+      <TD>Create <a href="#Statement Class">Statement</a> object</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD > Export(string type = "N-Triple", string[] contexts = null) </TD>
+      <TD>Exports all triples in the repository to an external file.&nbsp; 
+        The export may be optionally confined to a list of <EM>contexts</EM> (default is null). Each context is the URI of a 
+        subgraph. </TD>
+    </TR>
+    <TR>
+      <TD> public void </TD>
+      <TD > ExportStatements(string[] subj, string[] pred, string[] obj, string type, string[] contexts = null, string infer = "false") </TD>
+      <TD>Exports all triples that match <EM>subj</EM>, <EM>pred</EM> and/or <EM>obj</EM>. &nbsp; May optionally <EM>includeInferred</EM> statements 
+        provided by RDFS++ inference (default is False).  The 
+        export may be optionally confined to a list of <EM>contexts</EM> (default 
+        is null). Each context is the URI of a subgraph. </TD>
+    </TR>
+    <TR>
+      <TD>public string[]</TD>
+      <TD >GetContextIDs()</TD>
+      <TD>Return a list of context URIs, one for each subgraph referenced by a 
+        quad in the triple store. Omits the default context because its ID would 
+        be null.</TD>
+    </TR>
+    <TR>
+      <TD>public string </TD>
+      <TD > GetNamespaces(string prefix)</TD>
+      <TD>Returns the namespace that is associated with <EM>prefix</EM>, if any. </TD>
+    </TR>
+    <TR>
+      <TD>public List
+        <Namespace></TD>
+      <TD >GetNamespaces()</TD>
+      <TD>List the namespaces of the current repository </TD>
+    </TR>
+    <TR>
+      <TD>public string</TD>
+      <TD >GetSpec()</TD>
+      <TD>Returns a string composed of the catalog name concatenated with the 
+        repository name. </TD>
+    </TR>
+    <TR>
+      <TD>public string[][]</TD>
+      <TD >GetStatements(string[] Subj, string[] Pred, string[] Obj, string[] Context,
+        string Infer = "false", int Limit = -1, int Offset = -1)</TD>
+      <TD>Gets all statements with a specific <EM>subject</EM>, <EM>predicate</EM> and/or <EM>object</EM> from the repository. The result 
+        is optionally restricted to the specified set of named <EM>contexts</EM> A context is the URI of a subgraph. May optionally <EM>Infer</EM> statements provided by RDFS++ inference (default is false). Takes an 
+        optional <EM>limit</EM> on the number of statements to return.&nbsp; </TD>
+    </TR>
+    <TR>
+      <TD>public string[][]</TD>
+      <TD >GetStatementsById(string ids, bool returnIDs = true) </TD>
+      <TD>Return all statements whose triple ID matches an ID in the <EM>ids.</EM></TD>
+    </TR>
+    <TR>
+      <TD>public bool</TD>
+      <TD >IsEmpty(string[] contexts = null)</TD>
+      <TD>Returns True if GetSize(contexts) is zero. </TD>
+    </TR>
+    <TR>
+      <TD>public string </TD>
+      <TD>EvalSPARQLQuery(string queryLanguage, string queryString, string contexts = null,
+        string namedContexts = null, bool includeInferred = false,
+        Dictionary&lt;string, string&gt; bindings = null, bool checkVariables = false,
+        string infer = &quot;false&quot;, int limit = -1, int offset = -1) </TD>
+      <TD> return raw string representing the result, encoded in JSON format. <em>query</em>,Query string. <em>infer</em> Infer option, can be "false","rdfs++","restriction". <em>context</em> Context . <em>namedContext</em> Named Context . <em>bindings</em> Local bindings for variables . <em>checkVariables</em> Whether to check the non-existing variable . <em>limit</em> The size limit of result. <em>offset</em> Skip some of the results at the start. </TD>
+    </TR>
+    <TR>
+      <TD> public BooleanQuery</TD>
+      <TD >
+      	 PrepareBooleanQuery(string queryLanguage, string queryString, string contexts = null,
+                             string namedContexts = null, bool includeInferred = false,
+                             Dictionary&lt;string, string&gt; bindings = null, bool checkVariables = false)
+      </TD>
+      <TD>Parse <EM>queryString</EM> into a <A 
+      href=" #AbstractQuery Class">BooleanQuery</A> object which can be executed against the RDF storage. <EM>queryString</EM> must be an ASK query. The result is true or false. <EM>queryLanguage</EM> is one of SPARQL, PROLOG, or COMMON_LOGIC.&nbsp; <EM>baseURI</EM> optionally provides a URI prefix (defaults to None). Returns a <A 
+      href=" #Query Class">Query</A> object.&nbsp; The result of query execution will be True of False. </TD>
+    </TR>
+ 
+    <TR>
+      <TD>public StringArrayQuery </TD>
+      <TD >
+      	PrepareStringArrayQuery(string queryLanguage, string queryString, string contexts = null,
+                                string namedContexts = null, bool includeInferred = false,
+                                Dictionary&lt;string, string&gt; bindings = null, bool checkVariables = false)
+      </TD>
+      <TD>Embed <EM>queryString</EM> into a <A 
+      href=" #Query Class">StringArrayQuery</A> object which can be executed against the RDF storage. <EM>queryString           </EM> must be a SELECT query. <EM>queryLanguage</EM> is one of SPARQL, PROLOG, 
+        or COMMON_LOGIC.&nbsp; <EM>baseURI</EM> optionally provides a URI prefix 
+        (defaults to None). </TD>
+    </TR>
+    <TR>
+      <TD >public List
+        <DataType></TD>
+      <TD> ListTypeMapping()</TD>
+      <TD>Fetches a <a href="#DataType Class">DataType</a> set of currently specified mappings. </TD>
+    </TR>
+    <TR>
+      <TD > public void </TD>
+      <TD>ClearTypeMapping(bool isAll = false)</TD>
+      <TD>Clear type mappings for this repository. <em>isAll.</em> if  true Clear all type mappings for this repository including the automatic ones.else Clear all non-automatic type mappings for this repository. </TD>
+    </TR>
+    <TR>
+      <TD >public string[] </TD>
+      <TD>ListMappedTypes()</TD>
+      <TD>Yields a list of literal types for which datatype mappings have been defined in this store.</TD>
+    </TR>
+    <TR>
+      <TD >public void </TD>
+      <TD> AddMappedType(string type, string encoding)</TD>
+      <TD>Defines a datatype mapping from the first parameter to the second parameter</TD>
+    </TR>
+    <TR>
+      <TD >public void </TD>
+      <TD> DeleteMappedType(string type)</TD>
+      <TD>Deletes a datatype mapping,<em>type</em> should be an RDF resource</TD>
+    </TR>
+    <TR>
+      <TD> public string[] </TD>
+      <TD>ListMappedPredicates()</TD>
+      <TD>Yields a list of literal types for which predicate mappings have been defined in this store.</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD>AddMappedPredicate(string predicate, string encoding)</TD>
+      <TD>Takes two arguments, <em>predicate</em> and <em>encoding</em>, and defines a predicate mapping on them. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD>DeleteMappedPredicate(string predicate)</TD>
+      <TD>Deletes a predicate mapping. Takes one parameter, <em>predicate</em>. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >RemoveNamespace(string prefix)</TD>
+      <TD>Remove the namespace associate with <EM>prefix</EM>. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >RemoveDuplicateStatements(string indexMode = "spog")</TD>
+      <TD>Deletes all duplicate statements that are currently present in the store <em>indexMode</em> can be either spog (the default) or spo to indicate </TD>
+    </TR>
+    <TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >RemoveQuads(string[][] Quads)</TD>
+      <TD>Remove the given statements in <em>Quads</em></TD>
+    </TR>
+    <TR>
+      <TD>public void</TD>
+      <TD > RemoveQuadsByID(string[] tids)</TD>
+      <TD><EM>tids</EM> contains a list of triple IDs (integers). Remove all 
+        quads with IDs that match. </TD>
+    </TR>
+    <TR>
+      <TD>public int </TD>
+      <TD >RemoveStatement(Statement statement, string[] contexts = null)</TD>
+      <TD>Removes the supplied <EM><A 
+      href=" #Statement Class">Statement</A></EM>(s) 
+        from the specified <EM>contexts</EM> (default is null). </TD>
+    </TR>
+    <TR>
+      <TD>public int </TD>
+      <TD > RemoveTriples(string subj, string pred, string obj, string[] contexts = null) </TD>
+      <TD>Removes the triples with the specified <EM>subject</EM>, <EM>predicate</EM> and <EM>object</EM><BR>
+        from the repository, optionally 
+        restricted to the specified <EM>contexts</EM> (defaults to null)..</TD>
+    </TR>
+    <TR>
+      <TD> public void </TD>
+      <TD>SetNamespace(string prefix, string nsUrl)</TD>
+      <TD>Define (or redefine) a <EM>nsUrl</EM> associated with <EM>prefix</EM>. </TD>
+    </TR>
+    <TR>
+      <TD>public int</TD>
+      <TD >GetSize(string[] contexts = null)</TD>
+      <TD>Returns the number of (explicit) statements that are in the specified <EM>contexts</EM> in this repository. contexts defaults to null, 
+        but can be a context URI or a tuple of context URIs from GetContextIDs(). 
+        Use 'null' to get the size of the default graph (the unnamed context). </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id="Triple Index Methods">Triple Index Methods</H3>
+<P>These repositoryConnection methods support user-defined triple indices.&nbsp; 
+  See <A 
+href="http://www.franz.com/agraph/support/documentation/current/triple-index.html">AllegroGraph 
+  Triple Indices</A> for more information on this topic. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=961>
+  <TBODY>
+    <TR>
+      <TD width="105">public string[]  </TD>
+      <TD width="203" >ListIndices()</TD>
+      <TD width="524"><P>Returns a array of strng containing a list of the current set of triple 
+          indices.</P></TD>
+    </TR>
+    <TR>
+      <TD>public string[] </TD>
+      <TD >ListValidIndices()</TD>
+      <TD>Returns a array of string containing the list of all possible triple indices. </TD>
+    </TR>
+    <TR>
+      <TD>public void</TD>
+      <TD >AddIndex(string indexType)</TD>
+      <TD>Adds a specific type of index to the current set of triple 
+        indices.&nbsp;<EM> type </EM>is a string containing one of the following 
+        index names: spogi, spgoi, sopgi, sogpi, sgpoi, sgopi, psogi, psgoi, 
+        posgi, pogsi, pgsoi, pgosi, ospgi, osgpi, opsgi, opgsi, ogspi, ogpsi, 
+        gspoi, gsopi, gpsoi, gposi, gospi, gopsi, or i. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >DropIndex(string indexType)</TD>
+      <TD>Removes a specific type of index to the current set of triple 
+        indices.&nbsp;<EM> type </EM>is a string containing one of the following 
+        index names: spogi, spgoi, sopgi, sogpi, sgpoi, sgopi, psogi, psgoi, 
+        posgi, pogsi, pgsoi, pgosi, ospgi, osgpi, opsgi, opgsi, ogspi, ogpsi, 
+        gspoi, gsopi, gpsoi, gposi, gospi, gopsi, or i. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >OptimizeIndex(bool wait = false, string level = null)</TD>
+      <TD>
+      	Tells the server to try and optimize the indices for this store
+      </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id="Geospatial Reasoning Methods"></H3>
+<H3 id="Free Text Search Methods">Free Text Search Methods</H3>
+<P>The following repositoryConnection method supports free-text indexing in 
+  AllegroGraph. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=1103>
+  <TBODY>
+    <TR>
+    <TD width="115">public void</TD>
+      <TD width="291" >
+      	public void CreateFreeTextIndex(string name, string[] predicates = null, object indexLiterals = null,
+                                        string indexResources = "true", string[] indexFields = null,
+                                        int minimumWordSize = -1, string[] stopWords = null,
+                                        string[] wordFilters = null, char[] innerChars = null,
+                                        char[] borderChars = null, string tokenizer = null)
+      </TD>
+      <TD width="655">Create a free-text index with the given parameters. <EM>name</EM> is a 
+        string identifying the new index. If no <EM>predicates</EM> are given, 
+        triples are indexed regardless of predicate. <EM>indexLiterals</EM> determines which literals to index. It can be True (the default), False, 
+        or a list of resources, indicating the literal types that should be 
+        indexed. <EM>indexResources</EM> determines which resources are indexed. 
+        It can be True, False (the default), or "short", to index only the part of 
+        resources after the last slash or hash character. <EM>indexFields</EM> can 
+        be a list containing any combination of the<BR>
+        elements "subject", 
+        "predicate", "object", and<BR>
+        "graph". The default is ["object"]. <EM>minimumWordSize</EM>, an integer, and determines the minimum size a 
+        word must have to be indexed. The default is 3. <EM>stopWords</EM> should 
+        hold a list of words that should not be indexed. When not given, a list of 
+        common English words is used. <EM>wordFilters</EM> can be used to apply 
+        some normalizing filters to words as they are indexed or queried. Can be a 
+        list of filter names. Currently, only "drop-accents" and "stem.english" 
+        are supported. </TD>
+    </TR>
+    <TR>
+    <TD>public void</TD>
+      <TD >DeleteFreeTextIndex(string name)</TD>
+      <TD>Deletes the named index. </TD>
+    </TR>
+    <TR>
+    <TD>public string[][] </TD>
+      <TD >
+      EvalFreeTextIndex(string pattern, string expression = null, string index = null, bool sorted = false, int limit = -1, int offset = -1)
+      </TD>
+      <TD>Return an array of statements for the given free-text pattern search. 
+        If no index is provided, all indices will be used. </TD>
+    </TR>
+    <TR>
+    <TD>public Dictionary&lt;string, string&gt; </TD>
+      <TD >GetFreeTextIndexConfiguration(string indexName)</TD>
+      <TD>Returns a C# dictionary containing all of the configuration 
+        settings of the named index. </TD>
+    </TR>
+    
+     <TR>
+    <TD>public void</TD>
+      <TD >RegisterFreeTextPredicate(string predicate)</TD>
+      <TD>Register a new free text predicate </TD>
+    </TR>
+    <TR>
+    <TD>public string[]</TD>
+      <TD >ListFreeTextIndices()</TD>
+      <TD>List the free-text indices. </TD>
+    </TR>
+    <TR>
+    <TD>public void</TD>
+      <TD >
+      		ModifyTextIndex(string name, string[] predicates = null, object indexLiterals = null,
+                                        string indexResources = "true", string[] indexFields = null,
+                                        int minimumWordSize = -1, string[] stopWords = null,
+                                        string[] wordFilters = null, char[] innerChars = null,
+                                        char[] borderChars = null, string tokenizer = null)
+      </TD>
+      <TD><EM>name</EM> is a string identifying the index to be modified. If no <EM>predicates</EM> are given, triples are indexed regardless of 
+        predicate. <EM>indexLiterals</EM> determines which literals to index. It 
+        can be True (the default), False, or a list of resources, indicating the 
+        literal types that should be indexed. <EM>indexResources</EM> determines 
+        which resources are indexed. It can be True, False (the default), or 
+        "short", to index only the part of resources after the last slash or hash 
+        character. <EM>indexFields</EM> can be a list containing any combination 
+        of the<BR>
+        elements "subject", "predicate", "object", and<BR>
+        "graph". The 
+        default is ["object"]. <EM>minimumWordSize</EM>, an integer, and 
+        determines the minimum size a word must have to be indexed. The default is 
+        3. <EM>stopWords</EM> should hold a list of words that should not be 
+        indexed. When not given, a list of common English words is used. <EM>wordFilters</EM> can be used to apply some normalizing filters to 
+        words as they are indexed or queried. Can be a list of filter names. 
+        Currently, only "drop-accents" and "stem.english" are supported. <EM>reIndex</EM> if True (the default) will rebuild the index. If False, 
+        it will apply the new settings to new triples only, while maintaining the 
+        index data for existing triples. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<P>Note that text search is implemented through a SPARQL query using a "magic" 
+  predicate called <STRONG>fti:search</STRONG>. See the AllegroGraph C# API 
+  Tutorial for an example of how to set up this search. </P>
+<H3 id="Prolog Rule Inference Methods">Prolog Rule Inference Methods</H3>
+<P>These repositoryConnection methods support the use of Prolog rules in 
+  AllegroGraph. Any use of Prolog rules requires that you create a <A 
+href=" #Transactions">dedicated 
+  session</A> to run them in. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=1110>
+  <TBODY>
+    <TR>
+       <td width="93">public void</td>
+      <TD width="231" >AddRules(string rules, string language = "PROLOG")</TD>
+      <TD width="488"><P>Add a sequence of one or more rules (in ASCII format).<BR>
+          If the <EM>language</EM> is QueryLanguage.PROLOG, rule declarations start with 
+          '&lt;-' or '&lt;--'. The former appends a new rule; the latter overwrites 
+          any rule with the same predicate. <EM>language</EM> defaults to 
+          QueryLanguage.PROLOG. <BR>
+         </P></TD>
+    </TR>
+    <TR>
+     <td>public void</td>
+      <TD >loadRules(string fileName, string language = "PROLOG")</TD>
+      <TD>Load a file of rules. <EM>file</EM> is assumed to reside on the client 
+        machine. <EM>language</EM> defaults to QueryLanguage.PROLOG.  </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id="Geospatial Reasoning Methods">Geospatial Reasoning Methods</H3>
+<P>These repositoryConnection methods support geospatial reasoning. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=1066>
+  <TBODY>
+    <TR>
+      <TD width="110" >public string[]</TD>
+      <TD width="237" >ListGeoTypes()</TD>
+      <TD width="537">List the geo-spatial types registered in the store.</TD>
+    </TR>
+    <TR>
+      <TD>public List&lt;Statement&gt;</TD>
+      <TD>GetStatements(string predicate, GeoSpatial region, string[] contexts, int limit = -1, int offset = -1)</TD>
+      <TD>Fetch all triples with a given predicate whose object is a geospatial value inside the given region. </TD>
+    </TR>
+     <TR>
+      <TD >public GeoBox</TD>
+      <TD > CreateBox(float xMin = 0, float xMax = 0, float yMin = 0, float yMax = 0, string unit = null)</TD>
+      <TD>Create a rectangular search region (a box) for geospatial search.
+           This method works for both Cartesian and spherical coordinate systems.
+           xMin, xMax may be used to input latitude. yMin, yMax may be used to input longitude.</TD>
+    </TR>
+     <TR>
+      <TD > public GeoCircle </TD>
+      <TD >CreateCircle(float x, float y, float radius, string unit = null)</TD>
+      <TD> Create a circular search region for geospatial search. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id="Social Network Analysis Methods">Social Network Analysis Methods</H3>
+<P>The following repositoryConnection methods support Social Network Analysis in 
+  AllegroGraph. The C# API to the Social Network Analysis methods of 
+  AllegroGraph requires Prolog queries, and therefore must be run in a <A 
+href=" #Transactions">dedicated 
+  session</A>. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=1060>
+  <TBODY>
+    <TR>
+    	<td width="80"> public void </td>
+      <TD width="305" >
+      	RegisterSNAGenerator(string name, string[] subjectOf = null, string[] objectOf = null, string[] undirected = null, string query = null)
+      </TD>
+      <TD width="633">Construct a neighbor matrix named 'name'. The generator named 
+        'generator' is applied to each URI in 'group_uris' (a collection of 
+        fullURIs or qnames (strings)),<BR>
+        computing edges to max depth 
+        'max_depth'.<BR>
+        For use in a <A 
+      href=" #Transactions">dedicated 
+        session</A>. </TD>
+    </TR>
+    <TR>
+    	<td> public void </td>
+      <TD>
+      	RegisterNeighborMatrix(string name, string[] group, string generator, int depth = 1)
+      </TD>
+      <TD>Create (and remember) a generator named 'name'. If one already exists 
+        with the same name; redefine it. 'subjectOf', 'objectOf' and 'undirected' 
+        expect a list of predicate URIs, expressed as fullURIs or qnames, that 
+        define the edges traversed by the generator. Alternatively, instead of an 
+        adjacency map, one may provide a 'generator_query', that defines the 
+        edges.<BR>
+        For use in a <A 
+      href=" #Transactions">dedicated 
+        session</A>. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id=Transactions>Transactions</H3>
+<P>AllegroGraph lets you set up a special RepositoryConnection (a "session") 
+  that supports transaction semantics. You can add statements to this session 
+  until you accumulate all the triples you need for a specific transaction. Then 
+  you can commit the triples in a single act. Up to that moment the triples will 
+  not be visible to other users of the repository.</P>
+<P>If anything interrupts the accumulation of triples building to the 
+  transaction, you can roll back the session. This discards all of the uncommitted 
+  triples and resynchronizes the session with the repository as a whole. </P>
+<P>Closing the session deletes all uncommitted triples, all rules, generators 
+  and matrices that were created in the session. Rules, generators and matrices 
+  cannot be committed. They persist as long as the session persists. </P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=965>
+  <TBODY>
+    <TR>
+     <td width="68">public void </td>
+      <TD width="200" >OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)</TD>
+      <TD width="482">A dedicated connection context manager for use with the 'with' statement. Automatically calls openSession()          at block start and closeSession() at block end. 
+           If autocommit is True, commits are done on each request, otherwise you will need to call commit() or           rollback() as appropriate for your application.
+            lifetime is an integer specifying the time to live in seconds of 
+            the session.
+            If loadinitfile is True, then the current initfile will be loaded
+             for you when the session starts.</TD>
+    </TR>
+    <TR>
+     <td>public void </td>
+      <TD >CloseSession()</TD>
+      <TD>Close a dedicated session connection. </TD>
+    </TR>
+    
+    <TR> 
+      <td>public void </td>
+      <TD >Commit()</TD>
+      <TD>Commits changes on a dedicated connection. </TD>
+    </TR>
+    <TR>
+      <td>public void </td>
+      <TD >Rollback()</TD>
+      <TD>Rolls back changes on a dedicated connection. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3 id=SPOGI>Subject Triples Caching </H3>
+<P>You can enable subject triple caching to speed up queries where the same 
+  subject URI appears in multiple patterns. The first time AllegroGraph retrieves 
+  triples for a specific resource, it caches the triples in memory. Subsequent 
+  query patterns that ask for the same subject URI can retrieve the matching 
+  triples very quickly from the cache. The cache has a size limit and 
+  automatically rolls over as that limit is exceeded.</P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=939>
+  <TBODY>
+    <TR>
+     <td width="107">public void </td>
+      <TD width="152" >EnableTripleCache(int size = -1)</TD>
+      <TD width="468">Maintain a cache of size 'size' that caches, for each accessed 
+        resource, quads where the resource appears in subject position. This can 
+        accelerate the performance of certain types of queries. The size is the 
+        maximum number of subjects whose triples will be cached. Default is 
+        100,000.</TD>
+    </TR>
+    <TR> 
+      <td>public void </td>
+      <TD > DisableTripleCache()</TD>
+      <TD>Disable the spogi cache for this repository.</TD>
+    </TR>
+    <TR>
+    <td>public int</td>
+      <TD > GetTripleCacheSize()</TD>
+      <TD>Return the current size of the subject triples 
+        cache.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="AbstractQuery Class">AbstractQuery Class&nbsp;(and Subclasses) &nbsp;<A class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>The Query class is non-instantiable. It is an abstract class from which the 
+  three query subclasses are derived.&nbsp; It is included here because of its 
+  methods, which are inherited by the subclasses.&nbsp; </P>
+<P>A query on a <A 
+href=" #Repository Class">Repository</A> that can be formulated in one of the supported query languages (for example 
+  SPARQL). It allows one to predefine bindings in the query to be able to reuse 
+  the same query with different bindings. &nbsp; </P>
+<P>NameSpace: Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Query</P>
+<H3>Constructor</H3>
+<P>The best practice is to allow the <A 
+href=" #RepositoryConnection Class">RepositoryConnection</A> object to create an instance of one of the Query subclasses (<A 
+href=" #Subclass TupleQuery">TupleQuery</A>, <A 
+href=" #Subclass GraphQuery">GraphQuery</A>, <A 
+href=" #Subclass BooleanQuery">BooleanQuery</A>). 
+  There is no reason for the C# application programmer to create a Query 
+  object directly.&nbsp; </P>
+<PRE>   BooleanQuery boolQuery= conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString)
+   result = BooleanQuery.evaluate();</SPAN>)</PRE>
+<H3>Property</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=969>
+  <TBODY>
+    <TR>
+      <TD>public string</TD>
+      <TD>Querylanguage</TD>
+      <TD>query language type,can be SPARQL or PROLOG</TD>
+    </TR>
+    <TR>
+      <TD>public string</TD>
+      <TD>QueryString</TD>
+      <TD>query string</TD>
+    </TR>
+    <TR>
+      <TD>public string</TD>
+      <TD>Contexts</TD>
+      <TD>a set of contexts (named graphs) that filter triples.</TD>
+    </TR>
+    <TR>
+      <TD>public string</TD>
+      <TD>NamedContexts</TD>
+      <TD>named contexts</TD>
+    </TR>
+    <TR>
+      <TD> public bool</TD>
+      <TD>IncludeInferred</TD>
+      <TD>Determine whether evaluation results of this query should include inferred
+        statements </TD>
+    </TR>
+    <TR>
+      <TD> public Dictionary&lt;string, string&gt;</TD>
+      <TD>Bindings</TD>
+      <TD> Binds the specified variable to the supplied value</TD>
+    </TR>
+    <TR>
+      <TD> public RepositoryConnection</TD>
+      <TD>Connection</TD>
+      <TD>connection for query</TD>
+    </TR>
+    <TR>
+      <TD> public bool</TD>
+      <TD>CheckVariables</TD>
+      <TD>whether the presence of variables in the select clause referenced in a triple
+        are flagged or not</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=969>
+  <TBODY>
+    <TR>
+      <TD> public string </TD>
+      <TD >evaluate_generic_query(string infer = "false", int limit = -1, int offset = -1)</TD>
+      <TD>Evaluate a SPARQL or PROLOG query. If SPARQL, it may be a 'select', 
+        'construct', 'describe' or 'ask' query. ; </TD>
+    </TR>
+    <TR>
+      <TD> public void </TD>
+      <TD >RemoveBinding(string key)</TD>
+      <TD><P>Removes the named binding so that it has no value.</P></TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD  width=168>SetBindings(string key, string value)</TD>
+      <TD width=591>Binds the named key to the supplied value. Any value 
+        that was previously bound to the specified attribute will be overwritten. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >SetBindings(Dictionary &lt;string, string&gt; dictionary)</TD>
+      <TD>Sets multiple bindings using a dictionary of attribute keys and 
+        values. </TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD >SetCheckVariables(bool setting)</TD>
+      <TD>If true, the presence of variables in the SELECT clause not referenced 
+        in a triple pattern are flagged.</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD>SetContext(string contexts)</TD>
+      <TD>Assert a set of contexts (a list of subgraph URIs) that filter all triples.</TD>
+    </TR>
+    <TR>
+      <TD>public void </TD>
+      <TD>SetIncludeInferred(bool includeInferred)</TD>
+      <TD>Determines whether results of this query should include inferred 
+        statements (if any inferred statements are present in the repository). 
+        Inference is turned off by default (which is the opposite of standard 
+        Sesame behavior). The default value of setIncludeInferred() is True. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+
+<H3 id="Subclass BooleanQuery">Subclass BooleanQuery &nbsp;&nbsp;&nbsp;<A 
+class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H3>
+<P>This subclass is used with ASK queries.&nbsp; Use the <A 
+href=" #RepositoryConnection Class">RepositoryConnection</A> object's <STRONG>prepareBooleanQuery()</STRONG> method to create a BooleanQuery 
+  object. The results of the query are True or False.</P>
+<P><STRONG>Methods</STRONG></P>
+<P>BooleanQuery uses all the methods of the <A 
+href=" #Query Class">Query</A> class, plus one more:</P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=769>
+  <TBODY>
+    <TR>
+      <TD>public bool </TD>
+      <TD >Evaluate(string infer, int limit, int offset)</TD>
+      <TD>Execute the embedded query against the RDF store.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+
+<H3 id="Subclass StringArrayQuery">Subclass StringArrayQuery &nbsp;&nbsp;&nbsp;<A 
+class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H3>
+<P>This subclass is used with SELECT queries.&nbsp; Use the <A 
+href=" #RepositoryConnection Class">RepositoryConnection</A> object's <STRONG>prepareStringArrayQuery()</STRONG> method to create a StringArrayQuery object. The results of the query are array of string.</P>
+<P><STRONG>Methods</STRONG></P>
+<P>StringArrayQuery uses all the methods of the <A 
+href=" #AbstractQuery Class">AbstractQuery</A> class, plus one more:</P>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=769>
+  <TBODY>
+    <TR>
+      <TD>public string[][]</TD>
+      <TD>Evaluate(string infer, int limit, int offset)</TD>
+      <TD>Execute the embedded query against the RDF store.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+
+<H2 id="Statement Class">Statement Class&nbsp;&nbsp;&nbsp;<A class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>A Statement is a client-side triple.&nbsp; It encapsulates the subject, 
+  predicate, object and context (subgraph) values of a single triple and makes 
+  them available. </P>
+<P>NameSpace:  Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model</P>
+<H3>Constructor</H3>
+<P>public Statement(string subj, string pred, string obj, string context = null)</P>
+<UL>
+  <LI><EM>subject, predicate, object </EM>are the values of a typical triple.
+  <LI><EM>context </EM>is the optional URI of the subgraph of the repository. </LI>
+</UL>
+<P>Example:&nbsp; Best practice is to allow the <A 
+href=" #RepositoryConnection Class">RepositoryConnection</A>.createStatement() 
+  method to create and return the Statement object. There is no reason for the 
+  C# application programmer to create a Statement object directly.&nbsp; </P>
+<PRE>    stmt1 = conn.createStatement(alice, age, fortyTwo)</PRE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=769>
+  <TBODY>
+    <TR>
+      <td>public string</td>
+      <TD >GetContext()</TD>
+      <TD>Returns the value in the fourth position of the stored tuple (the 
+        subgraph URI).</TD>
+    </TR>
+    <TR>
+     <td>public string</td>
+      <TD >GetObject()</TD>
+      <TD>Returns the value in the third position of the stored tuple. </TD>
+    </TR>
+    <TR>
+       <td>public string</td>
+      <TD >GetPredicate()</TD>
+      <TD>Returns the value in the second position of the stored tuple. </TD>
+    </TR>
+    <TR>
+       <td>public string</td>
+      <TD >GetSubject()</TD>
+      <TD>Returns the value in the first position of the stored tuple. </TD>
+    </TR>
+    <TR>
+       <td>public void</td> 
+      <TD  width=168>SetQuad( string_tuple)</TD>
+      <TD width=591><P>Stores a string_tuple of a triple or quad.&nbsp; This method is called 
+          only by an internal method of the <A 
+      href=" #RepositoryResult Class">RepositoryResult</A> class.&nbsp; There is no need for a C# application programmer to use 
+          it. </P></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="Spec Class">Spec Class&nbsp;&nbsp;&nbsp;<A 
+class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P>Spec is a factory for creating url string for session on a federated, reasoning, or filtered store. </P>
+<P>NameSpace: Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail.Spec.</P>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=858>
+  <TBODY>
+    <TR>
+      <TD width="107">public static string </TD>
+      <TD  width=288>Local(string store, string catalog = null)</TD>
+      <TD width=421>Indicates the triple store named "store" in the catalog.</TD>
+    </TR>
+    <TR>
+      <TD>public static string </TD>
+      <TD >Remote(string name, string catalog = null, string host = "localhost", int port = 10035, string protocal = "http")</TD>
+      <TD>A remote store, by URL. If the URL points to the server itself, the store will be opened locally.</TD>
+    </TR>
+    <TR>
+      <TD>public static string </TD>
+      <TD > Url(string url)</TD>
+      <TD>Indicates the triple store named "url" in the root catalog.</TD>
+    </TR>
+    <TR>
+      <TD>public static string </TD>
+      <TD > Federate(string[] stores) </TD>
+      <TD>The federation of stores </TD>
+    </TR>
+    <TR>
+      <TD>public static string </TD>
+      <TD >Reason(string store, string reasoner = "rdf++") </TD>
+      <TD>The store "store", with rdfs++ reasoning applied.</TD>
+    </TR>
+    <TR>
+      <TD>public static string </TD>
+      <TD >GraphFilter(string store, string[] graphs)</TD>
+      <TD>Store "store", filtered to only contain the triples in the default graph (null)or graph named in graphs. </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<P></P>
+<H2 id="DataType Class">DataType Class&nbsp;&nbsp;&nbsp; <A class=returnlink href=" #Contents">Return to Top</A></H2>
+<P> DataType is class used for DatatypeMapping </P>
+<P>NameSpace: Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.</P>
+<H3>Property</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=858>
+  <TBODY>
+    <TR>
+      <TD width="107">public  string </TD>
+      <TD  width=288> Kind</TD>
+      <TD width=421>Datatype or predicate</TD>
+    </TR>
+    <TR>
+      <TD width="107">public  string </TD>
+      <TD  width=288> Part</TD>
+      <TD width=421>The resource associated with the mapping</TD>
+    </TR>
+    <TR>
+      <TD width="107">public  string </TD>
+      <TD  width=288> Encoding</TD>
+      <TD width=421> Encoding fields.</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H2 id="Namespace Class">Namespace Class&nbsp;&nbsp;&nbsp;<A 
+class=returnlink 
+href=" #Contents">Return 
+  to Top</A></H2>
+<P> Namespace is that portion of a URI that preceeds the last '#', '/', or ':' character, inclusive. </P>
+<P>NameSpace: Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.</P>
+<H3>Property</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=858>
+  <TBODY>
+    <TR>
+      <TD width="107">public  string </TD>
+      <TD  width=288> Prefix</TD>
+      <TD width=421>Prefix of namespace</TD>
+    </TR>
+    <TR>
+      <TD width="107">public  string </TD>
+      <TD  width=288> Name</TD>
+      <TD width=421>name of namespace</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<H3>Methods</H3>
+<TABLE 
+style="BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-COLLAPSE: collapse; BORDER-RIGHT-COLOR: #0000ff; BORDER-LEFT-COLOR: #0000ff" 
+border=2 cellPadding=4 width=858>
+  <TBODY>
+    <TR>
+      <TD width="107">public static string </TD>
+      <TD  width=288> ToString()</TD>
+      <TD width=421>return a string contain prefix and name</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<P></P>
+</BODY>
+</HTML>

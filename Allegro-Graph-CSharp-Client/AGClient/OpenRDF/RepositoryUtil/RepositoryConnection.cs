@@ -328,6 +328,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             RemoveTriples(null, null, null, contexts);
         }
 
+        /// <summary>
+        /// Execute SPARQL Query
+        /// </summary>
+        /// <param name="query">Query string</param>
+        /// <param name="infer">Infer option, can be "false","rdfs++","restriction"</param>
+        /// <param name="context">Context</param>
+        /// <param name="namedContext">Named Context</param>
+        /// <param name="bindings">Local bindings for variables</param>
+        /// <param name="checkVariables">Whether to check the non-existing variable</param>
+        /// <param name="limit">The size limit of result</param>
+        /// <param name="offset">Skip some of the results at the start</param>
+        /// <returns>A raw string representing the result, encoded in JSON format</returns>
         public string EvalSPARQLQuery(string queryLanguage, string queryString, string contexts = null,
                                                string namedContexts = null, bool includeInferred = false,
                                                Dictionary<string, string> bindings = null, bool checkVariables = false,
