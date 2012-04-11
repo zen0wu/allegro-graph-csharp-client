@@ -22,12 +22,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
                 req.Credentials = new NetworkCredential(Username, Password);
             }
 
-            if (Method!="GET"&&Body != null)
+            if (Method!="GET" && Body != null)
             {
-                StreamWriter reqInWriter = new StreamWriter(req.GetRequestStream());
+                Stream requestStream = req.GetRequestStream();
+                StreamWriter reqInWriter = new StreamWriter(requestStream);
                 reqInWriter.Write(Body);
                 reqInWriter.Close();
-                req.GetRequestStream().Close();
+                requestStream.Close();
             }
             
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
@@ -35,12 +36,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
 
             if (ReadResponse)
             {
-                StreamReader reqOutReader = new StreamReader(resp.GetResponseStream());
+                Stream responseStream = resp.GetResponseStream();
+                StreamReader reqOutReader = new StreamReader(responseStream);
                 ReturnBody = reqOutReader.ReadToEnd();
                 reqOutReader.Close();
+                responseStream.Close();
             }
             else
                 ReturnBody = null;
+
+            resp.Close();
         }
 
         /// <summary>

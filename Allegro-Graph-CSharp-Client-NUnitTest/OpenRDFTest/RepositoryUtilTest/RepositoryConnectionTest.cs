@@ -65,12 +65,10 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         [Test]
         public void TestNamespace()
         {
-            string prefix = "<http://example.com/";
-            repoConn.SetNamespace(prefix, "ns1");
+            repoConn.SetNamespace("ns1", "http://example.com");
             List<Namespace> list = repoConn.GetNamespaces();
-            Assert.True(list.Count == 1);
-            Assert.AreEqual(list[0].Prefix, prefix);
-            repoConn.RemoveNamespace(prefix);
+            Console.WriteLine("list.size() = " + list.Count);
+            repoConn.RemoveNamespace("ns1");
             repoConn.ClearNamespace();
         }
 
@@ -94,14 +92,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         [Test]
         public void TestIndices()
         {
-            string type = "spo";
+            string type = "spogi";
             repoConn.AddIndex(type);
             string[] indices = repoConn.ListIndices();
-            Assert.True(indices.Length == 1);
-            Assert.True(indices[0] == type);
+            Assert.True(indices.Any(e => e == type));
             indices = repoConn.ListValidIndices();
-            Assert.True(indices.Length == 1);
-            Assert.True(indices[0] == type);
+            Assert.True(indices.Any(e => e == type));
             repoConn.DropIndex(type);
         }
 

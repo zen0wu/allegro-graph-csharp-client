@@ -651,7 +651,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// </summary>
         public void Commit()
         {
-            AGRequestService.DoReq(this, "POST", "/session/commit");
+            AGRequestService.DoReq(this, "POST", "/commit");
         }
 
         /// <summary>

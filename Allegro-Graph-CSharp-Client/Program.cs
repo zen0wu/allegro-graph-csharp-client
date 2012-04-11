@@ -15,6 +15,14 @@ namespace Allegro_Graph_CSharp_Client
 {
     class Program
     {
+
+        private static Statement CreateSampleStatement(int id)
+        {
+            return new Statement(string.Format("<http://example.com/article-{0}>", id),
+                    "<http://www.w3.org/2000/01/rdf-schema#label>",
+                    string.Format("\"999\"^^<http://www.w3.org/2001/XMLSchema#int>", id));
+        }
+
         static void Main(string[] args)
         {
             /*AGServerInfo info = new AGServerInfo("http://172.16.2.21:10035", "chainyi", "chainyi123");
@@ -89,13 +97,12 @@ namespace Allegro_Graph_CSharp_Client
             Repository re = ca.GetRepository("CSClient2");
             RepositoryConnection conn = re.GetConnection();
             Console.WriteLine("size=" + conn.GetSize());
-            for (int i = 3; i < 13; ++i)
-            {
-                Console.WriteLine(i);
-                conn.AddStatement(new Statement(string.Format("<http://example.com/article-{0}>", i),
-                        "<http://www.w3.org/2000/01/rdf-schema#label>",
-                        string.Format("\"999\"^^<http://www.w3.org/2001/XMLSchema#int>", i)));
-            }
+
+            string type = "spogi";
+            conn.AddIndex(type);
+            string[] indices = conn.ListIndices();
+            indices = conn.ListValidIndices();
+            conn.DropIndex(type);
         }
     }
 }

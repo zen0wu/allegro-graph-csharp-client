@@ -430,6 +430,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
                     sw.WriteLine();
                 }
             }
+            sw.Flush();
+            sw.Close();
             //else if (type.Equals(".xml"))
             //{
             //}
