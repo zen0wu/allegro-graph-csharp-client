@@ -126,6 +126,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return this.GetMiniRepository().GetStatementsById(ids, returnIDs);
         }
 
+        public string[] GetStatementIDs(string[] Subj, string[] Pred, string[] Obj, string[] Context,
+                                        string Infer = "false", int Limit = -1, int Offset = -1)
+        {
+            return this.GetMiniRepository().GetStatementIDs(Subj,Pred,Obj,Context,Infer,Limit,Offset);
+        }
+
         public string[] GetStatementIDs()
         {
             return this.GetMiniRepository().GetStatementIDs();

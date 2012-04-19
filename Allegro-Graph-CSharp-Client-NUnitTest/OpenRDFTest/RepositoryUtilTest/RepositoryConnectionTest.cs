@@ -181,5 +181,15 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
                 Console.WriteLine(id);
             }
         }
+
+        [Test]
+        public void TestGetStatementIDsWithParams()
+        {
+            string[] ids = repoConn.GetStatementIDs(new string[]{"<http://example.com/article-3>"},null,null,null);
+            foreach (string id in ids)
+            {
+                Console.WriteLine(id);
+            }
+        }
     }
 }

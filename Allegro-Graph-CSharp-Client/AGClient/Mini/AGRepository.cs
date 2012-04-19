@@ -306,6 +306,19 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements/id?id=" + ids, accept);
         }
 
+
+        public string[] GetStatementIDs(string[] Subj, string[] Pred, string[] Obj, string[] Context,
+                                        string Infer = "false", int Limit = -1, int Offset = -1)
+        {
+            string[][] results = this.GetStatements(Subj, Pred, Obj, Context);
+            string[] ids = new string[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                ids[i] = results[i][0];
+            }
+            return ids;
+        }
+
         public string[] GetStatementIDs()
         {
             string[][] results = this.GetStatements(null, null, null, null);
