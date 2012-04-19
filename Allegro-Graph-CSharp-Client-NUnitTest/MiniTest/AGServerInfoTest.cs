@@ -26,6 +26,27 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             AGServerInfo ag2 = new AGServerInfo(BaseUrl, Username, Password);
             Assert.AreNotSame(ag1, ag2);
         }
+        [Test]
+        public void TestGetStatementsWithTID()
+        {
+            string baseUrl = "http://172.16.2.21:10035";
+            string username = "chainyi";
+            string password = "chainyi123";
+            AGServerInfo server = new AGServerInfo(baseUrl, username, password);
+            string[][] results = AGRequestService.DoReqAndGet<string[][]>(server, "GET", "/catalogs/chainyi/repositories/CSharpClient/statements", "application/x-quints+json");
+            for (int i = 0; i < results.Length; i++)
+            {
+                StringBuilder sb = new StringBuilder("Triple :\t");
+                for (int j = 0; j < results[i].Length; j++)
+                {
+                    sb.Append(results[i][j]);
+                    if (j != results[i].Length - 1)
+                        sb.Append("\t");
+                }
+                Console.WriteLine(sb.ToString());
+                Console.WriteLine(results[i].Length);
+            }
+        }
 
     }
 }

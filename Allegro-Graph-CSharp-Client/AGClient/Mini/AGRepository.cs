@@ -262,7 +262,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="infer">Infer type, default set to "False"</param>
         /// <param name="limit">The size limit of result</param>
         /// <param name="offset">Skip some of the results at the start</param>
-        /// <returns>Found statements</returns>
+        /// <returns>Found statements with tripleId</returns>
         public string[][] GetStatements(string[] subj, string[] pred, string[] obj, string[] context, string infer = "false",
             int limit = -1, int offset = -1)
         {
@@ -283,7 +283,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             addArrayParam("context", context);
             if (limit >= 0) parameters.Add("limit", limit.ToString());
             if (offset >= 0) parameters.Add("offset", offset.ToString());
-            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", parameters);
+            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements", "application/x-quints+json", parameters);
         }
 
         /// <summary>
@@ -303,9 +303,20 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             {
                 accept = "application/json";
             }
-            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements/id/id=" + ids, accept, null, true);
+            return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/statements/id?id=" + ids, accept);
         }
 
+        public string[] GetStatementIDs()
+        {
+            string[][] results = this.GetStatements(null, null, null, null);
+            string[] ids = new string[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                ids[i] = results[i][0];
+            }
+            return ids;
+        }
+        
         /// <summary>
         /// Delete statements by their ids
         /// </summary>

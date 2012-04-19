@@ -13,7 +13,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
     public class RepositoryConnectionTest
     {
         private static string CATALOG = "chainyi";
-        private static string REPOSITORY = "CSharpClient";
+        private static string REPOSITORY = "TestCsharpclient";
         private static string HOST = "172.16.2.21";
         private static string USERNAME = "chainyi";
         private static string PASSWORD = "chainyi123";
@@ -21,11 +21,21 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         Repository repo;
         RepositoryConnection repoConn;
 
-        private Statement CreateSampleStatement(int id)
+        private Statement CreateSampleStatement(int id, bool withContext = false)
         {
-            return new Statement(string.Format("<http://example.com/article-{0}>", id),
-                    "<http://www.w3.org/2000/01/rdf-schema#label>",
-                    string.Format("\"999\"^^<http://www.w3.org/2001/XMLSchema#int>", id));
+            if (withContext)
+            {
+                return new Statement(string.Format("<http://example.com/article-{0}>", id),
+                        "<http://www.w3.org/2000/01/rdf-schema#label>",
+                        string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", id),
+                        string.Format("context{0}", id));
+            }
+            else
+            {
+                return new Statement(string.Format("<http://example.com/article-{0}>", id),
+                            "<http://www.w3.org/2000/01/rdf-schema#label>",
+                            string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", id));
+            }
         }
 
         [TestFixtureSetUp]
@@ -61,6 +71,14 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
                 repoConn.AddStatement(CreateSampleStatement(i));
             Assert.True(repoConn.GetSize() == 10);
         }
+        [Test]
+        public void TestAddWithContext()
+        {
+            repoConn.Clear();
+            for (int i = 0; i < 10; ++i)
+                repoConn.AddStatement(CreateSampleStatement(i,true));
+            Assert.True(repoConn.GetSize() == 10);
+        }
 
         [Test]
         public void TestNamespace()
@@ -81,7 +99,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             for (int i = 0; i < bn; ++i)
                 repoConn.AddStatement(CreateSampleStatement(i));
             repoConn.Rollback();
-            for (int i = bn; i < bn*2; ++i)
+            for (int i = bn; i < bn * 2; ++i)
                 repoConn.AddStatement(CreateSampleStatement(i));
             repoConn.Commit();
             repoConn.CloseSession();
@@ -105,6 +123,63 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         public void ExportTest()
         {
             repoConn.Export();
+        }
+        [Test]
+        public void TestAddStatement()
+        {
+            Console.WriteLine("Test AddStatement");
+            string[] subjs = new string[] { "<http://example.com/article-996>", "<http://example.com/article-995>" };
+            string[] preds = new string[] { "<http://www.w3.org/2000/01/rdf-schema#label>", "<http://www.w3.org/2000/01/rdf-schema#label>" };
+            string[] objs = new string[] { "testObj1", "testObj2" };
+            string[] context = new string[] { "context1" };
+            for (int i = 0; i < 2; i++)
+            {
+                repoConn.AddStatement(subjs[i], preds[i], objs[i], context);
+            }
+        }
+        [Test]
+        public void TestGetStatement()
+        {
+            string[][] results = repoConn.GetStatements(null, null, null, null);
+            for (int i = 0; i < results.Length; i++)
+            {
+                StringBuilder sb = new StringBuilder("Triple :\t");
+                for (int j = 0; j < results[i].Length; j++)
+                {
+                    sb.Append(results[i][j]);
+                    if (j != results[i].Length - 1)
+                        sb.Append("\t");
+                }
+                Console.WriteLine(sb.ToString());
+                Console.WriteLine(results[i].Length);
+            }
+        }
+        [Test]
+        public void TestGetStatementsById()
+        {
+            string[][] results = repoConn.GetStatementsById("22", true);
+            for (int i = 0; i < results.Length; i++)
+            {
+                StringBuilder sb = new StringBuilder("Triple :\t");
+                for (int j = 0; j < results[i].Length; j++)
+                {
+                    sb.Append(results[i][j]);
+                    if (j != results[i].Length - 1)
+                        sb.Append("\t");
+                }
+                Console.WriteLine(sb.ToString());
+                Console.WriteLine(results[i].Length);
+            }
+        }
+
+        [Test]
+        public void TestGetStatementIDs()
+        {
+            string[] ids = repoConn.GetStatementIDs();
+            foreach (string id in ids)
+            {
+                Console.WriteLine(id);
+            }
         }
     }
 }

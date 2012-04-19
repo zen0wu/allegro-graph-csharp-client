@@ -26,7 +26,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             string password = "chainyi123";
             server = new AGServerInfo(baseUrl, username, password);
             catalog = new AGCatalog(server, "chainyi");
-            string repositoryName = "CSharpClient";
+            string repositoryName = "TestCsharpclient";
             repository = new AGRepository(catalog, repositoryName);
             Console.WriteLine(repository.Url);
         }
