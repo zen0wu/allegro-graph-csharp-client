@@ -10,26 +10,33 @@ using Allegro_Graph_CSharp_Client.AGClient.Mini;
 namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
 {
     /// <summary>
-    /// 测试AGClient类
+    /// Test AGClient
     /// </summary>
     [TestFixture]
     class AGClientTest
     {
-        private AGClient agClient;
         private AGServerInfo server;
+        private AGClient agClient;
+        private string buildDate; 
+        private string version;
+        private string testCatalogName;
+        private string userName;
+        private string password;
 
         [TestFixtureSetUp]
         public void Init()
         {
-            server = new AGServerInfo("http://172.16.2.21:10035", "chainyi", "chainyi123");
+            userName = "chainyi";
+            password = "chainyi123";
+            server = new AGServerInfo("http://172.16.2.21:10035", userName, password);
             agClient = new AGClient(server);
+            buildDate = "February 13, 2012 16:42:07 GMT-0800";
+            version = "4.5";
+            testCatalogName = "chainyi";
         }
-
-        ///<summary>
-        /// 测试构造函数以及同样的参数是否返回同样的对象
-        ///<summary>
+       
         [Test]
-        public void SameObjectTest()
+        public void TestSameObject()
         {
             AGClient agClient1 = new AGClient(server);
             AGClient agClient2 = new AGClient(server);
@@ -37,56 +44,89 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         /// <summary>
-        /// 测试 GetVersion()
+        /// Test GetVersion()
         /// </summary>
         [Test]
-        public void GetVersionTest()
+        public void TestGetVersion()
         {
             string version = agClient.GetVersion();
-            Console.Write(version);
-            bool result = string.IsNullOrEmpty(version);
-            Assert.IsFalse(result);
+            Assert.AreEqual(version,this.version);
         }
 
         /// <summary>
-        /// 测试 ListCatalogs()
+        /// Test ListCatalogs()
         /// </summary>
         [Test]
-        public void ListCatalogsTest()
+        public void TestListCatalogs()
         {
             string[] catalogs = agClient.ListCatalogs();
-            Console.WriteLine(catalogs.Length);
-            foreach (string catalog in catalogs)
-            {
-                Console.WriteLine(catalog);
-            }
             Assert.IsNotEmpty(catalogs);
+            Assert.Contains(testCatalogName, catalogs);
         }
 
         /// <summary>
-        /// 测试 OpenCatalog()
+        /// Test OpenCatalog()
         /// </summary>
         [Test]
-        public void OpenCatalogTest()
+        public void TestOpenCatalog()
         {
             string catalogName = "chainyi";
-            //Assert.IsInstanceOf(Type.GetType("Allegro_Graph_CSharp_Client.AGClient.Mini.AGCatalog"), agClient.OpenCatalog(catalogName));
             bool result = agClient.OpenCatalog(catalogName) is AGCatalog;
             Assert.IsTrue(result);
         }
+
         [Test]
-        public void OpenSessionTest()
+        public void TestOpenSession()
         {
             AGRepository result = agClient.OpenSession("<chainyi:CSharpClient>");
-            Console.WriteLine(result.Url);
-            Console.WriteLine(result.Username);
-            Console.WriteLine(result.Password);
-            //foreach (string[] statements in result.GetStatements(null, null, null, null))
-            //{
-            //    foreach (string statement in statements)
-            //        Console.WriteLine(statement);
-            //}
+            Assert.AreEqual(userName, result.Username);
+            Assert.AreEqual(password, result.Password);
+            Assert.NotNull(result.Url);
+        }
 
+        [Test]
+        public void TestGetBuiltDate()
+        {
+            Assert.AreEqual(agClient.GetBuiltDate(), this.buildDate);
+        }
+
+        [Test]
+        //[Ignore("need administrator previlege")]
+        public void TestCreateCatalog()
+        {
+            int preLength = agClient.ListCatalogs().Length;
+            agClient.CreateCatalog("OnlyTest");
+            Assert.AreEqual(preLength+1, agClient.ListCatalogs().Length);
+        }
+
+        [Test]
+        //[Ignore("need administrator previlege")]
+        public void TestDeleteCatalog()
+        {
+            int preLength = agClient.ListCatalogs().Length;
+            agClient.DeleteCatalog("OnlyTest");
+            Assert.AreEqual(preLength-1, agClient.ListCatalogs().Length);
+        }  
+
+        [Test]
+        [Ignore("need administrator previlege")]
+        public void TestReConfigure()
+        {
+            agClient.ReConfigure();
+        }
+
+        [Test]
+        [Ignore("need administrator previlege")]
+        public void TestReopenLog()
+        {
+            agClient.ReopenLog();
+        }
+
+        [Test]
+        [Ignore("need administrator previlege")]
+        public void TestGetInitFile()
+        {
+            agClient.GetInitFile();
         }
     }
 }

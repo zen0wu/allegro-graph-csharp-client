@@ -13,7 +13,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest
         {
             AGCatalogTest test1 = new AGCatalogTest();
             test1.Init();
-            test1.CreateRepositoryTest();
+           // test1.CreateRepositoryTest();
         }
     }
 }

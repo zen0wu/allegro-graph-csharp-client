@@ -9,84 +9,83 @@ using Allegro_Graph_CSharp_Client.AGClient.Mini;
 namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
 {
     /// <summary>
-    /// 测试AGCatalog类
+    /// Test class AGCatalog
     /// </summary>
-    
+
     [TestFixture]
     class AGCatalogTest
     {
         private AGServerInfo server;
         private AGCatalog catalog;
+        private string testCatalogName;
+        private string testRepositoryName;
+        private string tempRepositoryName;
 
-       [Test]
-       [TestFixtureSetUp]
+        [TestFixtureSetUp]
         public void Init()
         {
-            string baseUrl = "http://172.16.2.21:10035"; 
+            string baseUrl = "http://172.16.2.21:10035";
             string username = "chainyi";
             string password = "chainyi123";
-            server = new AGServerInfo(baseUrl, username, password); 
-            catalog = new AGCatalog(server, "chainyi");
-          
+            testCatalogName = "chainyi";
+            testRepositoryName = "TestCsharpclient";
+            tempRepositoryName = "TempRepositoryForCSharpClientTest";
+            server = new AGServerInfo(baseUrl, username, password);
+            catalog = new AGCatalog(server, testCatalogName);
         }
 
-        ///<summary>
-        /// 测试构造函数以及同样的参数是否返回同样的对象
-        ///<summary>
         [Test]
-        public void SameObjectTest()
+        public void TestSameObject()
         {
-            string catalogName = "chainyi";
-            AGCatalog catalog1 = new AGCatalog(server,catalogName);
-            AGCatalog catalog2 = new AGCatalog(server, catalogName);
+            AGCatalog catalog1 = new AGCatalog(server, testCatalogName);
+            AGCatalog catalog2 = new AGCatalog(server, testCatalogName);
             Assert.AreNotSame(catalog1, catalog2);
         }
 
         /// <summary>
-        /// 测试 OpenRepository()
+        /// Test OpenRepository()
         /// </summary>
         [Test]
-        public void OpenRepositoryTest()
+        public void TestOpenRepository()
         {
-            string repName = "chainyi";
-            bool result = catalog.OpenRepository(repName) is AGRepository;
+            bool result = catalog.OpenRepository(testCatalogName) is AGRepository;
             Assert.IsTrue(result);
         }
 
         /// <summary>
-        /// 测试 CreateRepository()
+        /// Test CreateRepository()
         /// </summary>
         [Test]
-        public void CreateRepositoryTest()
+        public void TestCreateRepository()
         {
-            string newRepName = "temp";
-            Console.WriteLine(catalog.Url);
-            catalog.CreateRepository(newRepName);
+            string[] preRepostories = catalog.ListRepositories();
+            catalog.CreateRepository(tempRepositoryName);
+            string[] currentRepostories = catalog.ListRepositories();
+            Assert.AreEqual(preRepostories.Length+1, currentRepostories.Length);
+            Assert.Contains(tempRepositoryName, currentRepostories);
         }
 
         /// <summary>
-        /// 测试 DeleteRepository()
+        /// Test DeleteRepository()
         /// </summary>
         [Test]
-        public void DeleteRepositoryTest()
+        public void TestDeleteRepository()
         {
-            string repName = "temp";
-            Console.WriteLine(catalog.Url);
-            catalog.DeleteRepository(repName);
+            string[] preRepostories = catalog.ListRepositories();
+            catalog.DeleteRepository(tempRepositoryName);
+            string[] currentRepostories = catalog.ListRepositories();
+            Assert.AreEqual(preRepostories.Length-1, currentRepostories.Length);
+            Assert.True(!currentRepostories.Contains(tempRepositoryName));
         }
 
         /// <summary>
-        /// 测试 ListRepositories()
+        /// Test ListRepositories()
         /// </summary>
         [Test]
-        public void ListRepositoriesTest()
+        public void TestListRepositories()
         {
-             Console.WriteLine(catalog.Url);
-             string[] repos = catalog.ListRepositories();
-             foreach (string repo in repos)
-             {
-                 Console.WriteLine(repo);
-             }
+            string[] repos = catalog.ListRepositories();
+            Assert.Contains(testRepositoryName, repos);
         }
     }
 }

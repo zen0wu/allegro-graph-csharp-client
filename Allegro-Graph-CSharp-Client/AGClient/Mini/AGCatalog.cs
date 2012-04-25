@@ -66,7 +66,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="name">Repository name</param>
         public void CreateRepository(string name)
         {
-            AGRequestService.DoReq(this, "PUT", "/repositories/" + name,null,true);
+            if (!ListRepositories().Contains(name))
+                AGRequestService.DoReq(this, "PUT", "/repositories/" + name, null, true);
         }
 
         /// <summary>

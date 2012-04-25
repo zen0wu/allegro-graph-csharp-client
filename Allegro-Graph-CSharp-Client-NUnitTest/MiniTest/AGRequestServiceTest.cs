@@ -30,7 +30,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         /// </summary>
         /// 
         [Test]
-        public void DoReqTest()
+        public void TestDoReq()
         {
             string method = "GET";
             string relativeUrl = "/catalogs/chainyi/repositories/test/statements";
@@ -39,12 +39,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         [Test]
-        public void DoReqAndGetTest()
+        public void TestDoReqAndGet()
         {
             string method = "GET";
             string relativeUrl = "/catalogs/chainyi/repositories/test/statements";
             string result = AGRequestService.DoReqAndGet(server, method, relativeUrl);
-            Assert.Pass(result);
+            Assert.NotNull(result);
         }
     }
 }

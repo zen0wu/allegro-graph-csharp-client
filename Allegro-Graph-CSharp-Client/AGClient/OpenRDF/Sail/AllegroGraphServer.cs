@@ -42,7 +42,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
         /// <summary>
         /// Return the date on which the server was built.
         /// </summary>
-        public DateTime Date { get { return _agClient.GetBuiltDate(); } }
+        public string Date { get { return _agClient.GetBuiltDate(); } }
 
 
         /// <summary>

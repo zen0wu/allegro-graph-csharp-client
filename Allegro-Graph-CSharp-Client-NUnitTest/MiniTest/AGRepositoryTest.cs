@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using Allegro_Graph_CSharp_Client.AGClient.Util;
 using Allegro_Graph_CSharp_Client.AGClient.Mini;
+using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model;
 using System.Data;
 
 namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
@@ -15,349 +16,230 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         private AGServerInfo server;
         private AGCatalog catalog;
         private AGRepository repository;
+        string BaseUrl;
+        string Username;
+        string Password;
+        string TestRepositoryName;
+        Namespace TestNamespace;
+        string TestIndexName;
+        Statement statement;
 
-        [Test]
         [TestFixtureSetUp]
         public void init()
         {
-            //对于非root catalog，访问时要增加catalog的路径,是否增加个成员表示repository所在的catalog
-            string baseUrl = "http://172.16.2.21:10035";
-            string username = "chainyi";
-            string password = "chainyi123";
-            server = new AGServerInfo(baseUrl, username, password);
+            BaseUrl = "http://172.16.2.21:10035";
+            Username = "chainyi";
+            Password = "chainyi123";
+            server = new AGServerInfo(BaseUrl, Username, Password);
             catalog = new AGCatalog(server, "chainyi");
-            string repositoryName = "TestCsharpclient";
-            repository = new AGRepository(catalog, repositoryName);
-            Console.WriteLine(repository.Url);
+            TestRepositoryName = "TestCsharpclient";
+            repository = new AGRepository(catalog, TestRepositoryName);
+            TestNamespace = new Namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            TestIndexName = "gospi";
+            statement = new Statement("<http://example/test?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/test?abc=1&def=2>", "<http://example/test?client=Csharp>");
         }
 
-        ///<summary>
-        /// 测试构造函数以及同样的参数是否返回同样的对象
-        ///<summary>
         [Test]
-        public void SameObjectTest()
+        public void TestSameObject()
         {
-            string repositoryName = "CSharpClient";
-            AGRepository repository1 = new AGRepository(catalog, repositoryName);
-            AGRepository repository2 = new AGRepository(catalog, repositoryName);
+            AGRepository repository1 = new AGRepository(catalog, TestRepositoryName);
+            AGRepository repository2 = new AGRepository(catalog, TestRepositoryName);
             Assert.AreNotSame(repository1, repository2);
         }
 
         /// <summary>
-        /// 测试 GetSize()
+        /// Test GetSize()
         /// </summary>
         [Test]
-        public void GetSizeTest()
+        public void TestGetSize()
         {
-            int size = repository.GetSize(null);
-            Console.Write(size);
-            Assert.IsNotNull(size);
+            int size = repository.GetSize();
+            Assert.Greater(size, 0);
         }
 
         /// <summary>
-        /// 测试 AddStatements()
+        /// Test AddStatements()
         /// </summary>
         [Test]
-        public void AddStatementsTest()
+        public void TestAddStatements()
         {
+            //TestCase-1
+
             string[][] quads = new string[1][] {
-                new string[4] { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/q?abc=1&def=2>" ,"<http://example/q?abc=1&def=2>" } };
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            int preSize = repository.GetSize();
             repository.AddStatements(quads);
+            Assert.AreEqual(preSize + 1, repository.GetSize());
+
+            //TestCase-2 
+            statement.Subject = "<http://example/test?abc=3&def=4>";
+            statement.Object = "<http://example/test?abc=3&def=4>";
+            quads = new string[1][] {
+                new string[3] {statement.Subject,statement.Predicate,statement.Object} };
+            preSize = repository.GetSize();
+            repository.AddStatements(quads);
+            Assert.AreEqual(preSize + 1, repository.GetSize());
         }
 
         /// <summary>
-        /// 测试 AddStatements() 
+        /// Test DeleteMatchingStatements()
         /// </summary>
         [Test]
-        [ExpectedException(typeof(AGRequestException))]
-        public void AddStatementsTest2()
+        public void TestDeleteMatchingStatements()
         {
+            //TestCase-1
             string[][] quads = new string[1][] {
-                new string[3] { "<http://example/q?abc=3&def=4>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/q?abc=3&def=4>" } };
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
             repository.AddStatements(quads);
-        }
+            int result = repository.DeleteMatchingStatements(statement.Subject, statement.Predicate, statement.Object, statement.Context);
+            Assert.GreaterOrEqual(result, 1);
 
-        /// <summary>
-        /// 测试 DeleteMatchingStatements()
-        /// </summary>
-        [Test]
-        public void DeleteMatchingStatementsTest()
-        {
-            string subj = "<http://example/q?abc=3&def=4>";
-            string pred = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>";
-            string obj = "<http://example/q?abc=3&def=4>";
-            string context = null;
-            int result = repository.DeleteMatchingStatements(subj, pred, obj, context);
-            Console.WriteLine(result);
-        }
-        /// <summary>
-        /// 测试 DeleteMatchingStatements()
-        /// </summary>
-        [Test]
-        public void DeleteMatchingStatementsTest2()
-        {
-            string subj = "<http://example/q?abc=1&def=2>";
+            //TestCase-2
+            string subj = statement.Subject;
             string pred = null;
             string obj = null;
             string context = null;
-            int result = repository.DeleteMatchingStatements(subj, pred, obj, context);
-            Console.WriteLine(result);
+            repository.AddStatements(quads);
+            result = repository.DeleteMatchingStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result, 1);
+
+            //TestCase-3
+            subj = null;
+            pred = statement.Predicate;
+            obj = null;
+            context = null;
+            repository.AddStatements(quads);
+            result = repository.DeleteMatchingStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result, 1);
+
+            //TestCase-4
+            subj = null;
+            pred = null;
+            obj = statement.Object;
+            context = null;
+            repository.AddStatements(quads);
+            result = repository.DeleteMatchingStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result, 1);
         }
 
         /// <summary>
-        /// 测试 DeleteMatchingStatements()
+        /// Test DeleteStatements()
         /// </summary>
         [Test]
-        public void DeleteMatchingStatementsTest3()
-        {
-            string subj = null;
-            string pred = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>";
-            string obj = null;
-            string context = null;
-            int result = repository.DeleteMatchingStatements(subj, pred, obj, context);
-            Console.WriteLine(result);
-        }
-
-        /// <summary>
-        /// 测试 DeleteMatchingStatements()
-        /// </summary>
-        [Test]
-        public void DeleteMatchingStatementsTest4()
-        {
-            string subj = null;
-            string pred = null;
-            string obj = "<http://example/q?abc=1&def=2>";
-            string context = null;
-            int result = repository.DeleteMatchingStatements(subj, pred, obj, context);
-            Console.WriteLine(result);
-        }
-
-        /// <summary>
-        /// 测试 DeleteStatements()
-        /// </summary>
-        [Test]
-        public void DeleteStatementsTest()
+        public void TestDeleteStatements()
         {
             string[][] quads = new string[1][] {
-                new string[4] { "<http://example/q?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/q?abc=1&def=2>" ,"<http://example/q?abc=1&def=2>" } };
-            //repository.AddStatements(quads);
-            Console.WriteLine(repository.GetSize());
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            repository.AddStatements(quads);
+            int preSize = repository.GetSize();
             repository.DeleteStatements(quads);
-            Console.WriteLine(repository.GetSize());
+            Assert.Less(repository.GetSize(), preSize);
         }
 
         ///<summary>
-        ///EvalSPARQLQuery()测试
+        ///Test EvalSPARQLQuery()
         ///</summary>
         [Test]
-        public void EvalSPARQLQueryTest()
+        public void TestEvalSPARQLQuery()
         {
+            //TestCase-1
+            string[][] quads = new string[1][] {
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            repository.AddStatements(quads);
             string query = "select ?subj ?pred ?obj {?subj ?pred ?obj}";
             DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
-            foreach (DataColumn dc in dt.Columns)
-                Console.Write(dc.ColumnName + "\t");
-            Console.WriteLine();
+            bool flag = false;
             foreach (DataRow dr in dt.Rows)
             {
-                foreach (DataColumn dc in dt.Columns)
-                    Console.Write(dr[dc] + " ");
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///EvalSPARQLQuery()测试
-        ///</summary>
-        [Test]
-        public void EvalSPARQLQueryTest2()
-        {
-            string query = "select ?subj ?pred ?obj {?subj ?pre ?obj}";
-            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
-            foreach (DataColumn dc in dt.Columns)
-                Console.Write(dc.ColumnName + "\t");
-            Console.WriteLine();
-            foreach (DataRow dr in dt.Rows)
-            {
-                foreach (DataColumn dc in dt.Columns)
-                    Console.Write(dr[dc] + " ");
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///EvalSPARQLQuery()测试
-        ///</summary>
-        [Test]
-        public void EvalSPARQLQueryTest3()
-        {
-            string query = "SELECT ?obj WHERE{ ?subj  <http://example.org/pred>  ?obj  . FILTER regex(?obj, \"ga\", \"i\") }";
-            //Console.WriteLine(query);
-            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
-            foreach (DataColumn dc in dt.Columns)
-                Console.Write(dc.ColumnName + "\t");
-            Console.WriteLine();
-            foreach (DataRow dr in dt.Rows)
-            {
-                foreach (DataColumn dc in dt.Columns)
-                    Console.Write(dr[dc] + " ");
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///EvalSPARQLQuery()测试
-        ///</summary>
-        [Test]
-        public void EvalSPARQLQueryTest4()
-        {
-            string query = "select ?subj ?pred ?obj {?subj ?pred ?obj}";
-            int returnNum = 2;
-            DataTable dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query, "false", null, null, null, false, returnNum, -1));
-            foreach (DataColumn dc in dt.Columns)
-                Console.Write(dc.ColumnName + "\t");
-            Console.WriteLine();
-            foreach (DataRow dr in dt.Rows)
-            {
-                foreach (DataColumn dc in dt.Columns)
-                    Console.Write(dr[dc] + " ");
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///GetStatements()测试
-        ///</summary>
-        [Test]
-        public void GetStatementsTest()
-        {
-            string[] subj = new string[] { "<http://example.org/node>" };
-            string[] pred = new string[] { "<http://example.org/pred>" };
-            string[] obj = null;
-            string[] context = null;
-            string[][] result = repository.GetStatements(subj, pred, obj, context);
-            for (int i = 0; i < result.GetLength(0); i++)
-            {
-                for (int j = 0; j < result[i].Length; j++)
-                    Console.Write(result[i][j]);
-                Console.WriteLine();
-            }           
-        }
-
-        ///<summary>
-        ///GetStatements()测试
-        ///</summary>
-        [Test]
-        public void GetStatementsTest2()
-        {
-            string[] subj = null;
-            string[] pred = new string[] { "<http://example.org/pred>" };
-            string[] obj = null;
-            string[] context = null;
-            string[][] result = repository.GetStatements(subj, pred, obj, context);
-            for (int i = 0; i < result.GetLength(0); i++)
-            {
-                for (int j = 0; j < result[i].Length; j++)
-                    Console.Write(result[i][j]);
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///GetStatements()测试
-        ///</summary>
-        [Test]
-        public void GetStatementsTest3()
-        {
-            string[] subj = null;
-            string[] pred = null;
-            string[] obj = null;
-            string[] context = null;
-            string[][] result = repository.GetStatements(subj, pred, obj, context);
-            for (int i = 0; i < result.GetLength(0); i++)
-            {
-                for (int j = 0; j < result[i].Length; j++)
-                    Console.Write(result[i][j]);
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///GetStatements()测试
-        ///</summary>
-        [Test]
-        public void GetStatementsTest4()
-        {
-            string[] subj = null;
-            string[] pred = null;
-            string[] obj = null;
-            string[] context = null;
-            string[][] result = repository.GetStatements(subj, pred, obj, context,"false",2,-1);
-            for (int i = 0; i < result.GetLength(0); i++)
-            {
-                for (int j = 0; j < result[i].Length; j++)
-                    Console.Write(result[i][j]);
-                Console.WriteLine();
-            }
-        }
-
-        ///<summary>
-        ///GetStatements()测试
-        ///</summary>
-        [Test]
-        public void GetStatementsTest5()
-        {
-            string[] subj = new string[]{"<none sense>"};
-            string[] pred = null;
-            string[] obj = null;
-            string[] context = null;
-            string[][] result = repository.GetStatements(subj, pred, obj, context, "false", 2, -1);
-            if (result.Length == 0)
-            {
-                Console.WriteLine("No result return");
-            }
-            else
-            {
-                for (int i = 0; i < result.GetLength(0); i++)
+                if (dr["subj"].ToString() == statement.Subject && dr["pred"].ToString() == statement.Predicate && dr["obj"].ToString() == statement.Object)
                 {
-                    for (int j = 0; j < result[i].Length; j++)
-                        Console.Write(result[i][j]);
-                    Console.WriteLine();
+                    flag = true;
+                    break;
                 }
             }
+            Assert.IsTrue(flag);
+
+            //TestCase-2
+            query = "SELECT ?obj WHERE{ ?subj  <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>  ?obj}";
+            dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query));
+            Assert.GreaterOrEqual(dt.Rows.Count, 1);
+
+            //TestCase-3
+            query = "select ?subj ?pred ?obj {?subj ?pred ?obj}";
+            int returnNum = 2;
+            dt = repository.QueryResultToDataTable(repository.EvalSPARQLQuery(query, "false", null, null, null, false, returnNum, -1));
+            Assert.AreEqual(dt.Rows.Count, returnNum);
+        }
+
+        ///<summary>
+        /// Test GetStatements()
+        ///</summary>
+        [Test]
+        public void TestGetStatements()
+        {
+            //TestCase-1
+            string[][] quads = new string[1][] {
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            repository.AddStatements(quads);
+            string[] subj = new string[] { statement.Subject };
+            string[] pred = new string[] { statement.Predicate };
+            string[] obj = null;
+            string[] context = null;
+            string[][] result = repository.GetStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result.GetLength(0), 1);
+
+            //TestCase-2
+            subj = null;
+            pred = new string[] { statement.Predicate };
+            obj = null;
+            context = null;
+            result = repository.GetStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result.GetLength(0), 1);
+
+            //TestCase-3
+            subj = null;
+            pred = null;
+            obj = null;
+            context = null;
+            result = repository.GetStatements(subj, pred, obj, context);
+            Assert.GreaterOrEqual(result.GetLength(0), 1);
+
+            //TestCase-4
+            subj = null;
+            pred = null;
+            obj = null;
+            context = null;
+            result = repository.GetStatements(subj, pred, obj, context, "false", 2, -1);
+            Assert.AreEqual(result.GetLength(0), 2);
         }
 
         [Test]
-        public void GetBlankNodesTest()
+        public void TestGetBlankNodes()
         {
             string[] results = repository.GetBlankNodes(3);
-            if (results != null)
+            Assert.AreEqual(results.Length, 3);
+        }
+
+        [Test]
+        public void TestListNamespaces()
+        {
+            List<Namespace> results = repository.ListNamespaces();
+            bool flag = false;
+            foreach (Namespace ns in results)
             {
-                foreach (string result in results)
+                if (ns.Prefix == TestNamespace.Prefix && ns.NameSpace == TestNamespace.NameSpace)
                 {
-                    Console.WriteLine(result);
+                    flag = true;
+                    break;
                 }
             }
-        }
-
-        [Test]
-        public void ListNamespaces()
-        {
-            List<Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace> results = repository.ListNamespaces();
-            foreach (Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model.Namespace nspace in results)
-            {
-                Console.WriteLine(nspace.Prefix+"#"+nspace.NameSpace);
-            }
+            Assert.IsTrue(flag);
         }
         [Test]
-        public void ListIndicesTest()
+        public void TestListIndices()
         {
             string[] indexs = repository.ListIndices();
-            foreach (string index in indexs)
-            {
-                Console.WriteLine(index);
-            }
+            Assert.Contains(TestIndexName, indexs);
         }
-
-
     }
 }

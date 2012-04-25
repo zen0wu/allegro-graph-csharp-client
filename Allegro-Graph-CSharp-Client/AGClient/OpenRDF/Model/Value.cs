@@ -47,6 +47,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         }
     }
 
+
    public class Namespace
    {
        string _prefix;
@@ -61,6 +62,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
            set { this._name = value; }
        }
 
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="p">Prefix</param>
+       /// <param name="n">Namespace</param>
        public Namespace(string p, string n)
        {
            this._name = n;
@@ -70,6 +76,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
        public override string ToString()
        {
            return string.Format("{0} :: {1}",_prefix,_name);
+       }
+       public bool Equals(Namespace ns)
+       {
+           if (ns.Prefix == this.Prefix && ns.NameSpace == this.NameSpace)
+               return true;
+           else
+               return false;
        }
    }
 }

@@ -8,20 +8,24 @@ using Allegro_Graph_CSharp_Client.AGClient.Mini;
 
 namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
 {
-    /// <summary>
-    /// 测试AGServerInfo类
-    /// </summary>
+    [TestFixture]
     class AGServerInfoTest
     {
-        ///<summary>
-        /// 测试构造函数以及同样的参数是否返回同样的对象
-        ///<summary>
-        [Test]
-        public void SameObjectTest()
+        string BaseUrl;
+        string Username;
+        string Password;
+
+        [TestFixtureSetUp]
+        public void Init()
         {
-            string BaseUrl = "http://172.16.2.21:10035";
-            string Username = "chainyi";
-            string Password = "chainyi123";
+            BaseUrl = "http://172.16.2.21:10035";
+            Username = "chainyi";
+            Password = "chainyi123";
+        }
+
+        [Test]
+        public void TestSameObject()
+        {
             AGServerInfo ag1 = new AGServerInfo(BaseUrl, Username, Password);
             AGServerInfo ag2 = new AGServerInfo(BaseUrl, Username, Password);
             Assert.AreNotSame(ag1, ag2);
@@ -29,10 +33,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         [Test]
         public void TestGetStatementsWithTID()
         {
-            string baseUrl = "http://172.16.2.21:10035";
-            string username = "chainyi";
-            string password = "chainyi123";
-            AGServerInfo server = new AGServerInfo(baseUrl, username, password);
+            AGServerInfo server = new AGServerInfo(BaseUrl, Username, Password);
             string[][] results = AGRequestService.DoReqAndGet<string[][]>(server, "GET", "/catalogs/chainyi/repositories/CSharpClient/statements", "application/x-quints+json");
             for (int i = 0; i < results.Length; i++)
             {
@@ -45,7 +46,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
                 }
                 Console.WriteLine(sb.ToString());
                 Console.WriteLine(results[i].Length);
-            }
+            }
         }
 
     }

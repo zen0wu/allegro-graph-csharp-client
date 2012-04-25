@@ -21,26 +21,32 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <summary>
         /// Get the version of allegrograph server
         /// </summary>
-        /// <returns></returns>
+        /// <returns>allegrograph server version</returns>
         public string GetVersion()
         {
             return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version", null, false);
         }
 
         /// <summary>
-        /// Return the date on which the server was built
+        /// Get the date on which the server was built
         /// </summary>
-        /// <returns></returns>
-        public DateTime GetBuiltDate()
+        /// <returns>allegrograph server built date</returns>
+        public string GetBuiltDate()
         {
-            return AGRequestService.DoReqAndGet<DateTime>(Server, "GET", "/version/date", null, false);
+            return AGRequestService.DoReqAndGet<string>(Server, "GET", "/version/date", null, false);
         }
 
+        /// <summary>
+        /// Re-read configuration file
+        /// </summary>
         public void ReConfigure()
         {
             AGRequestService.DoReq(Server, "POST", "/reconfigure ");
         }
 
+        /// <summary>
+        /// Re-open log file,need administrator previlege
+        /// </summary>
         public void ReopenLog()
         {
             AGRequestService.DoReq(Server, "POST", "/reopenLog");
@@ -61,7 +67,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         }
 
         /// <summary>
-        /// Create catalog,if exist return null else return new catalog
+        /// Create catalog,if exist return null else return new catalog,need enable dynamic catalogs for the server.
         /// </summary>
         /// <param name="Name">catalog name</param>
         /// <returns></returns>
@@ -73,7 +79,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             else
             {
-                AGRequestService.DoReq(Server, "PUT", "/Catalogs/" + Name);
+                AGRequestService.DoReq(Server, "PUT", "/catalogs/" + Name);
                 return new AGCatalog(Server, Name);
             }
         }
@@ -88,11 +94,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return new AGCatalog(Server, Name);
         }
 
+        /// <summary>
+        /// Delete catalog,need enable dynamic catalogs for the server. 
+        /// </summary>
+        /// <param name="Name">catalog name</param>
         public void DeleteCatalog(string Name)
         {
             AGRequestService.DoReq(Server, "DELETE", "/Catalogs/" + Name);
         }
-
 
         /// <summary>
         /// Open a session on a federated, reasoning, or filtered store.
@@ -101,8 +110,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="autoCommit"></param>
         /// <param name="lifetime"></param>
         /// <param name="loadInitFile"></param>
-        /// <returns>AGRepository</returns>
-        
+        /// <returns>AGRepository</returns>        
         public AGRepository OpenSession(string spec, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
         {
             string param = string.Empty;
@@ -114,7 +122,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             {
                 param = string.Format("/session?autoCommit={0}&loadInitFile={1}&store={2}&lifetime={3}", autoCommit, loadInitFile, spec, lifetime);
             }
-            //Console.WriteLine(param);
             string sessionUrl = AGRequestService.DoReqAndGet(this.Server, "POST", param);
             return new AGRepository(sessionUrl, Server.Username, Server.Password);
         }
@@ -141,14 +148,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// </param>
         public void SetInitFile(string content = null, bool restart = true)
         {
-            //Console.WriteLine(Server.Url + "/initfile");
             if (string.IsNullOrEmpty(content))
             {
                 DeleteInitFile();
             }
             else
             {
-                //AGRequestService.DoReq(Server, "PUT", "/initfile?" + "restart="+restart, content,true);
                 AGRequestService.DoReq(Server, "PUT", string.Format("/initfile?restart={0}", restart), content, true);
             }
         }

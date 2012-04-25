@@ -147,14 +147,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
-            Console.WriteLine(absUrl);
+            //Console.WriteLine(absUrl);
             string username = null, password = null;
             if (NeedsAuth)
             {
                 username = Base.Username;
                 password = Base.Password;
             }
-
             return RequestUtil.DoJsonReq(absUrl, Method, bodyString,Accept, contentType, username, password);
         }
 
