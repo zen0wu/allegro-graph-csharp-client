@@ -41,6 +41,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             AbsUrl = Base.Url + RelativeUrl;
             ContentType = "application/json; utf-8";
+            //Console.WriteLine(AbsUrl);
             BodyString = null;
             if (Body == null)
             {

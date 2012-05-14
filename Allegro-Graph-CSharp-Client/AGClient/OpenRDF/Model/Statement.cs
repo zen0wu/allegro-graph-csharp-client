@@ -14,7 +14,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         private string _id;
 
         
-        public Statement(string subj, string pred, string obj, string id=null,string context = null)
+        public Statement(string subj, string pred, string obj, string context = null,string id=null)
         {
             this._subject = subj;
             this._predicate = pred;
@@ -46,6 +46,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         {
             get { return _id; }
             set { _id = value; }
+        }
+        public override string ToString()
+        {
+            return string.Format("{0}{1}{2}{3}",Id,Subject,Predicate,Object);
         }
     }
 }

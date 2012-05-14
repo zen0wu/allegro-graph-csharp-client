@@ -36,7 +36,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             repository = new AGRepository(catalog, TestRepositoryName);
             TestNamespace = new Namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
             TestIndexName = "gospi";
-            statement = new Statement("<http://example/test?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/test?abc=1&def=2>", "<http://example/test?client=Csharp>");
+            statement = new Statement("<http://example/test?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/test?abc=1&def=2>", "<http://example/test?client=Csharp>", "85");
         }
 
         [Test]
@@ -235,11 +235,24 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             }
             Assert.IsTrue(flag);
         }
+
         [Test]
         public void TestListIndices()
         {
             string[] indexs = repository.ListIndices();
             Assert.Contains(TestIndexName, indexs);
+        }
+
+        [Test]
+        public void TestGetStatementsById()
+        {
+            string[][] results = repository.GetStatementsById("85", true);
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < results[0].Length; j++)
+            {
+                sb.Append(results[0][j]);
+            }
+            Assert.AreEqual(sb.ToString(), statement.ToString());
         }
     }
 }

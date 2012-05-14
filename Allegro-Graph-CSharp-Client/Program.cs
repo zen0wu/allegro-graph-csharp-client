@@ -15,6 +15,11 @@ namespace Allegro_Graph_CSharp_Client
 {
     class Program
     {
+        private static string CATALOG = "chainyi";
+        private static string REPOSITORY = "TestCsharpclient";
+        private static string HOST = "172.16.2.21";
+        private static string USERNAME = "chainyi";
+        private static string PASSWORD = "chainyi123";
 
         private static Statement CreateSampleStatement(int id)
         {
@@ -92,17 +97,28 @@ namespace Allegro_Graph_CSharp_Client
                 Console.WriteLine();
             }*/
 
-            AllegroGraphServer server = new AllegroGraphServer("172.16.2.21", 10035, "chainyi", "chainyi123");
-            Catalog ca = server.OpenCatalog("chainyi");
-            Repository re = ca.GetRepository("CSClient2");
-            RepositoryConnection conn = re.GetConnection();
-            Console.WriteLine("size=" + conn.GetSize());
+            //AllegroGraphServer server = new AllegroGraphServer("172.16.2.21", 10035, "chainyi", "chainyi123");
+            //Catalog ca = server.OpenCatalog("chainyi");
+            //Repository re = ca.GetRepository("CSClient2");
+            //RepositoryConnection conn = re.GetConnection();
+            //Console.WriteLine("size=" + conn.GetSize());
 
-            string type = "spogi";
-            conn.AddIndex(type);
-            string[] indices = conn.ListIndices();
-            indices = conn.ListValidIndices();
-            conn.DropIndex(type);
+            //string type = "spogi";
+            //conn.AddIndex(type);
+            //string[] indices = conn.ListIndices();
+            //indices = conn.ListValidIndices();
+            //conn.DropIndex(type);
+
+            AllegroGraphServer server = new AllegroGraphServer(HOST, 10035, USERNAME, PASSWORD);            Catalog cata = server.OpenCatalog(CATALOG);            Repository repo = cata.GetRepository(REPOSITORY);            RepositoryConnection repoConn = repo.GetConnection();
+            repoConn.OpenSession("<" + CATALOG + ":" + REPOSITORY + ">");
+            List<Namespace> spaces = repoConn.GetNamespaces();
+            Console.WriteLine(spaces.Count);
+            foreach (var space in spaces)
+            {
+                Console.WriteLine(space.Prefix + "\t" + space.NameSpace);
+            }
+            Console.WriteLine(repoConn.GetNamespaces("csharptest2"));
+            repoConn.CloseSession();            
         }
     }
 }
