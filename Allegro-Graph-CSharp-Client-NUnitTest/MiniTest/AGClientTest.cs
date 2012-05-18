@@ -53,6 +53,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Assert.AreEqual(version,this.version);
         }
 
+        [Test]
+        public void TestGetBuiltDate()
+        {
+            Assert.AreEqual(agClient.GetBuiltDate(), this.buildDate);
+        }
+
         /// <summary>
         /// Test ListCatalogs()
         /// </summary>
@@ -84,11 +90,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Assert.NotNull(result.Url);
         }
 
-        [Test]
-        public void TestGetBuiltDate()
-        {
-            Assert.AreEqual(agClient.GetBuiltDate(), this.buildDate);
-        }
+        
 
         [Test]
         //[Ignore("need administrator previlege")]

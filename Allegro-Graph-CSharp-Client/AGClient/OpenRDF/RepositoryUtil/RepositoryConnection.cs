@@ -129,14 +129,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         public string[] GetStatementIDs(string[] Subj, string[] Pred, string[] Obj, string[] Context,
                                         string Infer = "false", int Limit = -1, int Offset = -1)
         {
-            return this.GetMiniRepository().GetStatementIDs(Subj,Pred,Obj,Context,Infer,Limit,Offset);
+            return this.GetMiniRepository().GetStatementIDs(Subj, Pred, Obj, Context, Infer, Limit, Offset);
         }
 
         public string[] GetStatementIDs()
         {
             return this.GetMiniRepository().GetStatementIDs();
         }
-       
+
         /// <summary>
         /// Create Statement object
         /// </summary>
@@ -210,9 +210,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// </summary>
         /// <param name="statement">Statement object</param>
         /// <param name="contexts">named contexts</param>
-        public void AddStatement(Statement statement, string[] contexts = null)
+        public void AddStatement(Statement statement)
         {
-            AddTriple(statement.Subject, statement.Predicate, statement.Object, contexts);
+            AddTriple(statement.Subject, statement.Predicate, statement.Object, statement.Context);
         }
 
         /// <summary>
@@ -223,9 +223,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="pred">predicate</param>
         /// <param name="obj">object</param>
         /// <param name="contexts">named contexts</param>
-        public void AddStatement(string subj, string pred, string obj, string[] contexts = null)
+        public void AddStatement(string subj, string pred, string obj, string context = null)
         {
-            AddTriple(subj, pred, obj, contexts);
+            AddTriple(subj, pred, obj, context);
         }
 
         /// <summary>
@@ -235,21 +235,17 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="subj">subject</param>
         /// <param name="pred">predicate</param>
         /// <param name="obj">object</param>
-        /// <param name="contexts">named contexts</param>
-        public void AddTriple(string subj, string pred, string obj, string[] contexts = null)
+        /// <param name="contexts">named context</param>
+        public void AddTriple(string subj, string pred, string obj, string context = null)
         {
-            string[][] statements = null;
-            if (contexts != null)
+            string[][] statements = new string[1][]; ;
+            if (context != null)
             {
-                statements = new string[contexts.Length][];
-                for (int i = 0; i < contexts.Length; i++)
-                {
-                    statements[i] = new string[] { subj, pred, obj, contexts[i] };
-                }
+                statements[0] = new string[] { subj, pred, obj, context };
             }
             else
             {
-                statements = new string[1][];
+
                 statements[0] = new string[] { subj, pred, obj };
             }
             this.GetMiniRepository().AddStatements(statements);

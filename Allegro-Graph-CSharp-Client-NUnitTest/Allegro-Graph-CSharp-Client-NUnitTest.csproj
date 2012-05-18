@@ -53,8 +53,11 @@
     <Compile Include="MiniTest\AGRepositoryTest.cs" />
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForFreeTextSearchTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForNamespaceTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForTripleIndexTest.cs.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionUnderSessionTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryTest.cs" />
     <Compile Include="OpenRDFTest\SailTest\AllegroGraphServerTest.cs" />
     <Compile Include="OpenRDFTest\SailTest\SpecTest.cs" />

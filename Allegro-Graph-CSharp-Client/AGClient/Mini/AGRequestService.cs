@@ -68,6 +68,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             else {
                 // If body is not string, jsonize it
                 BodyString = JsonConvert.SerializeObject(Body);
+                //Console.WriteLine(BodyString);
             }
         }
 

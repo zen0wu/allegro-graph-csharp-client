@@ -109,7 +109,10 @@ namespace Allegro_Graph_CSharp_Client
             //indices = conn.ListValidIndices();
             //conn.DropIndex(type);
 
-            AllegroGraphServer server = new AllegroGraphServer(HOST, 10035, USERNAME, PASSWORD);            Catalog cata = server.OpenCatalog(CATALOG);            Repository repo = cata.GetRepository(REPOSITORY);            RepositoryConnection repoConn = repo.GetConnection();
+            AllegroGraphServer server = new AllegroGraphServer(HOST, 10035, USERNAME, PASSWORD);
+            Catalog cata = server.OpenCatalog(CATALOG);
+            Repository repo = cata.GetRepository(REPOSITORY);
+            RepositoryConnection repoConn = repo.GetConnection();
             repoConn.OpenSession("<" + CATALOG + ":" + REPOSITORY + ">");
             List<Namespace> spaces = repoConn.GetNamespaces();
             Console.WriteLine(spaces.Count);
@@ -118,7 +121,9 @@ namespace Allegro_Graph_CSharp_Client
                 Console.WriteLine(space.Prefix + "\t" + space.NameSpace);
             }
             Console.WriteLine(repoConn.GetNamespaces("csharptest2"));
-            repoConn.CloseSession();            
+            repoConn.CloseSession();
+            
+
         }
     }
 }

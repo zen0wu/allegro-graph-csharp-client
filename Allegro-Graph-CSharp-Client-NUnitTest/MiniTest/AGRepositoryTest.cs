@@ -214,6 +214,18 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         [Test]
+        public void TestGetStatementsById()
+        {
+            string[][] results = repository.GetStatementsById("85", true);
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < results[0].Length; j++)
+            {
+                sb.Append(results[0][j]);
+            }
+            Assert.AreEqual(sb.ToString(), statement.ToString());
+        }
+
+        [Test]
         public void TestGetBlankNodes()
         {
             string[] results = repository.GetBlankNodes(3);
@@ -243,16 +255,6 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Assert.Contains(TestIndexName, indexs);
         }
 
-        [Test]
-        public void TestGetStatementsById()
-        {
-            string[][] results = repository.GetStatementsById("85", true);
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < results[0].Length; j++)
-            {
-                sb.Append(results[0][j]);
-            }
-            Assert.AreEqual(sb.ToString(), statement.ToString());
-        }
+        
     }
 }

@@ -42,6 +42,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Assert.AreNotSame(catalog1, catalog2);
         }
 
+        [Test]
+        public void TestGetName()
+        {
+            Assert.AreSame(testCatalogName, catalog.GetName());
+        }
+
         /// <summary>
         /// Test OpenRepository()
         /// </summary>

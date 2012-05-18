@@ -635,9 +635,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         ///  Executes a prepared query stored under the name id 
         /// </summary>
         /// <param name="PQueryID">prepared query id</param>
-        public void ExecutePreparingQueries(string PQueryID)
+        public string ExecutePreparingQueries(string PQueryID)
         {
-            AGRequestService.DoReq(this, "GET", "/queries/" + PQueryID);
+            //AGRequestService.DoReq(this, "GET", "/queries/" + PQueryID);
+            return AGRequestService.DoReqAndGet(this, "GET", "/queries/" + PQueryID);
         }
 
         /// <summary>
@@ -647,10 +648,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="bindings">Local bindings for variables</param>
         /// <param name="limit">The size limit of result</param>
         /// <param name="offset">Skip some of the results at the start</param>
-        public void ExecutePreparingQueries(string PQueryID, Dictionary<string, string> bindings = null, int limit = -1, int offset = -1)
+        public string ExecutePreparingQueries(string PQueryID, Dictionary<string, string> bindings = null, int limit = -1, int offset = -1)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            AGRequestService.DoReq(this, "POST", "/queries/" + PQueryID, parameters);
+            return AGRequestService.DoReqAndGet(this, "POST", "/queries/" + PQueryID, parameters);
         }
 
         /// <summary>
@@ -770,8 +771,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<string[][]>(this, "GET", "/freetext" + sbParameter.ToString());
         }
 
-
-
         /// <summary>
         /// Create a free-text index with the given parameters
         /// </summary>
@@ -844,7 +843,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             else AddParam("indexLiterals", "");
 
-
             if (indexResources != null) AddParam("indexResources", indexResources);
             else AddParam("indexResources", "");
 
@@ -869,7 +867,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             else AddParam("stopword", "");
 
-            if (wordFilters != null & wordFilters.Length > 0)
+            if (wordFilters != null && wordFilters.Length > 0)
             {
                 for (int i = 0; i < wordFilters.Length; i++)
                     AddParam("wordFilter", wordFilters[i]);

@@ -35,7 +35,6 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             string method = "GET";
             string relativeUrl = "/catalogs/chainyi/repositories/test/statements";
             AGRequestService.DoReq(server, method, relativeUrl);
-
         }
 
         [Test]

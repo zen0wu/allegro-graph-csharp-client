@@ -10,7 +10,7 @@ using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil;
 
 namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
 {
-    public class RepositoryConnectionTest
+    public partial class RepositoryConnectionTest
     {
         private static string CATALOG = "chainyi";
         private static string REPOSITORY = "TestCsharpclient";
@@ -28,13 +28,14 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
                 return new Statement(string.Format("<http://example.com/article-{0}>", id),
                         "<http://www.w3.org/2000/01/rdf-schema#label>",
                         string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", id),
-                        string.Format("context{0}", id));
+                        string.Format("\"context{0}\"", id));
             }
             else
             {
                 return new Statement(string.Format("<http://example.com/article-{0}>", id),
                             "<http://www.w3.org/2000/01/rdf-schema#label>",
-                            string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", id));
+                             //string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", id));
+                            string.Format("\"obj{0}\"", id));
             }
         }
 
@@ -46,10 +47,11 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             Catalog cata = server.OpenCatalog(CATALOG);
             repo = cata.GetRepository(REPOSITORY);
             repoConn = repo.GetConnection();
+            //Console.WriteLine(repo.Url);
         }
 
         [Test]
-        public void ClearTripleStore()
+        public void TestClearTripleStore()
         {
             repoConn.Clear();
             Assert.AreEqual(repoConn.GetSize(), 0);
@@ -76,38 +78,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         public void TestAddWithContext()
         {
             repoConn.Clear();
-            for (int i = 0; i < 10; ++i)
+            for (int i = 10; i < 20; ++i)
                 repoConn.AddStatement(CreateSampleStatement(i, true));
             Assert.AreEqual(repoConn.GetSize(), 10);
-        }
+        }        
 
-        [Test]
-        public void TestTransaction()
-        {
-            int bn = 10;
-            repoConn.Clear();
-            repoConn.OpenSession(repoConn.GetSpec());
-            for (int i = 0; i < bn; ++i)
-                repoConn.AddStatement(CreateSampleStatement(i));
-            repoConn.Rollback();
-            for (int i = bn; i < bn * 2; ++i)
-                repoConn.AddStatement(CreateSampleStatement(i));
-            repoConn.Commit();
-            repoConn.CloseSession();
-            Assert.AreEqual(repoConn.GetSize(), bn);
-        }
-
-        [Test]
-        public void TestIndices()
-        {
-            string type = "spogi";
-            repoConn.AddIndex(type);
-            string[] indices = repoConn.ListIndices();
-            Assert.True(indices.Any(e => e == type));
-            indices = repoConn.ListValidIndices();
-            Assert.True(indices.Any(e => e == type));
-            repoConn.DropIndex(type);
-        }
+       
 
         //[Test]
         //public void ExportTest()
@@ -117,14 +93,15 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         [Test]
         public void TestAddStatement()
         {
+            repoConn.Clear();
             int preSize = repoConn.GetSize();
             string[] subjs = new string[] { "<http://example.com/article-996>", "<http://example.com/article-995>" };
             string[] preds = new string[] { "<http://www.w3.org/2000/01/rdf-schema#label>", "<http://www.w3.org/2000/01/rdf-schema#label>" };
-            string[] objs = new string[] { "testObj1", "testObj2" };
-            string[] context = new string[] { "context1" };
+            string[] objs = new string[] { string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", 100), string.Format("\"999{0}\"^^<http://www.w3.org/2001/XMLSchema#int>", 200) };
+            string[] context = new string[] { "\"context1\"","\"context2\"" };
             for (int i = 0; i < 2; i++)
             {
-                repoConn.AddStatement(subjs[i], preds[i], objs[i], context);
+                repoConn.AddStatement(subjs[i], preds[i], objs[i],context[i]);
             }
             Assert.AreEqual(repoConn.GetSize(), preSize + 2);
         }

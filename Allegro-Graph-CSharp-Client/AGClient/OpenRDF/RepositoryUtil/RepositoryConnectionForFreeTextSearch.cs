@@ -30,8 +30,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return this._repository.GetMiniRepository().EvalFreeTextIndex(pattern, expression, index, sorted, limit, offset);
         }
 
-        
-
         /// <summary>
         ///     Create a free-text index with the given parameters.
         /// </summary>

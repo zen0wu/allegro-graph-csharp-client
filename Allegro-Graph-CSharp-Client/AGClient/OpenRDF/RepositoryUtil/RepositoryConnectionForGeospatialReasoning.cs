@@ -25,7 +25,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="limit">Optional. Used to limit the amount of returned triples</param>
         /// <param name="offset">Optional. Used to skip a number of returned triples.</param>
         /// <returns></returns>
-        public List<Statement> GetStatements(string predicate, GeoSpatial region,int limit = -1, int offset = -1)
+        public List<Statement> GetStatementsOfGeo(string predicate, GeoSpatial region,int limit = -1, int offset = -1)
         {
             string geoDataType = region.GeoDataType;
             if (region is GeoBox)

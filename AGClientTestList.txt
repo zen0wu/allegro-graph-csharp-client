@@ -1,0 +1,243 @@
+Test List of AGCSharpClient
+
+namespace Allegro_Graph_CSharp_Client.AGClient.Mini
+
+Class AGClient
+AGClient::GetVersion                              finished
+AGClient::GetBuiltDate                            finished
+AGClient::ListCatalogs                            finished
+AGClient::CreateCatalog                           finished
+AGClient::OpenCatalog                             finished
+AGClient::DeleteCatalog                           finished
+AGClient::OpenSession                             finished
+ 
+AGClient::DeleteInitFile                          unfinished
+AGClient::SetInitFile                             unfinished
+AGClient::GetInitFile                             unfinished 
+AGClient::ReConfigure                             unfinished
+AGClient::ReopenLog                               unfinished
+
+==============================================================
+Class AGCatalog
+AGCatalog::OpenRepository                         finished
+AGCatalog::CreateRepository                       finished
+AGCatalog::DeleteRepository                       finished
+AGCatalog::ListRepositories                       finished
+AGCatalog::GetName                                finished
+
+==============================================================
+Class AGRepository
+AGRepository::GetSize                             finished
+AGRepository::GetCatalog                          finished
+AGRepository::ListContexts                        finished
+AGRepository::GetBlankNodes                       finished
+AGRepository::AddStatements                       finished
+AGRepository::DeleteMatchingStatements            finished
+AGRepository::DeleteStatements                    finished
+AGRepository::EvalSPARQLQuery                     finished
+
+AGRepository::GetStatements                       finished
+AGRepository::GetStatementsById                   finished
+AGRepository::GetStatementIDs                     finished
+AGRepository::DeleteStatementsById                finished
+AGRepository::DeleteDuplicateStatements           finished
+
+AGRepository::EvalPrologQuery                     unfinished
+
+AGRepository::ListNamespaces                      finished
+AGRepository::GetNamespaces                       unfinished
+AGRepository::AddNamespace                        unfinished
+AGRepository::DeleteNamespace                     unfinished
+AGRepository::ClearNamespaces                     unfinished
+
+AGRepository::LoadFile                            unfinished
+
+AGRepository::ListTypeMapping                     unfinished
+AGRepository::ClearTypeMapping                    unfinished
+AGRepository::ListMappedTypes                     unfinished
+AGRepository::AddMappedType                       unfinished
+AGRepository::DeleteMappedType                    unfinished
+AGRepository::ListMappedPredicates                unfinished
+AGRepository::AddMappedPredicate                  unfinished
+AGRepository::DeleteMappedPredicate               unfinished
+
+AGRepository::ListIndices                         finished
+AGRepository::ListValidIndices                    Same as RepositoryConnection::ListValidIndices
+AGRepository::AddIndex                            Same as RepositoryConnection::AddIndex
+AGRepository::DropIndex                           Same as RepositoryConnection::DropIndex
+AGRepository::OptimizeIndex                       Same as RepositoryConnection::
+
+AGRepository::OpenSession                         unfinished
+AGRepository::CloseSession                        unfinished
+
+AGRepository::PreparingQueries                    unfinished
+AGRepository::ExecutePreparingQueries[1]          unfinished
+AGRepository::ExecutePreparingQueries[2]          unfinished
+AGRepository::DeletePreparingQueries              unfinished
+AGRepository::DefinePrologFunction                unfinished
+
+AGRepository::Commit                              Same as RepositoryConnection::
+AGRepository::Rollback                            Same as RepositoryConnection::
+
+AGRepository::EnableTripleCache                   unfinished
+AGRepository::DisableTripleCache                  unfinished
+AGRepository::GetTripleCacheSize                  unfinished
+
+AGRepository::EvalFreeTextIndex                   unfinished
+AGRepository::ManipulateFreeTextIndex             unfinished
+AGRepository::CreateFreeTextIndex                 unfinished
+AGRepository::ModifyFreeTextIndex                 unfinished
+AGRepository::ListFreeTextIndices                 unfinished
+AGRepository::DeleteFreeTextIndex                 unfinished
+AGRepository::ListFreeTextPredicates              unfinished
+AGRepository::RegisterFreeTextPredicate           unfinished
+AGRepository::GetFreeTextIndex                    unfinished
+AGRepository::GetFreeTextIndexConfiguration[1]    unfinished
+AGRepository::GetFreeTextIndexConfiguration[2]    unfinished
+AGRepository::EvalFreeTextSearch                  unfinished
+AGRepository::DefinePrologFunctors                unfinished
+
+AGRepository::ListGeoTypes                        unfinished
+AGRepository::GetStatementsInsideBox              unfinished
+AGRepository::GetStatementsInsideCircle           unfinished
+AGRepository::GetStatementsHaversine              unfinished
+AGRepository::GetStatementsInsidePolygon          unfinished
+
+AGRepository::RegisterSNAGenerator                unfinished
+AGRepository::RegisterNeighborMatrix              unfinished
+=======================================================
+
+namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
+
+Class AllegroGraphServer
+
+AllegroGraphServer::ServerReConfigure             unfinished
+AllegroGraphServer::ReopenLog                     unfinished
+AllegroGraphServer::ListCatalogs                  finished
+AllegroGraphServer::CreateCatalog                 finished
+AllegroGraphServer::OpenCatalog                   finished
+AllegroGraphServer::DeleteCatalog                 finished
+AllegroGraphServer::GetInitFile                   unfinished
+AllegroGraphServer::SetInitFile                   unfinished
+AllegroGraphServer::DeleteInitFile                unfinished
+AllegroGraphServer::OpenSession                   finished
+AllegroGraphServer::OpenFederated                 unfinished
+
+=================================================================
+Catalog::GetSesameProtocolVersion                 finished
+Catalog::CreateRepository                         finished
+Catalog::DeleteRepository                         finished
+Catalog::GetName                                  finished
+Catalog::ListRepositories                         finished
+Catalog::GetRepository                            finished
+
+=================================================================
+
+namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
+
+Class RepositoryConnection
+RepositoryConnection::GetSize                         finished
+RepositoryConnection::IsEmpty                         finished
+RepositoryConnection::GetSpec                         finished
+RepositoryConnection::GetMiniRepository               finished
+RepositoryConnection::GetContextIDs                   finished
+RepositoryConnection::GetStatements                   finished
+RepositoryConnection::GetStatementsById               finished
+RepositoryConnection::GetStatementIDs                 finished
+RepositoryConnection::CreateStatement                 finished
+RepositoryConnection::GetBlankNodes                   finished
+RepositoryConnection::AddFile                         unfinished
+RepositoryConnection::AddStatement                    unfinished
+RepositoryConnection::AddTriple                       finished
+RepositoryConnection::AddTriples                      finished
+RepositoryConnection::RemoveTriples                   finished
+RepositoryConnection::RemoveStatement                 finished
+RepositoryConnection::RemoveQuadsByID                 finished
+RepositoryConnection::RemoveQuads                     finished
+RepositoryConnection::RemoveDuplicateStatements       finished
+RepositoryConnection::Clear                           finished
+RepositoryConnection::EvalSPARQLQuery                 finished
+RepositoryConnection::PrepareBooleanQuery             unfinished
+RepositoryConnection::PrepareStringArrayQuery         unfinished
+RepositoryConnection::ExportStatements                unfinished
+RepositoryConnection::Export                          unfinished
+
+RepositoryConnection::EvalFreeTextIndex               unfinished
+RepositoryConnection::CreateFreeTextIndex             unfinished
+RepositoryConnection::ModifyTextIndex                 unfinished
+RepositoryConnection::DeleteFreeTextIndex             unfinished
+RepositoryConnection::ListFreeTextIndices             unfinished
+RepositoryConnection::RegisterFreeTextPredicate       unfinished
+RepositoryConnection::GetFreeTextIndexConfiguration   unfinished
+RepositoryConnection::GetFreeTextIndexConfiguration   unfinished
+RepositoryConnection::GetFreeTextIndex                unfinished
+RepositoryConnection::EvalFreeTextSearch              unfinished
+
+RepositoryConnection::ListGeoTypes                    unfinished
+RepositoryConnection::GetStatementsOfGeo              unfinished
+RepositoryConnection::CreateBox                       unfinished
+RepositoryConnection::CreateCircle                    unfinished
+
+RepositoryConnection::GetNamespaces                   finished
+RepositoryConnection::SetNamespace                    finished
+RepositoryConnection::RemoveNamespace                 finished
+RepositoryConnection::ClearNamespace                  unfinished
+
+RepositoryConnection::AddRules                        unfinished
+RepositoryConnection::loadRules                       unfinished
+
+RepositoryConnection::RegisterSNAGenerator            unfinished
+RepositoryConnection::RegisterNeighborMatrix          unfinished
+
+RepositoryConnection::EnableTripleCache               unfinished
+RepositoryConnection::DisableTripleCache              unfinished
+RepositoryConnection::GetTripleCacheSize              unfinished
+
+RepositoryConnection::ListIndices                     finished
+RepositoryConnection::ListValidIndices                finished
+RepositoryConnection::AddIndex                        finished
+RepositoryConnection::DropIndex                       finished
+RepositoryConnection::OptimizeIndex                   finished
+
+RepositoryConnection::ListTypeMapping                 unfinished
+RepositoryConnection::ClearTypeMapping                unfinished
+RepositoryConnection::ListMappedTypes                 unfinished
+RepositoryConnection::AddMappedType                   unfinished
+RepositoryConnection::DeleteMappedType                unfinished
+RepositoryConnection::ListMappedPredicates            unfinished
+RepositoryConnection::AddMappedPredicate              unfinished
+RepositoryConnection::DeleteMappedPredicate           unfinished
+
+RepositoryConnection::OpenSession                     finished
+RepositoryConnection::CloseSession                    finished
+RepositoryConnection::Commit                          finished
+RepositoryConnection::Rollback                        finished
+RepositoryConnection::PreparingQueries                unfinished
+RepositoryConnection::ExecutePreparingQueries         unfinished
+RepositoryConnection::DeletePreparingQueries          unfinished
+RepositoryConnection::DefinePrologFunction            unfinished
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

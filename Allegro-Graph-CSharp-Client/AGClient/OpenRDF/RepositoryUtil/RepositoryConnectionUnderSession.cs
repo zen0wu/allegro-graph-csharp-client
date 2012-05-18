@@ -69,9 +69,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         ///  Executes a prepared query stored under the name id 
         /// </summary>
         /// <param name="PQueryID">prepared query id</param>
-        public void ExecutePreparingQueries(string PQueryID)
+        public string ExecutePreparingQueries(string PQueryID)
         {
-            _repository.GetMiniRepository().ExecutePreparingQueries(PQueryID);
+            return _repository.GetMiniRepository().ExecutePreparingQueries(PQueryID);
         }
 
         /// <summary>

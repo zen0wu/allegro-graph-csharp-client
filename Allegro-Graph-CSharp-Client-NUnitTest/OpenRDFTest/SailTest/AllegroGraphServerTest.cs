@@ -88,5 +88,6 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
         {
             Console.WriteLine(ags.GetInitFile());
         }
+        [Test]
     }
 }
