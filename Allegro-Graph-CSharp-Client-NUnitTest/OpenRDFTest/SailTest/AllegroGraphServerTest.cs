@@ -14,80 +14,112 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
     [TestFixture]
     class AllegroGraphServerTest
     {
+        private string buildDate;
+        private string version;
+        private string testCatalogName;
+        private string testRepoName;
+        private string userName;
+        private string password;
         private AllegroGraphServer ags;
         private Catalog catalog;
-        [Test]
+
         [TestFixtureSetUp]
         public void init()
         {
-            ags = new AllegroGraphServer("172.16.2.21", 10035, "chainyi", "chainyi123");
-            catalog = ags.OpenCatalog("chainyi");
-            Console.WriteLine(ags.Url);
-            Console.WriteLine(ags.Version);
-            Console.WriteLine(catalog.GetName());
+            userName = "chainyi";
+            password = "chainyi123";
+            testCatalogName = "chainyi";
+            testRepoName = "TestCsharpclient";
+            ags = new AllegroGraphServer("172.16.2.21", 10035, userName, password);
+            catalog = ags.OpenCatalog(testCatalogName);
+            buildDate = "February 13, 2012 16:42:07 GMT-0800";
+            version = "4.5";
         }
 
         [Test]
-        public void ListCatalogsTest()
+        public void TestProperty()
         {
+            Assert.AreEqual(ags.Url, "http://172.16.2.21:10035");
+            Assert.AreEqual(ags.Version, version);
+            Assert.AreEqual(catalog.GetName(), testCatalogName);
+            Assert.AreEqual(ags.Date, buildDate);
+        }
 
+        [Test]
+        public void TestListCatalogs()
+        {
             string[] catalogs = ags.ListCatalogs();
-            foreach (string cat in catalogs)
-            {
-                Console.WriteLine(cat);
-            }
+            Assert.Contains(testCatalogName, catalogs);
         }
-        ///<summary>
-        ///测试catalog类
-        ///</summary>
+
         [Test]
-        public void CreateRepositoryTest()
+        public void TestCreateDeleteCatalog()
         {
-            Console.WriteLine(catalog.Url);
-            Console.WriteLine("create 'temp' repository");
-            catalog.CreateRepository("temp");
+            string catalogTest = "OnlyTest";
+            int preLength = ags.ListCatalogs().Length;
+            ags.CreateCatalog(catalogTest);
+            Assert.AreEqual(preLength + 1, ags.ListCatalogs().Length);
+
+            ags.DeleteCatalog(catalogTest);
+            Assert.AreEqual(preLength, ags.ListCatalogs().Length);
         }
+
         [Test]
-        public void DeleteRepositoryTest()
+        public void TestOpenCatalog()
         {
-            Console.WriteLine(catalog.Url);
-            Console.WriteLine("delete 'temp' repository");
-            catalog.DeleteRepository("temp");
+            bool result = ags.OpenCatalog(testCatalogName) is Catalog;
+            Assert.IsTrue(result);
         }
+
+        //test catalog class
         [Test]
-        public void ListRepositoriesTest()
+        public void TestGetSesameProtocolVersion()
         {
-            Console.WriteLine(catalog.Url);
+            Assert.AreEqual(catalog.GetSesameProtocolVersion(), "4");
+        }
+
+        [Test]
+        public void TestGetName()
+        {
+            Assert.AreEqual(catalog.GetName(), testCatalogName);
+        }
+
+        [Test]
+        public void TestListRepositories()
+        {
             string[] repos = catalog.ListRepositories();
-            foreach (string repo in repos)
-            {
-                Console.WriteLine(repo);
-            }
+            Assert.Contains(testRepoName, repos);
         }
 
         [Test]
-        public void GetRepository_OpenTest()
+        public void TestCreateDeleteRepository()
         {
-            Repository repository = catalog.GetRepository("temp", AccessVerb.OPEN);
-        }
+            string tempRepositoryName = "RepositoryForTest";
+            string[] preRepostories = catalog.ListRepositories();
+            catalog.CreateRepository(tempRepositoryName);
+            string[] currentRepostories = catalog.ListRepositories();
+            Assert.AreEqual(preRepostories.Length + 1, currentRepostories.Length);
+            Assert.Contains(tempRepositoryName, currentRepostories);
 
+            catalog.DeleteRepository(tempRepositoryName);
+            currentRepostories = catalog.ListRepositories();
+            Assert.AreEqual(preRepostories.Length, currentRepostories.Length);
+            Assert.False(currentRepostories.Contains(tempRepositoryName));
+        }
+        
         [Test]
-        public void GetRepository_CreateTest()
+        public void TestGetRepository()
         {
-            Repository repository = catalog.GetRepository("temp", AccessVerb.CREATE);
+            Repository repository = catalog.GetRepository(testRepoName, AccessVerb.OPEN);
+            Assert.AreEqual(repository.GetDatabaseName(), testRepoName);
         }
 
         [Test]
-        public void SetInitFileTest()
+        public void TestInitFile()
         {
             string content = "(<-- (after-after ?a ?b) (q- ?a !<http:after> ?x) (q- ?x !<http:after> ?b))";
             ags.SetInitFile(content, false);
+            Assert.True(ags.GetInitFile().Contains(content));
         }
-        [Test]
-        public void GetInitFileTest()
-        {
-            Console.WriteLine(ags.GetInitFile());
-        }
-        [Test]
     }
 }

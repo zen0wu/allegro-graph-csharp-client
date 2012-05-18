@@ -126,9 +126,11 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
 
         [Test]
         [Ignore("need administrator previlege")]
-        public void TestGetInitFile()
+        public void TestInitFile()
         {
-            agClient.GetInitFile();
+            string content = "(<-- (after-after ?a ?b) (q- ?a !<http:after> ?x) (q- ?x !<http:after> ?b))";
+            agClient.SetInitFile(content, false);
+            Assert.True(agClient.GetInitFile().Contains(content));
         }
     }
 }

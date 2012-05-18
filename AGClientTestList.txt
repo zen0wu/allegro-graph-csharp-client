@@ -11,9 +11,9 @@ AGClient::OpenCatalog                             finished
 AGClient::DeleteCatalog                           finished
 AGClient::OpenSession                             finished
  
-AGClient::DeleteInitFile                          unfinished
-AGClient::SetInitFile                             unfinished
-AGClient::GetInitFile                             unfinished 
+AGClient::DeleteInitFile                          exception
+AGClient::SetInitFile                             exception
+AGClient::GetInitFile                             exception
 AGClient::ReConfigure                             unfinished
 AGClient::ReopenLog                               unfinished
 
@@ -45,10 +45,10 @@ AGRepository::DeleteDuplicateStatements           finished
 AGRepository::EvalPrologQuery                     unfinished
 
 AGRepository::ListNamespaces                      finished
-AGRepository::GetNamespaces                       unfinished
-AGRepository::AddNamespace                        unfinished
-AGRepository::DeleteNamespace                     unfinished
-AGRepository::ClearNamespaces                     unfinished
+AGRepository::GetNamespaces                       finished
+AGRepository::AddNamespace                        finished
+AGRepository::DeleteNamespace                     finished
+AGRepository::ClearNamespaces                     finished
 
 AGRepository::LoadFile                            unfinished
 
@@ -62,13 +62,10 @@ AGRepository::AddMappedPredicate                  unfinished
 AGRepository::DeleteMappedPredicate               unfinished
 
 AGRepository::ListIndices                         finished
-AGRepository::ListValidIndices                    Same as RepositoryConnection::ListValidIndices
-AGRepository::AddIndex                            Same as RepositoryConnection::AddIndex
-AGRepository::DropIndex                           Same as RepositoryConnection::DropIndex
-AGRepository::OptimizeIndex                       Same as RepositoryConnection::
-
-AGRepository::OpenSession                         unfinished
-AGRepository::CloseSession                        unfinished
+AGRepository::ListValidIndices                    finished
+AGRepository::AddIndex                            finished
+AGRepository::DropIndex                           finished
+AGRepository::OptimizeIndex                       unfinished
 
 AGRepository::PreparingQueries                    unfinished
 AGRepository::ExecutePreparingQueries[1]          unfinished
@@ -76,6 +73,8 @@ AGRepository::ExecutePreparingQueries[2]          unfinished
 AGRepository::DeletePreparingQueries              unfinished
 AGRepository::DefinePrologFunction                unfinished
 
+AGRepository::OpenSession                         Same as RepositoryConnection::
+AGRepository::CloseSession                        Same as RepositoryConnection::
 AGRepository::Commit                              Same as RepositoryConnection::
 AGRepository::Rollback                            Same as RepositoryConnection::
 
@@ -117,9 +116,11 @@ AllegroGraphServer::ListCatalogs                  finished
 AllegroGraphServer::CreateCatalog                 finished
 AllegroGraphServer::OpenCatalog                   finished
 AllegroGraphServer::DeleteCatalog                 finished
-AllegroGraphServer::GetInitFile                   unfinished
-AllegroGraphServer::SetInitFile                   unfinished
-AllegroGraphServer::DeleteInitFile                unfinished
+
+AllegroGraphServer::GetInitFile                   exception
+AllegroGraphServer::SetInitFile                   exception
+AllegroGraphServer::DeleteInitFile                exception
+
 AllegroGraphServer::OpenSession                   finished
 AllegroGraphServer::OpenFederated                 unfinished
 
@@ -146,8 +147,10 @@ RepositoryConnection::GetStatementsById               finished
 RepositoryConnection::GetStatementIDs                 finished
 RepositoryConnection::CreateStatement                 finished
 RepositoryConnection::GetBlankNodes                   finished
+
 RepositoryConnection::AddFile                         unfinished
-RepositoryConnection::AddStatement                    unfinished
+
+RepositoryConnection::AddStatement                    finished
 RepositoryConnection::AddTriple                       finished
 RepositoryConnection::AddTriples                      finished
 RepositoryConnection::RemoveTriples                   finished
@@ -157,6 +160,7 @@ RepositoryConnection::RemoveQuads                     finished
 RepositoryConnection::RemoveDuplicateStatements       finished
 RepositoryConnection::Clear                           finished
 RepositoryConnection::EvalSPARQLQuery                 finished
+
 RepositoryConnection::PrepareBooleanQuery             unfinished
 RepositoryConnection::PrepareStringArrayQuery         unfinished
 RepositoryConnection::ExportStatements                unfinished
@@ -181,7 +185,7 @@ RepositoryConnection::CreateCircle                    unfinished
 RepositoryConnection::GetNamespaces                   finished
 RepositoryConnection::SetNamespace                    finished
 RepositoryConnection::RemoveNamespace                 finished
-RepositoryConnection::ClearNamespace                  unfinished
+RepositoryConnection::ClearNamespace                  finished
 
 RepositoryConnection::AddRules                        unfinished
 RepositoryConnection::loadRules                       unfinished
@@ -197,7 +201,7 @@ RepositoryConnection::ListIndices                     finished
 RepositoryConnection::ListValidIndices                finished
 RepositoryConnection::AddIndex                        finished
 RepositoryConnection::DropIndex                       finished
-RepositoryConnection::OptimizeIndex                   finished
+RepositoryConnection::OptimizeIndex                   unfinished
 
 RepositoryConnection::ListTypeMapping                 unfinished
 RepositoryConnection::ClearTypeMapping                unfinished

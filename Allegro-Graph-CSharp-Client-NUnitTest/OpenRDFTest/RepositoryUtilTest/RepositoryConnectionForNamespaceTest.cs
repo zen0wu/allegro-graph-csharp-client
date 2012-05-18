@@ -13,23 +13,35 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
     {
         //Repository repo;
         //RepositoryConnection repoConn;
+        [Test]
+        public void TestGetNamespace()
+        {
+            Namespace testNamespace = new Namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            List<Namespace> results = repoConn.GetNamespaces();
+            bool flag = false;
+            foreach (Namespace ns in results)
+            {
+                if (ns.Prefix == testNamespace.Prefix && ns.NameSpace == testNamespace.NameSpace)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            Assert.IsTrue(flag);
+        }
 
         [Test]
-        public void TestSetNamespace()
+        public void TestSetRemoveNamespace()
         {
-
-            //Console.WriteLine(repoConn.GetSpec());
             repoConn.OpenSession(repoConn.GetSpec());
-            List<Namespace> list = repoConn.GetNamespaces();
-            int preSize = list.Count();
+            int preSize = repoConn.GetNamespaces().Count();
+
             repoConn.SetNamespace("csharptest2", "http://www.csharpexample2.com/");
-            foreach (Namespace ns in list)
-            {
-                Console.WriteLine(ns.ToString());
-            }
-            int currentSize = repoConn.GetNamespaces().Count();
-            Assert.AreEqual(currentSize, preSize + 1);
+            Assert.AreEqual(repoConn.GetNamespaces().Count(), preSize + 1);
+
             repoConn.RemoveNamespace("csharptest2");
+            Assert.AreEqual(repoConn.GetNamespaces().Count(), preSize );
+
             repoConn.CloseSession();
             //AllegroGraphServer server = new AllegroGraphServer(HOST, 10035, USERNAME, PASSWORD);
             //Catalog cata = server.OpenCatalog(CATALOG);
@@ -44,21 +56,18 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             //}
             //Console.WriteLine(repoConn.GetNamespaces("csharptest2"));
             //repoConn.CloseSession();
-
         }
 
+        
         [Test]
-        public void TestRemoveNamespace()
+        public void TestClearNamespace()
         {
-            //repoConn.SetNamespace("ns1", "http://example.com");
-            //List<Namespace> list = repoConn.GetNamespaces();
-            //foreach (Namespace ns in list)
-            //{
-            //    Console.WriteLine(ns.ToString());
-            //}
-            int preSize = repoConn.GetNamespaces().Count();
-            repoConn.RemoveNamespace("ns1");
-            Assert.AreEqual(repoConn.GetNamespaces().Count(), preSize - 1);
+            repoConn.ClearNamespace();
+            int defaultSize = repoConn.GetNamespaces().Count();
+            repoConn.SetNamespace("ns1", "http://example.com/1");
+            repoConn.SetNamespace("ns2", "http://example.com/2");
+            repoConn.ClearNamespace();
+            Assert.AreEqual(defaultSize, repoConn.GetNamespaces().Count());
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         //Repository repo;
         //RepositoryConnection repoConn;
         [Test]
-        public void TestOpenandCloseSession()
+        public void TestOpenCloseSession()
         {
             string oldUrl = repo.Url;
             repoConn.OpenSession(repo.GetSpec());

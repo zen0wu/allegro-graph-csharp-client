@@ -232,6 +232,20 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             Assert.AreEqual(results.Length, 3);
         }
 
+
+        [Test]
+        public void TestAddDeleteNamespace()
+        {
+            List<Namespace> list = repository.ListNamespaces();
+            int preSize = repository.ListNamespaces().Count();
+
+            repository.AddNamespace("ns1", "http://example.com");
+            Assert.AreEqual(repository.ListNamespaces().Count(), preSize + 1);
+
+            repository.DeleteNamespace("ns1");
+            Assert.AreEqual(repository.ListNamespaces().Count(), preSize );
+        }
+
         [Test]
         public void TestListNamespaces()
         {
@@ -249,12 +263,21 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         [Test]
+        public void TestClearNamespace()
+        {
+            repository.ClearNamespaces();
+            int defaultSize = repository.ListNamespaces().Count();
+            repository.AddNamespace("ns1", "http://example.com/1");
+            repository.AddNamespace("ns2", "http://example.com/2");
+            repository.ClearNamespaces();
+            Assert.AreEqual(defaultSize, repository.ListNamespaces().Count());
+        }
+
+        [Test]
         public void TestListIndices()
         {
             string[] indexs = repository.ListIndices();
             Assert.Contains(TestIndexName, indexs);
         }
-
-        
     }
 }

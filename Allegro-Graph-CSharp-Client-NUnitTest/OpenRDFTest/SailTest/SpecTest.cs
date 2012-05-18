@@ -12,51 +12,51 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
     public class SpecTest
     {
         [Test]
-        public void LocalTest()
+        public void TestLocal()
         {
             string result = Spec.Local("temp");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<temp>");
             result = Spec.Local("temp", "ACatalog");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<ACatalog:temp>");
         }
 
         [Test]
-        public void RemoteTest()
+        public void TestRemote()
         {
             string result = Spec.Remote("temp");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<http://localhost:10035/repositories/temp>");
             result = Spec.Remote("temp", "ACatalog");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<http://localhost:10035/catalogs/ACatalog/repositories/temp>");
         }
 
         [Test]
-        public void UrlTest()
+        public void TestUrl()
         {
             string result = Spec.Url("http://127.0.0.1:10035");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<http://127.0.0.1:10035>");
         }
         
         [Test]
-        public void FederateTest()
+        public void TestFederate()
         {
             string[] stores = new string[]{"rep1","rep2","rep3"};
             string result = Spec.Federate(stores);
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<rep1>+<rep2>+<rep3>");
         }
 
         [Test]
-        public void ReasonTest()
+        public void TestReason()
         {
             string result = Spec.Reason("store");
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<store>[rdf++]");
         }
 
         [Test]
-        public void GraphFilterTest()
+        public void TestGraphFilter()
         {
             string[] graphs = new string[] { "graph1", null, "graph3" };
             string result = Spec.GraphFilter("rep", graphs);
-            Console.WriteLine(result);
+            Assert.AreEqual(result, "<rep>{<graph1> null <graph3>} ");
         }
     }
 }
