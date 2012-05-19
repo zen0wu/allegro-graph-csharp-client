@@ -891,7 +891,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             if (tokenizer != null) AddParam("tokenizer", tokenizer);
             else AddParam("tokenizer", "");
-
+            //Console.WriteLine(paramsBuilder.ToString());
             AGRequestService.DoReq(this, method, "/freetext/indices/" + name, paramsBuilder.ToString());
         }
 
@@ -943,26 +943,26 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// List all the free text predicates
         /// </summary>
         /// <returns>The URIs of the free text predicates</returns>
-        public string[] ListFreeTextPredicates()
-        {
-            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/predicates");
-        }
+        //public string[] ListFreeTextPredicates()
+        //{
+        //    return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/predicates");
+        //}
 
         /// <summary>
         /// Register a new free text predicate
         /// </summary>
         /// <param name="predicate">the URI of predicate</param>
-        public void RegisterFreeTextPredicate(string predicate)
-        {
-            AGRequestService.DoReq(this, "POST", "/freetext/predicates", "predicate=" + predicate);
-        }
+        //public void RegisterFreeTextPredicate(string predicate)
+        //{
+        //    AGRequestService.DoReq(this, "POST", "/freetext/predicates", "predicate=" + predicate);
+        //}
 
         /// <summary>
         /// Returns the configuration parameters of the named free-text index
         /// </summary>
         /// <param name="indexName">Free text index name</param>
         /// <returns></returns>
-        public FreeTextIndex GetFreeTextIndex(string indexName)
+        public FreeTextIndex GetFreeTextIndexConfiguration(string indexName)
         {
             return AGRequestService.DoReqAndGet<FreeTextIndex>(this, "GET", "/freetext/indices/" + indexName);
         }
@@ -975,20 +975,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public string GetFreeTextIndexConfiguration(string indexName, string paramName)
         {
-            return AGRequestService.DoReqAndGet<string>(this, "GET", string.Format("/freetext/indices/{0}/{1}", indexName, paramName));
-        }
-
-        /// <summary>
-        ///     Returns a dictionary with fields "predicates",
-        ///     "indexLiterals","indexResources","indexFields",
-        ///     "minimumWordSize", "stopWords", and "wordFilters".
-        /// </summary>
-        /// <param name="index">Free text index name</param>
-        /// <returns></returns>
-        public Dictionary<string, string> GetFreeTextIndexConfiguration(string indexName)
-        {
-            return AGRequestService.DoReqAndGet<Dictionary<string, string>>(this, "GET", "/freetext/indices/" + indexName);
-        }
+            return AGRequestService.DoReqAndGet(this, "GET", string.Format("/freetext/indices/{0}/{1}", indexName, paramName));
+        }      
 
         /// <summary>
         /// Evaluate a free text search
@@ -999,27 +987,28 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="indexs">The indices involved</param>
         /// <returns></returns>
 
-        public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
-        {
-            string urlParam = "";
-            if (indexs == null)
-            {
-                urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&index={3}", pattern, infer, limit, "");
-            }
-            else
-            {
-                if (indexs.Length > 0)
-                {
-                    StringBuilder indexParam = new StringBuilder(string.Format("index={0}", indexs[0]));
-                    for (int i = 1; i < indexs.Length; i++)
-                    {
-                        indexParam.Append(string.Format("&index={0}", indexs[i]));
-                    }
-                    urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&{3}", pattern, infer, limit, indexParam.ToString());
-                }
-            }
-            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices/" + urlParam);
-        }
+        //public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
+        //{
+        //    string urlParam = "";
+        //    if (indexs == null)
+        //    {
+        //        urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&index={3}", pattern, infer, limit, "");
+        //    }
+        //    else
+        //    {
+        //        if (indexs.Length > 0)
+        //        {
+        //            StringBuilder indexParam = new StringBuilder(string.Format("index={0}", indexs[0]));
+        //            for (int i = 1; i < indexs.Length; i++)
+        //            {
+        //                indexParam.Append(string.Format("&index={0}", indexs[i]));
+        //            }
+        //            urlParam = string.Format("/freetext/pattern={0}&infer={1}&limit={2}&{3}", pattern, infer, limit, indexParam.ToString());
+        //        }
+        //    }
+        //    //return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/freetext/indices/" + urlParam);
+        //    return AGRequestService.DoReqAndGet<string[]>(this, "GET", urlParam);
+        //}
 
         /// <summary>
         /// Define a prolog functor

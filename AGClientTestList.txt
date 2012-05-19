@@ -82,18 +82,18 @@ AGRepository::EnableTripleCache                   unfinished
 AGRepository::DisableTripleCache                  unfinished
 AGRepository::GetTripleCacheSize                  unfinished
 
-AGRepository::EvalFreeTextIndex                   unfinished
-AGRepository::ManipulateFreeTextIndex             unfinished
-AGRepository::CreateFreeTextIndex                 unfinished
-AGRepository::ModifyFreeTextIndex                 unfinished
-AGRepository::ListFreeTextIndices                 unfinished
-AGRepository::DeleteFreeTextIndex                 unfinished
-AGRepository::ListFreeTextPredicates              unfinished
-AGRepository::RegisterFreeTextPredicate           unfinished
-AGRepository::GetFreeTextIndex                    unfinished
-AGRepository::GetFreeTextIndexConfiguration[1]    unfinished
-AGRepository::GetFreeTextIndexConfiguration[2]    unfinished
-AGRepository::EvalFreeTextSearch                  unfinished
+AGRepository::EvalFreeTextIndex                   Same as RepositoryConnection::
+AGRepository::ManipulateFreeTextIndex             Same as RepositoryConnection::
+AGRepository::CreateFreeTextIndex                 Same as RepositoryConnection::
+AGRepository::ModifyFreeTextIndex                 Same as RepositoryConnection::
+AGRepository::ListFreeTextIndices                 Same as RepositoryConnection::
+AGRepository::DeleteFreeTextIndex                 Same as RepositoryConnection::
+AGRepository::ListFreeTextPredicates              Same as RepositoryConnection::
+
+AGRepository::GetFreeTextIndexConfiguration[1]    Same as RepositoryConnection::
+AGRepository::GetFreeTextIndexConfiguration[2]    Same as RepositoryConnection::
+
+
 AGRepository::DefinePrologFunctors                unfinished
 
 AGRepository::ListGeoTypes                        unfinished
@@ -104,7 +104,7 @@ AGRepository::GetStatementsInsidePolygon          unfinished
 
 AGRepository::RegisterSNAGenerator                unfinished
 AGRepository::RegisterNeighborMatrix              unfinished
-=======================================================
+=============================================================
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
 
@@ -166,16 +166,15 @@ RepositoryConnection::PrepareStringArrayQuery         unfinished
 RepositoryConnection::ExportStatements                unfinished
 RepositoryConnection::Export                          unfinished
 
-RepositoryConnection::EvalFreeTextIndex               unfinished
-RepositoryConnection::CreateFreeTextIndex             unfinished
-RepositoryConnection::ModifyTextIndex                 unfinished
-RepositoryConnection::DeleteFreeTextIndex             unfinished
-RepositoryConnection::ListFreeTextIndices             unfinished
-RepositoryConnection::RegisterFreeTextPredicate       unfinished
-RepositoryConnection::GetFreeTextIndexConfiguration   unfinished
-RepositoryConnection::GetFreeTextIndexConfiguration   unfinished
-RepositoryConnection::GetFreeTextIndex                unfinished
-RepositoryConnection::EvalFreeTextSearch              unfinished
+RepositoryConnection::EvalFreeTextIndex               finished
+RepositoryConnection::CreateFreeTextIndex             finished
+RepositoryConnection::ModifyTextIndex                 finished
+RepositoryConnection::DeleteFreeTextIndex             finished
+RepositoryConnection::ListFreeTextIndices             finished
+
+RepositoryConnection::GetFreeTextIndexConfiguration[1]exception
+RepositoryConnection::GetFreeTextIndexConfiguration[2]exception
+
 
 RepositoryConnection::ListGeoTypes                    unfinished
 RepositoryConnection::GetStatementsOfGeo              unfinished

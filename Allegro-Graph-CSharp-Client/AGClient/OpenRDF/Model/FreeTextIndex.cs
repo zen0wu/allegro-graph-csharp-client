@@ -16,7 +16,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         /// <summary>
         /// Can be true (index all literals), false (no literals), or an array of literal types to index. 
         /// </summary>
-        public string[] indexLiterals { get; set; }
+        public string indexLiterals { get; set; }
 
         /// <summary>
         ///Can be true (index resources fully), false (don't index resources), or the string "short" to index only the part after the last # or / in the resource. 

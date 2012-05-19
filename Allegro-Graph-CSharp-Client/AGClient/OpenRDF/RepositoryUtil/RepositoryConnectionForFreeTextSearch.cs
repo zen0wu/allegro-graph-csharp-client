@@ -145,11 +145,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// Register a new free text predicate
         /// </summary>
         /// <param name="predicate">the URI of predicate</param>
-        public void RegisterFreeTextPredicate(string predicate)
-        {
-            this.GetMiniRepository().RegisterFreeTextPredicate(predicate);
-        }
+        //public void RegisterFreeTextPredicate(string predicate)
+        //{
+        //    this.GetMiniRepository().RegisterFreeTextPredicate(predicate);
+        //}
 
+
+        //public string[] ListlistFreeTextPredicates()
+        //{
+        //    return this.GetMiniRepository().ListFreeTextPredicates();
+        //}
         /// <summary>
         /// Returns the configuration parameter of the named free-text index
         /// </summary>
@@ -161,28 +166,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
             return this.GetMiniRepository().GetFreeTextIndexConfiguration(indexName,paramName);
         }
 
-
         /// <summary>
-        ///     Returns a dictionary with fields "predicates",
-        ///     "indexLiterals","indexResources","indexFields",
-        ///     "minimumWordSize", "stopWords", and "wordFilters".
+        ///     Returns the configuration parameters of the named free-text index
         /// </summary>
         /// <param name="index">Free text index name</param>
         /// <returns></returns>
-        public Dictionary<string, string> GetFreeTextIndexConfiguration(string indexName)
+        public FreeTextIndex GetFreeTextIndexConfiguration(string indexName)
         {
             return this.GetMiniRepository().GetFreeTextIndexConfiguration(indexName);
         }
-
-        /// <summary>
-        /// Returns the configuration parameters of the named free-text index
-        /// </summary>
-        /// <param name="indexName">Free text index name</param>
-        /// <returns>FreeTextIndex object</returns>
-        public FreeTextIndex GetFreeTextIndex(string indexName)
-        {
-            return _repository.GetMiniRepository().GetFreeTextIndex(indexName);
-        }
+        
         /// <summary>
         ///     Use free-text indices to search for the given pattern.
         ///     Returns an array of statements.
@@ -191,9 +184,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="infer"></param>
         /// <param name="limit"></param>
         /// <param name="index"> If no index is provided, all indices will be used. </param>
-        public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
-        {
-            return this.GetMiniRepository().EvalFreeTextSearch(pattern, infer, limit, indexs);
-        }
+        //public string[] EvalFreeTextSearch(string pattern, bool infer = false, int limit = -1, string[] indexs = null)
+        //{
+        //    return this.GetMiniRepository().EvalFreeTextSearch(pattern, infer, limit, indexs);
+        //}
     }
 }
