@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,9 @@
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForFreeTextSearchTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForNamespaceTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForSubjectTriplesCachingTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForTripleIndexTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForTypeMappingTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionUnderSessionTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryTest.cs" />

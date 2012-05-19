@@ -90,7 +90,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 username = Base.Username;
                 password = Base.Password;
             }
-
+            Console.WriteLine(absUrl);
             RequestUtil.DoReq(absUrl, Method, bodyString, contentType, username, password);
         }
 

@@ -78,9 +78,9 @@ AGRepository::CloseSession                        Same as RepositoryConnection::
 AGRepository::Commit                              Same as RepositoryConnection::
 AGRepository::Rollback                            Same as RepositoryConnection::
 
-AGRepository::EnableTripleCache                   unfinished
-AGRepository::DisableTripleCache                  unfinished
-AGRepository::GetTripleCacheSize                  unfinished
+AGRepository::EnableTripleCache                   Same as RepositoryConnection::
+AGRepository::DisableTripleCache                  Same as RepositoryConnection::
+AGRepository::GetTripleCacheSize                  Same as RepositoryConnection::
 
 AGRepository::EvalFreeTextIndex                   Same as RepositoryConnection::
 AGRepository::ManipulateFreeTextIndex             Same as RepositoryConnection::
@@ -192,9 +192,9 @@ RepositoryConnection::loadRules                       unfinished
 RepositoryConnection::RegisterSNAGenerator            unfinished
 RepositoryConnection::RegisterNeighborMatrix          unfinished
 
-RepositoryConnection::EnableTripleCache               unfinished
-RepositoryConnection::DisableTripleCache              unfinished
-RepositoryConnection::GetTripleCacheSize              unfinished
+RepositoryConnection::EnableTripleCache               finished
+RepositoryConnection::DisableTripleCache              finished
+RepositoryConnection::GetTripleCacheSize              finished
 
 RepositoryConnection::ListIndices                     finished
 RepositoryConnection::ListValidIndices                finished
@@ -202,14 +202,14 @@ RepositoryConnection::AddIndex                        finished
 RepositoryConnection::DropIndex                       finished
 RepositoryConnection::OptimizeIndex                   unfinished
 
-RepositoryConnection::ListTypeMapping                 unfinished
-RepositoryConnection::ClearTypeMapping                unfinished
-RepositoryConnection::ListMappedTypes                 unfinished
-RepositoryConnection::AddMappedType                   unfinished
-RepositoryConnection::DeleteMappedType                unfinished
-RepositoryConnection::ListMappedPredicates            unfinished
-RepositoryConnection::AddMappedPredicate              unfinished
-RepositoryConnection::DeleteMappedPredicate           unfinished
+RepositoryConnection::ListTypeMapping                 finished
+RepositoryConnection::ClearTypeMapping                finished
+RepositoryConnection::ListMappedTypes                 finished
+RepositoryConnection::AddMappedType                   exception
+RepositoryConnection::DeleteMappedType                exception
+RepositoryConnection::ListMappedPredicates            finished
+RepositoryConnection::AddMappedPredicate              exception
+RepositoryConnection::DeleteMappedPredicate           exception
 
 RepositoryConnection::OpenSession                     finished
 RepositoryConnection::CloseSession                    finished

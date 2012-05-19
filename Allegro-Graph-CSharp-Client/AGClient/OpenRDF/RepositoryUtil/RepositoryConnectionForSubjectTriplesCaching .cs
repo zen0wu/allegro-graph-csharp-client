@@ -14,7 +14,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="size">Triple cache size</param>
         public void EnableTripleCache(int size = -1)
         {
-            _repository.GetMiniRepository().EnableTripleCache();
+            _repository.GetMiniRepository().EnableTripleCache(size);
         }
 
         /// <summary>

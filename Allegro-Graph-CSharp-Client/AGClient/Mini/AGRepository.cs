@@ -451,7 +451,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
        /// </param>
         public void ClearTypeMapping(bool isAll=false)
         {
-            AGRequestService.DoReq(this, "DELETE", "/mapping");
+            if (isAll)
+            {
+                AGRequestService.DoReq(this, "DELETE", "/mapping/all");
+            }
+            else
+            {
+                AGRequestService.DoReq(this, "DELETE", "/mapping");
+            }
         }
 
         /// <summary>

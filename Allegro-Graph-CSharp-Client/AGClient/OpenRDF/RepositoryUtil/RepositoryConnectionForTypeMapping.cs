@@ -18,6 +18,15 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         }
 
         /// <summary>
+        /// Yields a list of literal types for which datatype mappings have been defined in this store.
+        /// </summary>
+        /// <returns>The set of type</returns>
+        public string[] ListMappedTypes()
+        {
+            return this.GetMiniRepository().ListMappedTypes();
+        }
+
+        /// <summary>
        /// Clear type mappings for this repository. 
        /// </summary>
        /// <param name="isAll">
@@ -27,15 +36,6 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         public void ClearTypeMapping(bool isAll = false)
         {
             this.GetMiniRepository().ClearNamespaces(isAll);
-        }
-
-        /// <summary>
-        /// Yields a list of literal types for which datatype mappings have been defined in this store.
-        /// </summary>
-        /// <returns>The set of type</returns>
-        public string[] ListMappedTypes()
-        {
-            return this.GetMiniRepository().ListMappedTypes();
         }
 
         /// <summary>
