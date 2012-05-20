@@ -14,8 +14,8 @@ AGClient::OpenSession                             finished
 AGClient::DeleteInitFile                          exception
 AGClient::SetInitFile                             exception
 AGClient::GetInitFile                             exception
-AGClient::ReConfigure                             unfinished
-AGClient::ReopenLog                               unfinished
+AGClient::ReConfigure                             exception
+AGClient::ReopenLog                               exception
 
 ==============================================================
 Class AGCatalog
@@ -52,14 +52,14 @@ AGRepository::ClearNamespaces                     finished
 
 AGRepository::LoadFile                            unfinished
 
-AGRepository::ListTypeMapping                     unfinished
-AGRepository::ClearTypeMapping                    unfinished
-AGRepository::ListMappedTypes                     unfinished
-AGRepository::AddMappedType                       unfinished
-AGRepository::DeleteMappedType                    unfinished
-AGRepository::ListMappedPredicates                unfinished
-AGRepository::AddMappedPredicate                  unfinished
-AGRepository::DeleteMappedPredicate               unfinished
+AGRepository::ListTypeMapping                     Same as RepositoryConnection::
+AGRepository::ClearTypeMapping                    Same as RepositoryConnection::
+AGRepository::ListMappedTypes                     Same as RepositoryConnection::
+AGRepository::AddMappedType                       Same as RepositoryConnection::
+AGRepository::DeleteMappedType                    Same as RepositoryConnection::
+AGRepository::ListMappedPredicates                Same as RepositoryConnection::
+AGRepository::AddMappedPredicate                  Same as RepositoryConnection::
+AGRepository::DeleteMappedPredicate               Same as RepositoryConnection::
 
 AGRepository::ListIndices                         finished
 AGRepository::ListValidIndices                    finished
@@ -94,16 +94,16 @@ AGRepository::GetFreeTextIndexConfiguration[1]    Same as RepositoryConnection::
 AGRepository::GetFreeTextIndexConfiguration[2]    Same as RepositoryConnection::
 
 
-AGRepository::DefinePrologFunctors                unfinished
+AGRepository::DefinePrologFunctors                Same as RepositoryConnection::
 
-AGRepository::ListGeoTypes                        unfinished
-AGRepository::GetStatementsInsideBox              unfinished
-AGRepository::GetStatementsInsideCircle           unfinished
-AGRepository::GetStatementsHaversine              unfinished
-AGRepository::GetStatementsInsidePolygon          unfinished
+AGRepository::ListGeoTypes                        Same as RepositoryConnection::
+AGRepository::GetStatementsInsideBox              Same as RepositoryConnection::
+AGRepository::GetStatementsInsideCircle           Same as RepositoryConnection::
+AGRepository::GetStatementsHaversine              Same as RepositoryConnection::
+AGRepository::GetStatementsInsidePolygon          Same as RepositoryConnection::
 
-AGRepository::RegisterSNAGenerator                unfinished
-AGRepository::RegisterNeighborMatrix              unfinished
+AGRepository::RegisterSNAGenerator                Same as RepositoryConnection::
+AGRepository::RegisterNeighborMatrix              Same as RepositoryConnection::
 =============================================================
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
@@ -176,10 +176,11 @@ RepositoryConnection::GetFreeTextIndexConfiguration[1]exception
 RepositoryConnection::GetFreeTextIndexConfiguration[2]exception
 
 
-RepositoryConnection::ListGeoTypes                    unfinished
-RepositoryConnection::GetStatementsOfGeo              unfinished
-RepositoryConnection::CreateBox                       unfinished
-RepositoryConnection::CreateCircle                    unfinished
+RepositoryConnection::ListGeoTypes                    finished
+
+RepositoryConnection::SetCartesianGeoType             finished
+RepositoryConnection::SetSphericalGeoType             finished
+RepositoryConnection::GetStatementsInsideBox          exception
 
 RepositoryConnection::GetNamespaces                   finished
 RepositoryConnection::SetNamespace                    finished

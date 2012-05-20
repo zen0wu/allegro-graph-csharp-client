@@ -43,6 +43,11 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
         public static URI CreateURI(string uri,string nameSpace,string localname)
         {
             return new URI(uri, nameSpace, localname);  
-        }  
+        }
+
+        public static string CreateGeoLiteral(string literal, string literalType)
+        {
+            return string.Format("\"{0}\"^^{1}",literal,literalType);
+        }
     }
 }

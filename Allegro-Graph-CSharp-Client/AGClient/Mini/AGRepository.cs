@@ -329,7 +329,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             return ids;
         }
-        
+
         /// <summary>
         /// Delete statements by their ids
         /// </summary>
@@ -355,8 +355,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public List<Namespace> ListNamespaces()
         {
             return AGRequestService.DoReqAndGet<List<Namespace>>(this, "GET", "/namespaces");
-        }            
-       
+        }
+
         /// <summary>
         /// Returns the namespace URI defined for the given prefix. 
         /// </summary>
@@ -374,7 +374,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="nsUrl">Namespace's URL</param>
         public void AddNamespace(string prefix, string nsUrl)
         {
-            AGRequestService.DoReq(this, "POST", "/namespaces/" + prefix, "text/plain",nsUrl, true);
+            AGRequestService.DoReq(this, "POST", "/namespaces/" + prefix, "text/plain", nsUrl, true);
         }
 
         /// <summary>
@@ -442,14 +442,14 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<List<DataType>>(this, "GET", "/mapping");
         }
 
-       /// <summary>
-       /// Clear type mappings for this repository. 
-       /// </summary>
-       /// <param name="isAll">
+        /// <summary>
+        /// Clear type mappings for this repository. 
+        /// </summary>
+        /// <param name="isAll">
         ///      if true Clear all type mappings for this repository including the automatic ones.
         ///      else Clear all non-automatic type mappings for this repository. 
-       /// </param>
-        public void ClearTypeMapping(bool isAll=false)
+        /// </param>
+        public void ClearTypeMapping(bool isAll = false)
         {
             if (isAll)
             {
@@ -478,7 +478,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="encoding">Encoding</param>
         public void AddMappedType(string type, string encoding)
         {
-            AGRequestService.DoReq(this, "PUT", string.Format("/mapping/type?type={0}&encoding={1}",type,encoding));
+            AGRequestService.DoReq(this, "PUT", string.Format("/mapping/type?type={0}&encoding={1}", type, encoding));
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="encoding">encoding</param>
         public void AddMappedPredicate(string predicate, string encoding)
         {
-            AGRequestService.DoReq(this, "POST", string.Format("/mapping/predicate?predicate={0}&encoding={1}",predicate,encoding));
+            AGRequestService.DoReq(this, "POST", string.Format("/mapping/predicate?predicate={0}&encoding={1}", predicate, encoding));
         }
 
         /// <summary>
@@ -515,7 +515,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="predicate">predicate</param>
         public void DeleteMappedPredicate(string predicate)
         {
-            AGRequestService.DoReq(this, "DELETE", string.Format("/mapping/predicate?predicate={0}",predicate));
+            AGRequestService.DoReq(this, "DELETE", string.Format("/mapping/predicate?predicate={0}", predicate));
         }
 
 
@@ -569,7 +569,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="level">Level determines how much work should be done. </param>
         public void OptimizeIndex(bool wait = false, string level = null)
         {
-            AGRequestService.DoReq(this, "POST", string.Format("/indices/optimize?wait={0}&level={1}",wait,level));
+            AGRequestService.DoReq(this, "POST", string.Format("/indices/optimize?wait={0}&level={1}", wait, level));
         }
 
         /// <summary>
@@ -983,7 +983,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string GetFreeTextIndexConfiguration(string indexName, string paramName)
         {
             return AGRequestService.DoReqAndGet(this, "GET", string.Format("/freetext/indices/{0}/{1}", indexName, paramName));
-        }      
+        }
 
         /// <summary>
         /// Evaluate a free text search
@@ -1028,7 +1028,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //Geo-spatial               
         //////////////////////////////////////////////////////////////////////////////////////////////////// 
-        
+
         /// <summary>
         /// List the geo-spatial types registered in the store.
         /// </summary>
@@ -1036,6 +1036,77 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         public string[] ListGeoTypes()
         {
             return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/geo/types");
+        }
+
+        /// <summary>
+        /// Define a new Cartesian geospatial type. Returns the type resource
+        /// </summary>
+        /// <param name="stripWidth">
+        /// A floating-point number that determines the granularity of the type
+        /// </param>
+        /// <param name="xmin">
+        /// Floating-point numbers that determine the min x size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="xmax">
+        /// Floating-point numbers that determine the man x size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="ymin">
+        /// Floating-point numbers that determine the min y size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="ymax">
+        /// Floating-point numbers that determine the max y size of the Cartesian plane that is modelled by this type
+        /// </param>
+        public string SetCartesianGeoType(float stripWidth, float xmin = -1, float xmax = -1, float ymin = -1, float ymax = -1)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("stripWidth={0}", stripWidth));
+            parameters.Append(string.Format("&xmin={0}", xmin));
+            parameters.Append(string.Format("&xmax={0}", xmax));
+            parameters.Append(string.Format("&ymin={0}", ymin));
+            parameters.Append(string.Format("&ymax={0}", ymax));
+            return AGRequestService.DoReqAndGet(this, "POST", "/geo/types/cartesian?" + parameters.ToString());
+        }
+
+        /// <summary>
+        /// Add a spherical geospatial type. Returns the type resource.
+        /// </summary>
+        /// <param name="stripWidth">
+        /// A floating-point number that determines the granularity of the type
+        /// </param>
+        /// <param name="unit">
+        ///  Can be degree, radian, km, or mile. Determines the unit in which the stripWidth argument is given
+        /// </param>
+        /// <param name="latmin">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere. 
+        /// </param>
+        /// <param name="latmax">
+        ///  Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere. 
+        /// </param>
+        /// <param name="longmin">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere.  
+        /// </param>
+        /// <param name="longmax">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere.  
+        /// </param>
+        /// <returns></returns>
+        public string SetSphericalGeoType(float stripWidth, string unit = "degree", float latmin = 361, float latmax = 361, float longmin = 361, float longmax = 361)
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("stripWidth={0}", stripWidth));
+            parameters.Append(string.Format("&unit={0}", unit));
+            if (latmin < 360) parameters.Append(string.Format("&latmin={0}", latmin));
+            if (longmin < 360) parameters.Append(string.Format("&longmin={0}", longmin));
+            if (latmax < 360) parameters.Append(string.Format("&latmax={0}", latmax));
+            if (longmax < 360) parameters.Append(string.Format("&longmax={0}", longmax));
+            return AGRequestService.DoReqAndGet(this, "POST", "/geo/types/spherical?" + parameters.ToString());
         }
 
         /// <summary>
@@ -1064,7 +1135,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
             if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
 
-            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box", parameters.ToString());
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box?"+parameters.ToString());
         }
 
         /// <summary>
@@ -1091,7 +1162,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
             if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
 
-            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/circle", parameters.ToString());
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/circle?" + parameters.ToString());
         }
         /// <summary>
         /// Get all the triples with a given predicate whose object lies within radius units 

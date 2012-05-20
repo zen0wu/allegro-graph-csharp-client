@@ -35,7 +35,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
        /// </param>
         public void ClearTypeMapping(bool isAll = false)
         {
-            this.GetMiniRepository().ClearNamespaces(isAll);
+            this.GetMiniRepository().ClearTypeMapping(isAll);
         }
 
         /// <summary>

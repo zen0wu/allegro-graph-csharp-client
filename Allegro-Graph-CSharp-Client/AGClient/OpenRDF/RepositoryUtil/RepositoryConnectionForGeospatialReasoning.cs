@@ -18,6 +18,75 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         }
 
         /// <summary>
+        /// Define a new Cartesian geospatial type. Returns the type resource
+        /// </summary>
+        /// <param name="stripWidth">
+        /// A floating-point number that determines the granularity of the type
+        /// </param>
+        /// <param name="xmin">
+        /// Floating-point numbers that determine the min x size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="xmax">
+        /// Floating-point numbers that determine the man x size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="ymin">
+        /// Floating-point numbers that determine the min y size of the Cartesian plane that is modelled by this type
+        /// </param>
+        /// <param name="ymax">
+        /// Floating-point numbers that determine the max y size of the Cartesian plane that is modelled by this type
+        /// </param>
+        public string SetCartesianGeoType(float stripWidth, float xmin , float xmax , float ymin , float ymax )
+        {
+            return this.GetMiniRepository().SetCartesianGeoType(stripWidth, xmin, xmax, ymin, ymax);
+        }
+
+
+        /// <summary>
+        /// Add a spherical geospatial type. Returns the type resource.
+        /// </summary>
+        /// <param name="stripWidth">
+        /// A floating-point number that determines the granularity of the type
+        /// </param>
+        /// <param name="unit">
+        ///  Can be degree, radian, km, or mile. Determines the unit in which the stripWidth argument is given
+        /// </param>
+        /// <param name="latmin">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere. 
+        /// </param>
+        /// <param name="latmax">
+        ///  Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere. 
+        /// </param>
+        /// <param name="longmin">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere.  
+        /// </param>
+        /// <param name="longmax">
+        /// Optional.
+        /// Can be used to limit the size of the region modelled by this type. 
+        /// Default is to span the whole sphere.  
+        /// </param>
+        /// <returns></returns>
+        public string SetSphericalGeoType(float stripWidth, string unit = "degree", float latmin = 361, float latmax = 361, float longmin = 361, float longmax = 361)
+        {
+            return this.GetMiniRepository().SetSphericalGeoType(stripWidth, unit, latmin, latmax, longmin, longmax);
+        }
+
+
+
+
+        public List<Statement> GetStatementsInsideBox(string type, string predicate,
+                                           float xMin, float xMax, float yMin, float yMax,
+                                           float limit = -1, float offset = -1)
+        {
+            return this.GetMiniRepository().GetStatementsInsideBox(type,predicate,xMin,xMax,yMin,yMax,limit,offset);
+        }
+
+        /// <summary>
         /// Fetch all triples with a given predicate whose object is a geospatial value inside the given region. 
         /// </summary>
         /// <param name="predicate">The geospatial type of the object field.</param>

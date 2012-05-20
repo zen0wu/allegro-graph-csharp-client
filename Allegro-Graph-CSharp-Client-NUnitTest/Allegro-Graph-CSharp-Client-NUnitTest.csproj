@@ -55,7 +55,9 @@
     <Compile Include="MiniTest\AGRequestServiceTest.cs" />
     <Compile Include="MiniTest\AGServerInfoTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForFreeTextSearchTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForGeospatialReasoningTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForNamespaceTest.cs" />
+    <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForSocialNetworkAnalysisTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForSubjectTriplesCachingTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForTripleIndexTest.cs" />
     <Compile Include="OpenRDFTest\RepositoryUtilTest\RepositoryConnectionForTypeMappingTest.cs" />
