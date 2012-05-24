@@ -68,7 +68,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
             {
                 stores[i] = string.Format("<{0}>",stores[i]);
             }
-            return string.Join("+", stores);
+            return  string.Join("+", stores) ;
         }
 
         /// <summary>

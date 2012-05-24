@@ -66,6 +66,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             int defaultSize = repoConn.GetNamespaces().Count();
             repoConn.SetNamespace("ns1", "http://example.com/1");
             repoConn.SetNamespace("ns2", "http://example.com/2");
+            Assert.AreEqual(defaultSize, repoConn.GetNamespaces().Count()-2);
             repoConn.ClearNamespace();
             Assert.AreEqual(defaultSize, repoConn.GetNamespaces().Count());
         }

@@ -5,6 +5,7 @@ using System.Text;
 
 using Allegro_Graph_CSharp_Client.AGClient.Mini;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil;
+using System.Web;
 
 namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
 {
@@ -168,7 +169,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
         /// <returns></returns>
         public Repository OpenFederated(string[] specs, bool autoCommit = false, int lifetime = -1, bool loadInitFile = false)
         {
-            string spec = Spec.Federate(specs);
+            string spec = HttpUtility.UrlEncode(Spec.Federate(specs));
             return OpenSession(spec, autoCommit, lifetime, loadInitFile);
         }
     }

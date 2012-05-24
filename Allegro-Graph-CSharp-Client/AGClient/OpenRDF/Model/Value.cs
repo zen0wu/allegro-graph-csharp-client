@@ -85,4 +85,12 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Model
                return false;
        }
    }
+   public class ContextInfo
+   {
+       public string ContextID { get; set; }
+       public override string ToString()
+       {
+           return ContextID;
+       }
+   }
 }

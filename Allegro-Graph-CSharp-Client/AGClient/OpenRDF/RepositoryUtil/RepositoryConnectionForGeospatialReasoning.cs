@@ -81,9 +81,16 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
 
         public List<Statement> GetStatementsInsideBox(string type, string predicate,
                                            float xMin, float xMax, float yMin, float yMax,
-                                           float limit = -1, float offset = -1)
+                                           float limit = -1, float offset = -1, string useContext="false")
         {
-            return this.GetMiniRepository().GetStatementsInsideBox(type,predicate,xMin,xMax,yMin,yMax,limit,offset);
+            return this.GetMiniRepository().GetStatementsInsideBox(type,predicate,xMin,xMax,yMin,yMax,limit,offset,useContext);
+        }
+
+        public List<Statement> GetStatementsInsideCircle(string type, string predicate,
+                                                         float x, float y, float radius,
+                                                         float limit = -1, float offset = -1,string useContext="false")
+        {
+            return this.GetMiniRepository().GetStatementsInsideCircle(type, predicate, x, y, radius, limit, offset,useContext);
         }
 
         /// <summary>

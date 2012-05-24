@@ -13,6 +13,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
             string Username, string Password,
             out HttpStatusCode StatusCode, out string ReturnBody)
         {
+            Console.WriteLine("InMakeReq-Url:" + Url);
+            Console.WriteLine("ContentType:" + ContentType);
+            Console.WriteLine("Method:" + Method);
+            Console.WriteLine("Body:" + Body);
             HttpWebRequest req = WebRequest.Create(Url) as HttpWebRequest;
             req.Method = Method;
             req.ContentType = ContentType;
@@ -46,6 +50,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Util
                 ReturnBody = null;
 
             resp.Close();
+            Console.WriteLine("return:{0}",ReturnBody);
         }
 
         /// <summary>

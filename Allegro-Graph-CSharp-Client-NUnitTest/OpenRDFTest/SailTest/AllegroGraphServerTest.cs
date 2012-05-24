@@ -115,11 +115,39 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.SailTest
         }
 
         [Test]
+        public void TestOpenSession()
+        {
+            bool isRepository = ags.OpenSession(string.Format("<{0}:{1}>", ags.Url, testRepoName)) is Repository;
+            Assert.IsTrue(isRepository);
+        }
+
+        [Test]
+        public void TestOpenFederated()
+        {
+            string[] stores = new string[2];
+            stores[0] = testRepoName;
+            stores[1] = "CSharpClient";
+            bool isRepository = ags.OpenFederated(stores) is Repository;
+            Assert.IsTrue(isRepository);
+        }
+
+        [Test]
         public void TestInitFile()
         {
             string content = "(<-- (after-after ?a ?b) (q- ?a !<http:after> ?x) (q- ?x !<http:after> ?b))";
             ags.SetInitFile(content, false);
             Assert.True(ags.GetInitFile().Contains(content));
+        }
+
+        [Test]
+        public void TestServerReConfigure()
+        {
+            ags.ServerReConfigure();
+        }
+        [Test]
+        public void TestReopenLog()
+        {
+            ags.ReopenLog();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             AbsUrl = Base.Url + RelativeUrl;
             ContentType = "application/json; utf-8";
-            //Console.WriteLine(AbsUrl);
+            //Console.WriteLine("InPrepareReq:"+AbsUrl);
             BodyString = null;
             if (Body == null)
             {
@@ -70,6 +70,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 BodyString = JsonConvert.SerializeObject(Body);
                 //Console.WriteLine(BodyString);
             }
+            //Console.WriteLine(ContentType);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
                 username = Base.Username;
                 password = Base.Password;
             }
-            Console.WriteLine(absUrl);
+            //Console.WriteLine(absUrl);
             RequestUtil.DoReq(absUrl, Method, bodyString, contentType, username, password);
         }
 
@@ -98,7 +99,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// DoReq with specific content-type
         /// <seealso cref="DoReq"/>
         /// </summary>
-        public static void DoReq(IAGUrl Base, string Method, string RelativeUrl, string ContentType, object Body = null, bool NeedsAuth = true)
+        public static void DoReqWithContentType(IAGUrl Base, string Method, string RelativeUrl, string ContentType, object Body = null, bool NeedsAuth = true)
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
@@ -120,7 +121,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
-            Console.WriteLine(absUrl);
+            //Console.WriteLine(absUrl);
             string username = null, password = null;
             if (NeedsAuth)
             {
@@ -149,7 +150,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             string absUrl, contentType, bodyString;
             PrepareReq(Base, Method, RelativeUrl, Body, out absUrl, out bodyString, out contentType);
-            Console.WriteLine(absUrl);
+            //Console.WriteLine(absUrl);
             string username = null, password = null;
             if (NeedsAuth)
             {

@@ -39,7 +39,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         public void TestAddDeleteMappedType()
         {
             string exns = "http://www.example.com/";
-            string ageType = string.Format("{0}{1}", exns, "myInteger");
+            string ageType = string.Format("<{0}{1}>", exns, "myInteger");
             string intEncoding = "<http://www.w3.org/2001/XMLSchema#int>";
             //ageType = HttpUtility.UrlEncode(ageType);
             //intEncoding = HttpUtility.UrlEncode(intEncoding);
@@ -56,8 +56,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         public void TestClearTypeMapping()
         {
             //Clear all non-automatic type
+
+            //Console.WriteLine("In clear");
+            repoConn.ClearTypeMapping();
+
             string exns = "http://www.example.com/";
-            string myType = string.Format("{0}{1}", exns, "myInteger");
+            string myType = string.Format("<{0}{1}>", exns, "myInteger");
             string intEncoding = "<http://www.w3.org/2001/XMLSchema#int>";
             repoConn.AddMappedType(myType, intEncoding);
 
@@ -66,15 +70,22 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             Assert.Greater(preSize, repoConn.ListTypeMapping().Count());
 
             //Clear all type
-            repoConn.ClearTypeMapping(true);
-            Assert.AreEqual(repoConn.ListTypeMapping().Count(), 0);
+            //repoConn.ClearTypeMapping(true);
+            //Assert.AreEqual(repoConn.ListTypeMapping().Count(), 0);
+        }
+
+        [Test]
+        public void TestListMappedPredicates()
+        {
+            string[] mappedPreds = repoConn.ListMappedPredicates();
+            foreach (string s in mappedPreds) Console.WriteLine(s);
         }
 
         [Test]
         public void TestMappedPredicates()
         {
             string exns = "http://www.example.com/";
-            string agePred = string.Format("{0}{1}", exns, "age");
+            string agePred = string.Format("<{0}{1}>", exns, "age");
             string intEncoding = "<http://www.w3.org/2001/XMLSchema#int>";
 
             int preSize = repoConn.ListMappedPredicates().Count();

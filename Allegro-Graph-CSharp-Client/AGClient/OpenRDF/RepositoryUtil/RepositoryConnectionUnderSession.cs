@@ -16,7 +16,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// <param name="loadinitfile">If loadinitfile is True, then the current initfile will be loaded for you when the session starts.</param>
         public void OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
         {
-            _repository.OldUrl = _repository.Url;
+            _repository.UrlBeforeSession = _repository.Url;
             _repository.Url = _repository.GetMiniRepository().OpenSession(spec, autocommit, lifetime, loadinitfile);
         }
 
@@ -26,7 +26,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         public void CloseSession()
         {
             _repository.GetMiniRepository().CloseSession();
-            _repository.Url = _repository.OldUrl;
+            _repository.Url = _repository.UrlBeforeSession;
         }
 
         /// <summary>

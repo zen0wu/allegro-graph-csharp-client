@@ -19,7 +19,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
         {
             string oldUrl = repo.Url;
             repoConn.OpenSession(repo.GetSpec());
-            Assert.AreEqual(oldUrl, repo.OldUrl);
+            Assert.AreEqual(oldUrl, repo.UrlBeforeSession);
             Assert.AreNotEqual(oldUrl, repo.Url);
             repoConn.CloseSession();
             Assert.AreEqual(oldUrl, repo.Url);

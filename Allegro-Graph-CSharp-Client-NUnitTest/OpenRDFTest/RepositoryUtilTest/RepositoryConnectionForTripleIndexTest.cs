@@ -22,5 +22,11 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.OpenRDFTest.RepositoryUtilTest
             Assert.True(indices.Any(e => e == type));
             repoConn.DropIndex(type);
         }
+
+        [Test]
+        public void TestOptimizeIndex()
+        {
+            repoConn.OptimizeIndex();
+        }
     }
 }

@@ -51,6 +51,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             get { return RepoUrl; }
             set { RepoUrl = value; }
         }
+        public string UrlBeforeSession { get; set; }
         public string Username { get { return Catalog.Username; } }
         public string Password { get { return Catalog.Password; } }
         public string DatabaseName { get { return this.Name; } }
@@ -71,6 +72,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             return AGRequestService.DoReqAndGet<int>(this, "GET", "/size", parameters);
         }
 
+        public string GetSpec()
+        {
+            return string.Format("<{0}:{1}>",this.Catalog.Url,this.DatabaseName);
+        }
         /// <summary>
         /// Returns the catalog it belongs to
         /// </summary>
@@ -84,9 +89,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// List the contexts in this repository
         /// </summary>
         /// <returns>The names of contexts</returns>
-        public string[] ListContexts()
+        public string ListContexts()
         {
-            return AGRequestService.DoReqAndGet<string[]>(this, "GET", "/contexts");
+            return AGRequestService.DoReqAndGet(this, "GET", "/contexts");
         }
 
         /// <summary>
@@ -336,7 +341,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="ids">The ids of the statements</param>
         public void DeleteStatementsById(string[] ids)
         {
-            AGRequestService.DoReq(this, "POST", "/statements/delete?ids=true", JsonConvert.SerializeObject(ids));
+            StringBuilder contentBuilder = new StringBuilder();
+            contentBuilder.Append("[");
+            //AGRequestService.DoReqWithContentType(this, "POST", "/statements/delete?ids=true", "application/json; utf-8", JsonConvert.SerializeObject(ids), true);
+            foreach (string id in ids)
+            {
+                if (contentBuilder.Length > 1)
+                    contentBuilder.Append("," + id);
+                else
+                    contentBuilder.Append(id);
+            }
+            contentBuilder.Append("]");
+            AGRequestService.DoReqWithContentType(this, "POST", "/statements/delete?ids=true", "application/json; utf-8", contentBuilder.ToString(), true);
         }
 
         /// <summary>
@@ -374,7 +390,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="nsUrl">Namespace's URL</param>
         public void AddNamespace(string prefix, string nsUrl)
         {
-            AGRequestService.DoReq(this, "POST", "/namespaces/" + prefix, "text/plain", nsUrl, true);
+            AGRequestService.DoReqWithContentType(this, "POST", "/namespaces/" + prefix, "text/plain", nsUrl, true);
         }
 
         /// <summary>
@@ -426,7 +442,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             }
             string vars = string.Format("file={0}&context={1}&baseUrl={2}", HttpUtility.UrlEncode(filePath), HttpUtility.UrlEncode(context), HttpUtility.UrlEncode(baseUrl));
             string relativeUrl = "/statements?" + vars;
-            AGRequestService.DoReq(this, "POST", relativeUrl, contentType, fileContent);
+            AGRequestService.DoReqWithContentType(this, "POST", relativeUrl, contentType, fileContent);
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -478,7 +494,8 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <param name="encoding">Encoding</param>
         public void AddMappedType(string type, string encoding)
         {
-            AGRequestService.DoReq(this, "PUT", string.Format("/mapping/type?type={0}&encoding={1}", type, encoding));
+            AGRequestService.DoReq(this, "POST", string.Format("/mapping/type?type={0}&encoding={1}", type, encoding));
+           // AGRequestService.DoReq(this, "PUT", "/mapping/type", string.Format("type={0}&encoding={1}", type, encoding));
         }
 
         /// <summary>
@@ -578,16 +595,21 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public string OpenSession(string spec, bool autocommit = false, int lifetime = -1, bool loadinitfile = false)
         {
+
             string relativeUrl = string.Empty;
             if (lifetime == -1)
             {
-                relativeUrl = string.Format("/session?autoCommit={0},loadInitFile={1},store={2}", autocommit, loadinitfile, spec);
+                relativeUrl = string.Format("/session?autoCommit={0}&loadInitFile={1}&store={2}", autocommit, loadinitfile, spec);
             }
             else
             {
-                relativeUrl = string.Format("/session?autoCommit={0}, lifetime={1},loadInitFile={2}, store={3}", autocommit, lifetime, loadinitfile, spec);
+                relativeUrl = string.Format("/session?autoCommit={0}&lifetime={1}&loadInitFile={2}&store={3}", autocommit, lifetime, loadinitfile, spec);
             }
-            return AGRequestService.DoReqAndGet<string>(this, "POST", relativeUrl);
+            this.UrlBeforeSession = this.Url;
+            string UrlAfterSession = AGRequestService.DoReqAndGet<string>(this, "POST", relativeUrl);
+            this.Url = UrlAfterSession;
+            return UrlAfterSession;
+            
             //return new AGRepository(sessionUrl, this.Username, this.Password);
         }
 
@@ -600,7 +622,9 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             {
                 AGRequestService.DoReq(this, "POST", "/session/close");
             }
-            catch { }
+            finally {
+                this.Url = this.UrlBeforeSession;
+            }
         }
 
         /// <summary>
@@ -1101,12 +1125,13 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         {
             StringBuilder parameters = new StringBuilder();
             parameters.Append(string.Format("stripWidth={0}", stripWidth));
-            parameters.Append(string.Format("&unit={0}", unit));
+            // parameters.Append(string.Format("&unit={0}", unit));
             if (latmin < 360) parameters.Append(string.Format("&latmin={0}", latmin));
             if (longmin < 360) parameters.Append(string.Format("&longmin={0}", longmin));
             if (latmax < 360) parameters.Append(string.Format("&latmax={0}", latmax));
             if (longmax < 360) parameters.Append(string.Format("&longmax={0}", longmax));
             return AGRequestService.DoReqAndGet(this, "POST", "/geo/types/spherical?" + parameters.ToString());
+            //return AGRequestService.DoReqAndGet(this, "POST", "/geo/types/spherical?stripWidth=" + stripWidth, parameters.ToString());
         }
 
         /// <summary>
@@ -1123,7 +1148,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public List<Statement> GetStatementsInsideBox(string type, string predicate,
                                            float xMin, float xMax, float yMin, float yMax,
-                                           float limit = -1, float offset = -1)
+                                           float limit = -1, float offset = -1, string useContext = "false")
         {
             StringBuilder parameters = new StringBuilder();
             parameters.Append(string.Format("type={0}", type));
@@ -1134,8 +1159,26 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             parameters.Append(string.Format("&yMax={0}", yMax));
             if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
             if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+            parameters.Append(string.Format("&useContext={0}", useContext));
+            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box?" + parameters.ToString());
+        }
 
-            return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box?"+parameters.ToString());
+        public string GetStringInsideBox(string type, string predicate,
+                                           float xMin, float xMax, float yMin, float yMax,
+                                           float limit = -1, float offset = -1, string useContext = "false")
+        {
+            StringBuilder parameters = new StringBuilder();
+            parameters.Append(string.Format("type={0}", type));
+            parameters.Append(string.Format("&predicate={0}", predicate));
+            parameters.Append(string.Format("&xMin={0}", xMin));
+            parameters.Append(string.Format("&xMax={0}", xMax));
+            parameters.Append(string.Format("&yMin={0}", yMin));
+            parameters.Append(string.Format("&yMax={0}", yMax));
+            if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
+            if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
+            parameters.Append(string.Format("&useContext={0}", useContext));
+            //return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/box?"+parameters.ToString());
+            return AGRequestService.DoReqAndGet(this, "GET", "/geo/box?" + parameters.ToString());
         }
 
         /// <summary>
@@ -1151,7 +1194,7 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
         /// <returns></returns>
         public List<Statement> GetStatementsInsideCircle(string type, string predicate,
                                                          float x, float y, float radius,
-                                                         float limit = -1, float offset = -1)
+                                                         float limit = -1, float offset = -1, string useContext = "false")
         {
             StringBuilder parameters = new StringBuilder();
             parameters.Append(string.Format("type={0}", type));
@@ -1161,9 +1204,10 @@ namespace Allegro_Graph_CSharp_Client.AGClient.Mini
             parameters.Append(string.Format("&radius={0}", radius));
             if (limit != -1) parameters.Append(string.Format("&limit={0}", limit));
             if (offset != -1) parameters.Append(string.Format("&offset={0}", offset));
-
+            parameters.Append(string.Format("&useContext={0}", useContext));
             return AGRequestService.DoReqAndGet<List<Statement>>(this, "GET", "/geo/circle?" + parameters.ToString());
         }
+
         /// <summary>
         /// Get all the triples with a given predicate whose object lies within radius units 
         /// from the given latitude/longitude.

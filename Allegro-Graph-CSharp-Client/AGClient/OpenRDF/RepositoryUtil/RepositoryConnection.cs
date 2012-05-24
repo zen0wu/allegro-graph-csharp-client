@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Allegro_Graph_CSharp_Client.AGClient.Mini;
 using Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Rio;
@@ -84,7 +86,18 @@ namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
         /// List the contexts in this repository
         /// </summary>
         /// <returns>The names of contexts</returns>
-        public string[] GetContextIDs() { return this.GetMiniRepository().ListContexts(); }
+        //
+        public string[] GetContextIDs()
+        {
+            List<ContextInfo> contextInfos = JsonConvert.DeserializeObject<List<ContextInfo>>(this.GetMiniRepository().ListContexts());
+            string[] contexts = new string[contextInfos.Count];
+            int i = 0;
+            foreach (ContextInfo context in contextInfos)
+            {
+                contexts[i++] = context.ToString();
+            }
+            return contexts;
+        }
 
         /// <summary>
         /// Retrieves statements (triples) by matching against their components.

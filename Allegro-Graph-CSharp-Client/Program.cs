@@ -113,16 +113,18 @@ namespace Allegro_Graph_CSharp_Client
             Catalog cata = server.OpenCatalog(CATALOG);
             Repository repo = cata.GetRepository(REPOSITORY);
             RepositoryConnection repoConn = repo.GetConnection();
-            repoConn.OpenSession("<" + CATALOG + ":" + REPOSITORY + ">");
-            List<Namespace> spaces = repoConn.GetNamespaces();
-            Console.WriteLine(spaces.Count);
-            foreach (var space in spaces)
-            {
-                Console.WriteLine(space.Prefix + "\t" + space.NameSpace);
-            }
-            Console.WriteLine(repoConn.GetNamespaces("csharptest2"));
-            repoConn.CloseSession();
-            
+            //repoConn.OpenSession("<" + CATALOG + ":" + REPOSITORY + ">");
+            //List<Namespace> spaces = repoConn.GetNamespaces();
+            //Console.WriteLine(spaces.Count);
+            //foreach (var space in spaces)
+            //{
+            //    Console.WriteLine(space.Prefix + "\t" + space.NameSpace);
+            //}
+            //Console.WriteLine(repoConn.GetNamespaces("csharptest2"));
+            //repoConn.CloseSession();
+            //string geoType = repoConn.SetSphericalGeoType(2);
+            //Console.Write(geoType);
+            repoConn.GetMiniRepository().DeleteStatementsById(new string[] {"272" });
 
         }
     }

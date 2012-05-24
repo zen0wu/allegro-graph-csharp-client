@@ -20,7 +20,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         string Username;
         string Password;
         string TestRepositoryName;
-        Namespace TestNamespace;
+        Namespace Testnamespace;
         string TestIndexName;
         Statement statement;
 
@@ -34,7 +34,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             catalog = new AGCatalog(server, "chainyi");
             TestRepositoryName = "TestCsharpclient";
             repository = new AGRepository(catalog, TestRepositoryName);
-            TestNamespace = new Namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            Testnamespace = new Namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
             TestIndexName = "gospi";
             statement = new Statement("<http://example/test?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/test?abc=1&def=2>", "<http://example/test?client=Csharp>", "85");
         }
@@ -45,6 +45,12 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             AGRepository repository1 = new AGRepository(catalog, TestRepositoryName);
             AGRepository repository2 = new AGRepository(catalog, TestRepositoryName);
             Assert.AreNotSame(repository1, repository2);
+        }
+
+        [Test]
+        public void TestGetCatalog()
+        {
+            Assert.AreEqual(catalog.Url, repository.GetCatalog().Url);
         }
 
         /// <summary>
@@ -120,6 +126,18 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             repository.AddStatements(quads);
             result = repository.DeleteMatchingStatements(subj, pred, obj, context);
             Assert.GreaterOrEqual(result, 1);
+        }
+
+        [Test]
+        public void TestListContexts()
+        {
+            string[][] quads = new string[1][] {
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            repository.AddStatements(quads);
+            string contexts = repository.ListContexts();
+            Console.WriteLine(contexts);
+            Assert.IsTrue(contexts.Contains("<http://example/test?client=Csharp>"));
+            repository.DeleteStatements(quads);
         }
 
         /// <summary>
@@ -226,6 +244,35 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         [Test]
+        public void TestGetStatementIDs()
+        {
+            string[] ids = repository.GetStatementIDs();
+            Assert.Greater(ids.Length, 0);
+        }
+
+        [Test]
+        public void TestDeleteStatementsById()
+        {
+            string[] ids = repository.GetStatementIDs();
+            repository.DeleteStatementsById(new string[] { ids[0], ids[1] });
+            Assert.AreEqual(ids.Length - 2, repository.GetStatementIDs().Length);
+        }
+
+        [Test]
+        public void TestDeleteDuplicateStatements()
+        {
+            Statement statement = new Statement("<http://example/test?abc=1&def=2>", "<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>", "<http://example/test?abc=1&def=9>", "<http://example/test?client=Csharp>", "85");
+            repository.DeleteMatchingStatements(null, null, statement.Object, null);
+            string[][] quads = new string[1][] {
+                new string[4] { statement.Subject,statement.Predicate,statement.Object,statement.Context} };
+            repository.AddStatements(quads);
+            repository.AddStatements(quads);
+            int preSize = repository.GetSize();
+            repository.DeleteDuplicateStatements();
+            Assert.AreEqual(preSize - 1, repository.GetSize());
+        }
+
+        [Test]
         public void TestGetBlankNodes()
         {
             string[] results = repository.GetBlankNodes(3);
@@ -237,13 +284,17 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         public void TestAddDeleteNamespace()
         {
             List<Namespace> list = repository.ListNamespaces();
-            int preSize = repository.ListNamespaces().Count();
+            int preSize = list.Count();
+
+            //repository.OpenSession(repository.GetSpec(),true);
+            repository.GetStatements(null, null, null, null);
 
             repository.AddNamespace("ns1", "http://example.com");
             Assert.AreEqual(repository.ListNamespaces().Count(), preSize + 1);
 
             repository.DeleteNamespace("ns1");
-            Assert.AreEqual(repository.ListNamespaces().Count(), preSize );
+            Assert.AreEqual(repository.ListNamespaces().Count(), preSize);
+            //repository.CloseSession();
         }
 
         [Test]
@@ -253,7 +304,7 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
             bool flag = false;
             foreach (Namespace ns in results)
             {
-                if (ns.Prefix == TestNamespace.Prefix && ns.NameSpace == TestNamespace.NameSpace)
+                if (ns.Prefix == Testnamespace.Prefix && ns.NameSpace == Testnamespace.NameSpace)
                 {
                     flag = true;
                     break;
@@ -263,12 +314,19 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         }
 
         [Test]
-        public void TestClearNamespace()
+        public void TestNamespace()
         {
             repository.ClearNamespaces();
             int defaultSize = repository.ListNamespaces().Count();
+
             repository.AddNamespace("ns1", "http://example.com/1");
             repository.AddNamespace("ns2", "http://example.com/2");
+
+            Assert.AreEqual(defaultSize + 2, repository.ListNamespaces().Count());
+
+            string aNamespace = repository.GetNamespaces("ns1");
+            //Console.WriteLine("Ns:{0}",aNamespace);
+
             repository.ClearNamespaces();
             Assert.AreEqual(defaultSize, repository.ListNamespaces().Count());
         }
@@ -278,6 +336,17 @@ namespace Allegro_Graph_CSharp_Client_NUnitTest.MiniTest
         {
             string[] indexs = repository.ListIndices();
             Assert.Contains(TestIndexName, indexs);
+        }
+        [Test]
+        public void TestIndices()
+        {
+            string type = "spogi";
+            repository.AddIndex(type);
+            string[] indices = repository.ListIndices();
+            Assert.True(indices.Any(e => e == type));
+            indices = repository.ListValidIndices();
+            Assert.True(indices.Any(e => e == type));
+            repository.DropIndex(type);
         }
     }
 }

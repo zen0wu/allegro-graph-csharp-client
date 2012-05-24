@@ -1,227 +1,227 @@
 Test List of AGCSharpClient
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ namespace Allegro_Graph_CSharp_Client.AGClient.Mini +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-namespace Allegro_Graph_CSharp_Client.AGClient.Mini
+Class AGClient                     Status            TestClass:AGClientTest
+------------------------------------------------------------------------------
+AGClient::GetVersion               finished           ::TestGetVersion
+AGClient::GetBuiltDate             finished           ::TestGetBuiltDate
+AGClient::ListCatalogs             finished           ::TestListCatalogs
+AGClient::CreateCatalog            exception(401)     ::TestCreateCatalog
+AGClient::OpenCatalog              finished           ::TestOpenCatalog
+AGClient::DeleteCatalog            exception(401)     ::TestDeleteCatalog
+AGClient::OpenSession              finished           ::TestOpenSession
 
-Class AGClient
-AGClient::GetVersion                              finished
-AGClient::GetBuiltDate                            finished
-AGClient::ListCatalogs                            finished
-AGClient::CreateCatalog                           finished
-AGClient::OpenCatalog                             finished
-AGClient::DeleteCatalog                           finished
-AGClient::OpenSession                             finished
- 
-AGClient::DeleteInitFile                          exception
-AGClient::SetInitFile                             exception
-AGClient::GetInitFile                             exception
-AGClient::ReConfigure                             exception
-AGClient::ReopenLog                               exception
+The below test need administrator previlege 
 
-==============================================================
-Class AGCatalog
-AGCatalog::OpenRepository                         finished
-AGCatalog::CreateRepository                       finished
-AGCatalog::DeleteRepository                       finished
-AGCatalog::ListRepositories                       finished
-AGCatalog::GetName                                finished
+AGClient::DeleteInitFile           exception(401)     ::TestDeleteInitFile
+AGClient::SetInitFile              exception(401)     ::TestSetInitFile
+AGClient::GetInitFile              exception(401)     ::TestGetInitFile
+AGClient::ReConfigure              exception(401)     ::TestReConfigure
+AGClient::ReopenLog                exception(401)     ::TestReopenLog
 
-==============================================================
-Class AGRepository
-AGRepository::GetSize                             finished
-AGRepository::GetCatalog                          finished
-AGRepository::ListContexts                        finished
-AGRepository::GetBlankNodes                       finished
-AGRepository::AddStatements                       finished
-AGRepository::DeleteMatchingStatements            finished
-AGRepository::DeleteStatements                    finished
-AGRepository::EvalSPARQLQuery                     finished
+==============================================================================
+Class AGCatalog                    Status            Class AGCatalogTest
+------------------------------------------------------------------------------
+AGCatalog::OpenRepository          finished          ::TestOpenRepository
+AGCatalog::CreateRepository        finished          ::TestCreateRepository
+AGCatalog::DeleteRepository        finished          ::TestDeleteRepository
+AGCatalog::ListRepositories        finished          ::TestListRepositories
+AGCatalog::GetName                 finished          ::TestGetName
 
-AGRepository::GetStatements                       finished
-AGRepository::GetStatementsById                   finished
-AGRepository::GetStatementIDs                     finished
-AGRepository::DeleteStatementsById                finished
-AGRepository::DeleteDuplicateStatements           finished
+================================================================================
+Class AGRepository                 Status            Class AGRepositoryTest          -------------------------------------------------------------------------------- 
+::GetSize                          finished          ::TestGetSize()
+::GetCatalog                       finished          ::TestGetCatalog 
+::ListContexts                     finished          ::TestListContexts
+::GetBlankNodes                    finished          ::TestGetBlankNodes
+::AddStatements                    finished          ::TestAddStatements
+::DeleteMatchingStatements         finished          ::TestDeleteMatchingStatements
+::DeleteStatements                 finished          ::TestDeleteStatements
+::EvalSPARQLQuery                  finished          ::TestEvalSPARQLQuery
 
-AGRepository::EvalPrologQuery                     unfinished
+::GetStatements                    finished          ::TestGetStatements
+::GetStatementsById                finished          ::TestGetStatementsById
+::GetStatementIDs                  finished          ::TestGetStatementIDs
+::DeleteStatementsById             finished          ::TestDeleteStatementsById 
+::DeleteDuplicateStatements        finished          ::TestDeleteDuplicateStatements
 
-AGRepository::ListNamespaces                      finished
-AGRepository::GetNamespaces                       finished
-AGRepository::AddNamespace                        finished
-AGRepository::DeleteNamespace                     finished
-AGRepository::ClearNamespaces                     finished
+::EvalPrologQuery                unfinished          ::Test
 
-AGRepository::LoadFile                            unfinished
+::ListNamespaces                   finished          ::TestListNamespaces(??only get the default NS)
+::GetNamespaces                    finished          ::Test
+::AddNamespace                     finished	     ::TestAddDeleteNamespace
+::DeleteNamespace                  finished          ::TestAddDeleteNamespace
+::ClearNamespaces                  finished          ::TestClearNamespace
 
-AGRepository::ListTypeMapping                     Same as RepositoryConnection::
-AGRepository::ClearTypeMapping                    Same as RepositoryConnection::
-AGRepository::ListMappedTypes                     Same as RepositoryConnection::
-AGRepository::AddMappedType                       Same as RepositoryConnection::
-AGRepository::DeleteMappedType                    Same as RepositoryConnection::
-AGRepository::ListMappedPredicates                Same as RepositoryConnection::
-AGRepository::AddMappedPredicate                  Same as RepositoryConnection::
-AGRepository::DeleteMappedPredicate               Same as RepositoryConnection::
+::LoadFile                       unfinished          ::Test
 
-AGRepository::ListIndices                         finished
-AGRepository::ListValidIndices                    finished
-AGRepository::AddIndex                            finished
-AGRepository::DropIndex                           finished
-AGRepository::OptimizeIndex                       unfinished
+::ListIndices                      finished          ::TestListIndices
+::ListValidIndices                 finished          ::TestTestIndices
+::AddIndex                         finished          ::TestTestIndices
+::DropIndex                        finished          ::TestTestIndices
+::OptimizeIndex                    unfinished          ::Test
 
-AGRepository::PreparingQueries                    unfinished
-AGRepository::ExecutePreparingQueries[1]          unfinished
-AGRepository::ExecutePreparingQueries[2]          unfinished
-AGRepository::DeletePreparingQueries              unfinished
-AGRepository::DefinePrologFunction                unfinished
+::PreparingQueries                 unfinished          ::Test
+::ExecutePreparingQueries[1]       unfinished          ::Test
+::ExecutePreparingQueries[2]       unfinished          ::Test
+::DeletePreparingQueries           unfinished          ::Test
+::DefinePrologFunction             unfinished          ::Test
 
-AGRepository::OpenSession                         Same as RepositoryConnection::
-AGRepository::CloseSession                        Same as RepositoryConnection::
-AGRepository::Commit                              Same as RepositoryConnection::
-AGRepository::Rollback                            Same as RepositoryConnection::
+::ListTypeMapping                     Same as RepositoryConnection::()
+::ClearTypeMapping                    Same as RepositoryConnection::()
+::ListMappedTypes                     Same as RepositoryConnection::()
+::AddMappedType                       Same as RepositoryConnection::()
+::DeleteMappedType                    Same as RepositoryConnection::()
+::ListMappedPredicates                Same as RepositoryConnection::()
+::AddMappedPredicate                  Same as RepositoryConnection::()
+::DeleteMappedPredicate               Same as RepositoryConnection::()
 
-AGRepository::EnableTripleCache                   Same as RepositoryConnection::
-AGRepository::DisableTripleCache                  Same as RepositoryConnection::
-AGRepository::GetTripleCacheSize                  Same as RepositoryConnection::
+::OpenSession                         Same as RepositoryConnection::()
+::CloseSession                        Same as RepositoryConnection::()
+::Commit                              Same as RepositoryConnection::()
+::Rollback                            Same as RepositoryConnection::()
+::EnableTripleCache                   Same as RepositoryConnection::()
+::DisableTripleCache                  Same as RepositoryConnection::()
+::GetTripleCacheSize                  Same as RepositoryConnection::()
+::EvalFreeTextIndex                   Same as RepositoryConnection::()
+::ManipulateFreeTextIndex             Same as RepositoryConnection::()
+::CreateFreeTextIndex                 Same as RepositoryConnection::()
+::ModifyFreeTextIndex                 Same as RepositoryConnection::()
+::ListFreeTextIndices                 Same as RepositoryConnection::()
+::DeleteFreeTextIndex                 Same as RepositoryConnection::()
+::ListFreeTextPredicates              Same as RepositoryConnection::()
+::GetFreeTextIndexConfiguration[1]    Same as RepositoryConnection::()
+::GetFreeTextIndexConfiguration[2]    Same as RepositoryConnection::()
+::DefinePrologFunctors                Same as RepositoryConnection::()
+::ListGeoTypes                        Same as RepositoryConnection::()
+::GetStatementsInsideBox              Same as RepositoryConnection::()
+::GetStatementsInsideCircle           Same as RepositoryConnection::()
+::GetStatementsHaversine              Same as RepositoryConnection::()
+::GetStatementsInsidePolygon          Same as RepositoryConnection::()
+::RegisterSNAGenerator                Same as RepositoryConnection::()
+::RegisterNeighborMatrix              Same as RepositoryConnection::()
+===============================================================================
 
-AGRepository::EvalFreeTextIndex                   Same as RepositoryConnection::
-AGRepository::ManipulateFreeTextIndex             Same as RepositoryConnection::
-AGRepository::CreateFreeTextIndex                 Same as RepositoryConnection::
-AGRepository::ModifyFreeTextIndex                 Same as RepositoryConnection::
-AGRepository::ListFreeTextIndices                 Same as RepositoryConnection::
-AGRepository::DeleteFreeTextIndex                 Same as RepositoryConnection::
-AGRepository::ListFreeTextPredicates              Same as RepositoryConnection::
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-AGRepository::GetFreeTextIndexConfiguration[1]    Same as RepositoryConnection::
-AGRepository::GetFreeTextIndexConfiguration[2]    Same as RepositoryConnection::
+Class AllegroGraphServer         Status               Class AllegroGraphServerTest
+-----------------------------------------------------------------------------------
+::ServerReConfigure             exception((401) 未经授权)  ::TestServerReConfigure
+::ReopenLog                     exception(401)             ::TestReopenLog
+::ListCatalogs                  finished                   ::TestListCatalogs
+::CreateCatalog                 finished                   ::TestCreateDeleteCatalog
+::OpenCatalog                   finished                   ::TestOpenCatalog
+::DeleteCatalog                 finished                   ::TestCreateDeleteCatalog
 
+::GetInitFile                   exception(401)
+::SetInitFile                   exception(401)
+::DeleteInitFile                exception(401)
 
-AGRepository::DefinePrologFunctors                Same as RepositoryConnection::
+::OpenSession                   exception(500) 内部服务器错误  ::TestOpenSession
+::OpenFederated                 exception(400) 错误请求        ::TestOpenFederated 
 
-AGRepository::ListGeoTypes                        Same as RepositoryConnection::
-AGRepository::GetStatementsInsideBox              Same as RepositoryConnection::
-AGRepository::GetStatementsInsideCircle           Same as RepositoryConnection::
-AGRepository::GetStatementsHaversine              Same as RepositoryConnection::
-AGRepository::GetStatementsInsidePolygon          Same as RepositoryConnection::
+==================================================================================
+Class Catalog                     Status               Class AGCatalogTest
+----------------------------------------------------------------------------------
+::GetSesameProtocolVersion       finished              ::TestGetSesameProtocolVersion
+::CreateRepository               finished              ::TestCreateRepository 
+::DeleteRepository               finished              ::TestDeleteRepository 
+::GetName                        finished              ::TestGetName 
+::ListRepositories               finished              ::TestListRepositories 
+::GetRepository                  finished              ::TestGetRepository
 
-AGRepository::RegisterSNAGenerator                Same as RepositoryConnection::
-AGRepository::RegisterNeighborMatrix              Same as RepositoryConnection::
-=============================================================
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.Sail
+Class RepositoryConnection              Status               Class AGCatalogTest
+-------------------------------------------------------------------------------------
+::GetSize                             finished              ::TestGetSize
+::IsEmpty                             finished              ::TestIsEmpty
+::GetContextIDs                       finished              ::TestGetContextIDs
+::GetStatements                       finished              ::TestGetStatements 
+::GetStatementsById                   finished              ::TestGetStatementsById 
+::GetStatementIDs                     finished              ::TestGetStatementIDs
+::GetBlankNodes                       finished              ::TestGetBlankNodes 
+::AddFile                             unfinished
 
-Class AllegroGraphServer
+::AddStatement                        finished              ::TestAdd
+::AddTriple                           finished              ::TestAddTriple 
+::AddTriples                          finished              ::TestAddTriples
+::RemoveTriples                       finished              ::TestRemoveTriples 
+::RemoveStatement                     finished              ::TestRemoveStatement  
+::RemoveQuadsByID                     finished              ::TestRemoveQuadsByID
+::RemoveQuads                         finished              ::TestRemoveQuads 
+::RemoveDuplicateStatements           finished              ::TestRemoveDuplicateStatements
+::Clear                               finished              ::TestClearTripleStore
+::EvalSPARQLQuery                     finished              ::TestEvalSPARQLQuery 
 
-AllegroGraphServer::ServerReConfigure             unfinished
-AllegroGraphServer::ReopenLog                     unfinished
-AllegroGraphServer::ListCatalogs                  finished
-AllegroGraphServer::CreateCatalog                 finished
-AllegroGraphServer::OpenCatalog                   finished
-AllegroGraphServer::DeleteCatalog                 finished
+::PrepareBooleanQuery                 unfinished
+::PrepareStringArrayQuery             unfinished
+::ExportStatements                    unfinished
+::Export                              unfinished
 
-AllegroGraphServer::GetInitFile                   exception
-AllegroGraphServer::SetInitFile                   exception
-AllegroGraphServer::DeleteInitFile                exception
+::EvalFreeTextIndex                   finished              ::TestEvalFreeTextIndex 
+::CreateFreeTextIndex                 finished              ::TestCreateDeleteFreeTextIndex
+::ModifyTextIndex                     finished              ::TestModifyTextIndex  
+::DeleteFreeTextIndex                 finished              ::TestCreateDeleteFreeTextIndex
+::ListFreeTextIndices                 finished              ::TestTestListFreeTextIndices
 
-AllegroGraphServer::OpenSession                   finished
-AllegroGraphServer::OpenFederated                 unfinished
-
-=================================================================
-Catalog::GetSesameProtocolVersion                 finished
-Catalog::CreateRepository                         finished
-Catalog::DeleteRepository                         finished
-Catalog::GetName                                  finished
-Catalog::ListRepositories                         finished
-Catalog::GetRepository                            finished
-
-=================================================================
-
-namespace Allegro_Graph_CSharp_Client.AGClient.OpenRDF.RepositoryUtil
-
-Class RepositoryConnection
-RepositoryConnection::GetSize                         finished
-RepositoryConnection::IsEmpty                         finished
-RepositoryConnection::GetSpec                         finished
-RepositoryConnection::GetMiniRepository               finished
-RepositoryConnection::GetContextIDs                   finished
-RepositoryConnection::GetStatements                   finished
-RepositoryConnection::GetStatementsById               finished
-RepositoryConnection::GetStatementIDs                 finished
-RepositoryConnection::CreateStatement                 finished
-RepositoryConnection::GetBlankNodes                   finished
-
-RepositoryConnection::AddFile                         unfinished
-
-RepositoryConnection::AddStatement                    finished
-RepositoryConnection::AddTriple                       finished
-RepositoryConnection::AddTriples                      finished
-RepositoryConnection::RemoveTriples                   finished
-RepositoryConnection::RemoveStatement                 finished
-RepositoryConnection::RemoveQuadsByID                 finished
-RepositoryConnection::RemoveQuads                     finished
-RepositoryConnection::RemoveDuplicateStatements       finished
-RepositoryConnection::Clear                           finished
-RepositoryConnection::EvalSPARQLQuery                 finished
-
-RepositoryConnection::PrepareBooleanQuery             unfinished
-RepositoryConnection::PrepareStringArrayQuery         unfinished
-RepositoryConnection::ExportStatements                unfinished
-RepositoryConnection::Export                          unfinished
-
-RepositoryConnection::EvalFreeTextIndex               finished
-RepositoryConnection::CreateFreeTextIndex             finished
-RepositoryConnection::ModifyTextIndex                 finished
-RepositoryConnection::DeleteFreeTextIndex             finished
-RepositoryConnection::ListFreeTextIndices             finished
-
-RepositoryConnection::GetFreeTextIndexConfiguration[1]exception
-RepositoryConnection::GetFreeTextIndexConfiguration[2]exception
-
-
-RepositoryConnection::ListGeoTypes                    finished
-
-RepositoryConnection::SetCartesianGeoType             finished
-RepositoryConnection::SetSphericalGeoType             finished
-RepositoryConnection::GetStatementsInsideBox          exception
-
-RepositoryConnection::GetNamespaces                   finished
-RepositoryConnection::SetNamespace                    finished
-RepositoryConnection::RemoveNamespace                 finished
-RepositoryConnection::ClearNamespace                  finished
-
-RepositoryConnection::AddRules                        unfinished
-RepositoryConnection::loadRules                       unfinished
-
-RepositoryConnection::RegisterSNAGenerator            unfinished
-RepositoryConnection::RegisterNeighborMatrix          unfinished
-
-RepositoryConnection::EnableTripleCache               finished
-RepositoryConnection::DisableTripleCache              finished
-RepositoryConnection::GetTripleCacheSize              finished
-
-RepositoryConnection::ListIndices                     finished
-RepositoryConnection::ListValidIndices                finished
-RepositoryConnection::AddIndex                        finished
-RepositoryConnection::DropIndex                       finished
-RepositoryConnection::OptimizeIndex                   unfinished
-
-RepositoryConnection::ListTypeMapping                 finished
-RepositoryConnection::ClearTypeMapping                finished
-RepositoryConnection::ListMappedTypes                 finished
-RepositoryConnection::AddMappedType                   exception
-RepositoryConnection::DeleteMappedType                exception
-RepositoryConnection::ListMappedPredicates            finished
-RepositoryConnection::AddMappedPredicate              exception
-RepositoryConnection::DeleteMappedPredicate           exception
-
-RepositoryConnection::OpenSession                     finished
-RepositoryConnection::CloseSession                    finished
-RepositoryConnection::Commit                          finished
-RepositoryConnection::Rollback                        finished
-RepositoryConnection::PreparingQueries                unfinished
-RepositoryConnection::ExecutePreparingQueries         unfinished
-RepositoryConnection::DeletePreparingQueries          unfinished
-RepositoryConnection::DefinePrologFunction            unfinished
+::GetFreeTextIndexConfiguration[1]    exception [取不到设置值，但在eval时又有效]  
+::GetFreeTextIndexConfiguration[2]    exception
 
 
+::ListGeoTypes                        finished              ::TestListGeoTypes
+::SetCartesianGeoType                 finished              ::TestSetCartesianGeoType
+::SetSphericalGeoType                 finished              ::TestSetSphericalGeoType
+::GetStatementsInsideBox              exception(400错误请求)::TestGetStatementsOfGeo 
+
+//取不到新添加的namespace
+::GetNamespaces                       finished              ::TestGetNamespace
+::SetNamespace                        finished              ::TestSetRemoveNamespace
+::RemoveNamespace                     finished              ::TestSetRemoveNamespace
+::ClearNamespace                      finished              ::TestClearNamespace
+
+::AddRules                            unfinished
+::loadRules                           unfinished
+::RegisterSNAGenerator                unfinished
+::RegisterNeighborMatrix              unfinished
+
+::EnableTripleCache                   finished              ::TestTripleCache
+::DisableTripleCache                  finished              ::TestTripleCache
+::GetTripleCacheSize                  finished              ::TestTripleCache
+
+::ListIndices                         finished              ::TestIndices
+::ListValidIndices                    finished              ::TestIndices
+::AddIndex                            finished              ::TestIndices
+::DropIndex                           finished              ::TestIndices
+::OptimizeIndex                       exception(400错误请求)::TestOptimizeIndex
+
+::ListTypeMapping                     finished              ::TestListTypeMapping  
+::ClearTypeMapping                    finished              ::TestClearTypeMapping
+::ListMappedTypes                     finished              ::TestListMappedTypes
+::AddMappedType                       exception(400错误请求)
+::DeleteMappedType                    exception(400错误请求)
+::ListMappedPredicates                finished              ::TestListMappedPredicates    
+::AddMappedPredicate                  exception(400错误请求)
+::DeleteMappedPredicate               exception(400错误请求)
+
+::OpenSession                         finished                ::TestOpenCloseSession
+::CloseSession                        exception(基础连接关闭)  ::TestOpenCloseSession
+::Commit                              exception(基础连接关闭)  ::TestTransaction
+::Rollback                            exception(基础连接关闭)  ::TestTransaction
+
+都是基于openSession()
+::PreparingQueries                    unfinished
+::ExecutePreparingQueries             unfinished
+::DeletePreparingQueries              unfinished
+::DefinePrologFunction                unfinished
+======================================================================================
+                                        --End--
 
 
 
